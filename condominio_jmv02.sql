@@ -90,8 +90,10 @@ CREATE TABLE `datos_usuarios` (
 --
 
 INSERT INTO `datos_usuarios` (`id`, `rif_cedula`, `tipo_identificacion`, `razon_social`, `domicilio_fiscal`, `telefono`, `correo`) VALUES
-(19, '28609560', 0, 'Jugney Vargas', 'Barrio Unión', '0424-5698188', 'jugneyv@gmail.com'),
-(20, '26846371', 0, 'Diego Salazar', 'Calle 28', '0424-4034515', 'diego14asf@gmail.com');
+(01, '28609560', 0, 'Jugney Vargas', 'Barrio Unión', '0424-5698188', 'jugneyv@gmail.com'),
+(02, '26846371', 0, 'Diego Salazar', 'Calle 28', '0424-4034515', 'diego14asf@gmail.com'),
+(03, '27250544', 0, 'Xavier Suarez', 'Calle 28', '0424-5798958', '@gmail.com'),
+(04, '28406750', 0, 'Luis Colmenares', 'Calle 28', '0426-3525659', '@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -407,7 +409,7 @@ CREATE TABLE `usuarios_roles` (
 
 INSERT INTO `usuarios_roles` (`id_usuario`, `id_rol`, `clave`) VALUES
 (19, 1, 'Hola123'),
-(20, 2, 'Hola123');
+(20, 1, 'Hola123');
 
 --
 -- Índices para tablas volcadas

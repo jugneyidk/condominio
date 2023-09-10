@@ -1,0 +1,17 @@
+----USUARIOS-----
+---admin--------
+usuario:28609560
+contraseña:Hola123
+usuario:26846371
+contraseña:Hola123
+usuario:27250544
+contraseña:Hola123
+usuario:28406750
+contraseña:Hola123
+----------------
+---secretaria----
+usuario:
+contraseña:
+---superusuario--
+usuario:
+contraseña:
