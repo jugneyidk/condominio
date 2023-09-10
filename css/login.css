@@ -1,0 +1,17 @@
+body {
+  background-color: #86c0ff;
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .container {
+    max-width: 920px;
+  }
+}
+@media (min-width: 1200px){
+  .container {
+    max-width: 1150px;
+  }
+}
+#login{
+  height: 100vh;
+  height: 100svh;
+}

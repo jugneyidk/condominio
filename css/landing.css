@@ -1,0 +1,71 @@
+#navbar{
+    position: absolute;
+    z-index: 20;
+    width: 100%;
+}
+.navbar-brand{
+    color: black!important;
+}
+#navbar-logo{
+    filter: invert(100%);
+}
+.nav-sticky .navbar-brand{
+    color: white!important;
+}
+.nav-sticky #navbar-logo{
+    filter: none;
+}
+.nav-sticky{
+    position: fixed!important;
+}
+.jumbotron {    
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(480px,480px,80svh);
+}
+.jumbotron:before {
+  content: "";
+  background: url("../img/jumbotron.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  position: absolute;
+  opacity: 0.30;
+}
+.jumbotron .container {
+  position: relative;
+}
+@media screen and (max-width:767px){
+    #navbar{
+        background-color: #2E86C1!important;
+        position: static!important;
+    }
+    .nav-sticky{
+        position: fixed!important;
+    }
+    #navbar-logo{
+        filter: none!important;
+    }
+    .jumbotron {
+        min-height: 600px;    
+        min-height: calc(100svh - 69px);
+    }
+    .jumbotron:before {
+        background: url("../img/condominio2.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        opacity: 0.20;
+      }
+    .jumbotron .display-4{
+        font-size: 2.5rem;
+    }
+}
