@@ -29,6 +29,7 @@ if (isset($_SESSION['rol'])) {
 								if ($rol == "2") :
 								?>
 									<a class="dropdown-item" href="?p=usuarios-administracion">Usuarios</a>
+									<a class="dropdown-item" href="?p=nomina">Nomina</a>
 								<?php endif; ?>
 								<a class="dropdown-item" href="?p=habitantes">Habitantes</a>
 								<a class="dropdown-item" href="?p=tipoapto">Tipos de Apartamento</a>
@@ -45,6 +46,7 @@ if (isset($_SESSION['rol'])) {
 								<a class="dropdown-item" href="?p=deudas">Deudas</a>
 								<a class="dropdown-item" href="?p=pagos">Pagos</a>
 								<a class="dropdown-item" href="?p=generar-reporte">Generar Reporte</a>
+								<a class="dropdown-item" href="?p=estadistica">Estadistica</a>
 							</div>
 						</li>
 						<div class="collapse navbar-collapse" id="navbarNavDropdown">
