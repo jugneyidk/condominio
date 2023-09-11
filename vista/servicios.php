@@ -7,7 +7,7 @@
 	<div class="container-lg bg-white p-2 p-sm-4 p-md-5 mb-5">
 		<?php require_once('comunes/cabecera_modulos.php'); ?>
 		<div>
-			<h2 class="text-center h2 text-primary">Estadisticas del sistema</h2>
+			<h2 class="text-center h2 text-primary">Servicios</h2>
 			<hr />
 		</div>
 

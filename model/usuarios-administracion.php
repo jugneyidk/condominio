@@ -25,7 +25,7 @@ class usuarios extends datos
 				$guarda = $co->query("insert into datos_usuarios(rif_cedula,tipo_identificacion,razon_social,domicilio_fiscal,telefono,correo) 
 		   values ('$rif_cedula','$tipo_identificacion','$razon_social','$domicilio_fiscal','$telefono','$correo')");
 				$lid = $co->lastInsertId();
-				// $contrasena = password_hash($password, PASSWORD_BCRYPT);
+				$contrasena = password_hash($password, PASSWORD_BCRYPT);
 				$gd = $co->query("insert into usuarios_roles(id_usuario,id_rol,clave) 
 		   values ('$lid','$rol','$password')");
 				$r['resultado'] = 'incluir';
@@ -122,7 +122,7 @@ class usuarios extends datos
 						id = '$id'
 						");
 				if ($password) {
-					// $contrasena = password_hash($password, PASSWORD_BCRYPT);
+					$contrasena = password_hash($password, PASSWORD_BCRYPT);
 					$co->query("Update usuarios_roles set 
 							id_rol = '$rol',
 							clave = '$password'
