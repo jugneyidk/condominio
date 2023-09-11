@@ -4,7 +4,7 @@
 	<?php require_once("comunes/carga.php"); ?>
 	<?php require_once("comunes/modal.php"); ?>
 	<?php require_once('comunes/menu.php'); ?>
-	<div class="container-lg bg-white p-2 p-sm-4 p-md-5 mb-5">
+	<div class="container-lg bg-white p-2 p-sm-4 p-md-5 mb-5"> 
 		<?php require_once('comunes/cabecera_modulos.php'); ?>
 		<div>
 			<h2 class="text-center h2 text-primary">Servicios</h2>
@@ -21,13 +21,13 @@
         
                 <div class="row mb-3">
                 	<div class="col-6 col-md-5">
-						<label for="metodo">Servicio</label>
+						<label for="servicio">Servicio</label>
 						<select class="form-control" id="service" name="service">
 							<option value='' disabled selected>-</option>
 							<option value='corpoelec'>Corpoelec</option>
 							<option value='otro'>Otro</option>
 						</select>
-						<span id="smetodo" class="text-danger"></span>
+						<span id="sservicio" class="text-danger"></span>
 					</div>
                     <div class="col-12 col-md-5">
                         <label for="descripcion">Descripción:</label>

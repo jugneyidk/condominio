@@ -1,12 +1,61 @@
 <?php
-  //verifica que exista la vista de
-  //la pagina
-  if(is_file("vista/".$p.".php")){
-	  //si existe se la trae, ahora ve a la carpeta vista
-	  //y busca el archivo principal.php 
-	  require_once("vista/".$p.".php"); 
+if (!is_file("model/" . $p . ".php")) {
+
+  echo "Falta definir la clase " . $p;
+  exit;
+}
+require_once("model/" . $p . ".php");
+if (is_file("vista/" . $p . ".php")) {
+ // $o = new ();
+ // $permisos = $o->chequearpermisos();
+  if (!empty($_POST)) {
+    $accion = $_POST['accion'];
+   /* if ($accion == '') {
+      $respuesta = $o->listadoapartamentos();
+      echo json_encode($respuesta);
+    } else if ($accion == '') {
+      $respuesta = $o->listadohabitantes();
+      echo json_encode($respuesta);
+    } else*/  if ($accion == 'incluir') {
+     /* $respuesta = $o->incluir(
+        $_POST['nombres'],
+        $_POST['apellidos'],
+        $_POST['cedula_rif'],
+        $_POST['domicilio_fiscal'],
+        $_POST['telefono'],
+        $_POST['correo'],
+        $_POST['descripcion'],
+        $_POST['metodo'],
+        $_POST['fecha'],
+        $_POST['monto'],
+        $_POST['referencia']
+      );*/
+     // echo json_encode($respuesta);
+    } /*else if ($accion == 'modificar') {
+      $respuesta = $o->modificar(
+        $_POST['nombres'],
+        $_POST['apellidos'],
+        $_POST['cedula_rif'],
+        $_POST['domicilio_fiscal'],
+        $_POST['telefono'],
+        $_POST['correo'],
+         $_POST['descripcion'],
+        $_POST['metodo'],
+        $_POST['fecha'],
+        $_POST['monto'],
+        $_POST['referencia']
+      );
+      //echo json_encode($respuesta);
+    } else*/ if ($accion == 'eliminar') {
+     // $respuesta = $o->eliminar($_POST['id']);
+     // echo json_encode($respuesta);
+    } else if ($accion == 'listado') {
+      //$respuesta = $o->listadotipos();
+     // echo json_encode($respuesta);
+    }
+    exit;
   }
-  else{
-	  require_once("vista/404.php"); 
-  }
-?>
+  require_once("vista/" . $p . ".php");
+} else {
+  echo "pagina en construccion";
+}

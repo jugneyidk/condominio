@@ -28,7 +28,7 @@
                                     <a class="dropdown-item" id="p-extranjero" href="">E</a>
                                     <a class="dropdown-item" id="p-juridica" href="">J</a>
                                 </div>
-                            </div>
+                            </div> 
                             <input autocomplete="off" type="text" class="form-control" name="cedula_rif" id="cedula_rif">
                         </div>
                         <select name="tipo_identificacion" id="tipo_identificacion" value="-" class="d-none">

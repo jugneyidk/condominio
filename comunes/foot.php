@@ -6,7 +6,7 @@
             <small class="text-muted">© 2022-2023</small>
         </div>
         <?php if (isset($_SESSION['id_usuario'])) : ?>
-            <div class="col-md-3">
+            <div class="col-md-1">
                 <p class="text-light h5">Gestionar</p>
                 <ul class="list-unstyled text-small">
                     <?php if ($_SESSION['rol'] == 2) : ?>
@@ -17,7 +17,7 @@
                     <li><a href="?p=apartamentos" class="text-muted">Apartamentos</a></li>
                 </ul>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-1">
                 <p class="text-light h5">Procesar</p>
                 <ul class="list-unstyled text-small">
                     <li><a href="?p=deuda-condominio" class="text-muted">Deuda del condominio</a></li>
@@ -26,7 +26,21 @@
                     <li><a href="?p=generar-reporte" class="text-muted">Generar Reporte</a></li>
                 </ul>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
+                <p class="text-light h5">Pago</p>
+                <ul class="list-unstyled text-small">
+                    <li><a href="?p=nomina" class="text-muted">Nomina</a></li>
+                    <li><a href="?p=servicios" class="text-muted">Servicios</a></li>
+                </ul>
+            </div>
+            <div class="col-md-1">
+                <p class="text-light h5">Ver</p>
+                <ul class="list-unstyled text-small">
+                    <li><a href="?p=movimiento" class="text-muted">Balance</a></li>
+                    <li><a href="?p=estadistica" class="text-muted">Estadistica</a></li>
+                </ul>
+            </div>
+            <div class="col-md-1">
                 <p class="text-light h5">Ayuda</p>
                 <ul class="list-unstyled text-small">
                     <li><a href="?p=acerca" class="text-muted">Acerca de</a></li>
