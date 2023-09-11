@@ -18,8 +18,6 @@
             <canvas id="myChart" width="100" height="220"></canvas>
         </div>
     </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <script>
         // Datos de ejemplo
         var labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];

@@ -48,10 +48,9 @@
             <thead>
               <tr>
                 <th scope="col" class="text-info">Nº pago</th>
-                <th scope="col" class="text-info">Apto</th>
-                <th scope="col" class="text-info">Torre</th>
-                <th scope="col" class="text-info">Fecha</th>
+                <th scope="col" class="text-info">Tipo de pago</th>
                 <th scope="col" class="text-info">Monto</th>
+                <th scope="col" class="text-info">Fecha</th>
                 <th scope="col" class="text-info">Estado</th>
                 <th scope="col" class="text-info">Acción</th>
               </tr>
@@ -61,63 +60,7 @@
           </table>
         </div>
       </div>
-      <div class="tab-pane fade" id="pendiente" role="tabpanel" aria-labelledby="pendiente-tab">
-        <div class="table-responsive">
-          <table class="table table-striped" id="tablapendiente">
-            <thead>
-              <tr>
-                <th scope="col" class="text-info">Nº pago</th>
-                <th scope="col" class="text-info">Apto</th>
-                <th scope="col" class="text-info">Torre</th>
-                <th scope="col" class="text-info">Fecha</th>
-                <th scope="col" class="text-info">Monto</th>
-                <th scope="col" class="text-info">Estado</th>
-                <th scope="col" class="text-info">Acción</th>
-              </tr>
-            </thead>
-            <tbody id="listadopagospendientes">
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="confirmados" role="tabpanel" aria-labelledby="confirmados-tab">
-        <div class="table-responsive">
-          <table class="table table-striped" id="tablaconfirmado">
-            <thead>
-              <tr>
-                <th scope="col" class="text-info">Nº pago</th>
-                <th scope="col" class="text-info">Apto</th>
-                <th scope="col" class="text-info">Torre</th>
-                <th scope="col" class="text-info">Fecha</th>
-                <th scope="col" class="text-info">Monto</th>
-                <th scope="col" class="text-info">Estado</th>
-                <th scope="col" class="text-info">Acción</th>
-              </tr>
-            </thead>
-            <tbody id="listadopagosconfirmados">
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="declinados" role="tabpanel" aria-labelledby="declinados-tab">
-        <div class="table-responsive">
-          <table class="table table-striped" id="tabladeclinado">
-            <thead>
-              <tr>
-                <th scope="col" class="text-info">Nº pago</th>
-                <th scope="col" class="text-info">Apto</th>
-                <th scope="col" class="text-info">Torre</th>
-                <th scope="col" class="text-info">Fecha</th>
-                <th scope="col" class="text-info">Monto</th>
-                <th scope="col" class="text-info">Estado</th>
-                <th scope="col" class="text-info">Acción</th>
-              </tr>
-            </thead>
-            <tbody id="listadopagosdeclinados">
-            </tbody>
-          </table>
-        </div>
-      </div>
+    
     </div>
 
 	</div>
