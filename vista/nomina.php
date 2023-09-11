@@ -79,7 +79,7 @@
                     </div>
                     <div class="col-6 col-md-3">
 						<label for="metodo">Metodo de pago</label>
-						<select class="form-control" id="piso" name="piso">
+						<select class="form-control" id="metodo" name="metodo">
 							<option value='' disabled selected>-</option>
 							<option value='pagomovil'>Pago movil</option>
 							<option value='transferencia'>transferencia</option>
@@ -88,6 +88,11 @@
 						</select>
 						<span id="smetodo" class="text-danger"></span>
 					</div>
+					<div class="col-6 col-md-3">
+                        <label for="descripcion">Fecha:</label>
+                        <input autocomplete="off" class="form-control" type="date" id="fecha" name="fecha" />
+                        <span id="sfecha" class="text-danger"></span>
+                    </div>
                 </div>
 
  		<div class="row mb-3">
@@ -107,12 +112,13 @@
 		 <div class="row justify-content-center">
 			
 					<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-						<button type="button" class="btn btn-primary w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalapartamentos" name="consultar">PAGADO<span class="fa fa-plus-circle ml-2"></span></button>
+						<button type="button" class="btn btn-primary w-100 small-width" id="pagado" data-toggle="modal" data-target="#modalapartamentos" name="pagado">PAGADO<span class="fa fa-plus-circle ml-2"></span></button>
 					</div>
 			
 					<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-						<button type="button" class="btn btn-danger w-100 small-width" id="modificar" name="modificar" >CANCELAR<span class="fa fa-trash ml-2"></span></button>
+						<button type="button" class="btn btn-danger w-100 small-width" id="cancelar" name="cancelar" >CANCELAR<span class="fa fa-trash ml-2"></span></button>
 					</div>
+				
 				
 			</div>
             </div>
