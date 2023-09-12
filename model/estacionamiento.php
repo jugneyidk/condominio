@@ -4,7 +4,7 @@ require_once('model/datos.php');
 
 /**
  * 
-
+CONTROL para permitir apartamento con múltiples estacionamientos
 num_estacionamiento
 id_apartamento
 costo
@@ -122,7 +122,7 @@ class estac extends datos
 		$r = array();
 
 		if (!$this->existe()) {
-			if(true || !$this->existe(2)){// si elimino el true validara que un apartamento no pueda tener mas de un estacionamiento
+			if(true || !$this->existe(2)){//CONTROL si elimino el true validara que un apartamento no pueda tener mas de un estacionamiento
 
 				try {
 					$consulta = $this->con->prepare("INSERT INTO `estacionamiento`(`num_estacionamiento`, `id_apartamento`, `costo`) VALUES (?,?,?)");
@@ -156,7 +156,7 @@ class estac extends datos
 		$r = array();
 
 		if ($this->existe(3)) {
-			if(true || !$this->existe(2)){// si elimino el true validara que un apartamento no pueda tener mas de un estacionamiento
+			if(!$this->existe(2)){//CONTROL si elimino el true validara que un apartamento no pueda tener mas de un estacionamiento
 
 				try {
 						$consulta = $this->con->prepare("UPDATE `estacionamiento` SET `num_estacionamiento`= ?,`id_apartamento`= ?,`costo`= ? WHERE `num_estacionamiento` = ?");

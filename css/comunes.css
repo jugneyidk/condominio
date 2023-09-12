@@ -4,3 +4,6 @@ body {
 footer {
   top: 100%;
 }
+table.rows-pointer tbody tr{
+	cursor: pointer !important;
+}

@@ -82,18 +82,26 @@ function enviaAjax(datos, func_success,func_beforesend="modal") {
 				if(typeof func_success === "function"){
 					func_success(respuesta);
 				}
+				else throw "No hay una función definida";
 
 			} catch (e) {
-				alert("Error en JSON " + e.name + " !!!");
+				alert("Error en " + e.name + " !!!");
 				console.error(e);
 				console.log(respuesta);
 			}
 		},
 		error: function (request, status, err) {
+			console.log("Hola");
 			modalcarga(false);
 			if (status == "timeout") {
-				muestraMensaje("Servidor ocupado", "Intente de nuevo", "error");
-			} else {
+				muestraMensaje("Servidor Ocupado", "Intente de nuevo", "error");
+
+			} 
+			else if(request.readyState===0){
+				muestraMensaje("No Hay Conexión Con El Servidor", "Intente de nuevo", "error");
+			}
+			else {
+				console.log("Hola3");
 				muestraMensaje("Error", request + status + err, "error");
 			}
 		},
@@ -148,18 +156,6 @@ function vaciarSpanError() {
   	});
 }
 
-function borrar() {
-	$("form input").val("");
-	$("form select").val("");
-	limpiarvalidacion();
-}
-
-function limpiarvalidacion() {
-	$("form input").removeClass("is-valid");
-	$("form input").removeClass("is-invalid");
-	$("form select").removeClass("is-valid");
-	$("form select").removeClass("is-invalid");
-}
 
 function removeSpace(cadena)
 {
@@ -177,3 +173,64 @@ function removeSpace(cadena)
 		return undefined;
 	}
 };
+
+function rowsEvent(tbody,func,control=true){//
+	if(typeof tbody==='string')
+	{
+		tbody=document.getElementById(tbody);
+	}
+
+	
+	if(typeof func==='function')
+	{
+		tbody.addEventListener('click',function(e){
+			var elem=e.target;
+			count=0;
+			if(control){
+				while(elem.tagName!='TR'&&elem.tagName!='TBODY'&& elem!=this){
+					
+					count++;
+					if(count>100)
+					{
+						console.error('se paso el while');
+						return false;
+						break
+					}
+					elem=elem.parentNode;
+				}
+				if(elem.tagName=='TBODY' || elem == this){
+					return false;
+				}
+				if(!elem.getElementsByTagName('td')[0].classList.contains("dataTables_empty")){
+					func(elem,e.target);
+				}
+			}
+			else{
+				func(elem);
+			}
+		},true);
+	}
+	else{
+		console.error('el segundo argumento debe ser una función que se ejecutara al hacer click en el table');
+	}
+	
+}
+
+// function cambiarbotones(parametro) {
+//   $("#modificar").prop("disabled", parametro);
+//   $("#eliminar").prop("disabled", parametro);
+//   $("#incluir").prop("disabled", !parametro);
+// }
+
+// function borrar(func) {
+// 	$("form input").val("");
+// 	$("form select").val("");
+// 	limpiarvalidacion();
+// }
+
+// function limpiarvalidacion() {
+// 	$("form input").removeClass("is-valid");
+// 	$("form input").removeClass("is-invalid");
+// 	$("form select").removeClass("is-valid");
+// 	$("form select").removeClass("is-invalid");
+// }

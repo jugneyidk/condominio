@@ -95,17 +95,12 @@
 					</button>
 				</div>
 				<div class="table-responsive">
-					<table class="table table-striped table-hover" id="tablaservicios">
+					<table class="table table-striped table-hover rows-pointer" id="tablaservicios">
 						<thead>
 							<tr>
-								<th class="d-none"></th>
 								<th>ID</th>
-								<th class="d-none"></th>
-								<th>Tipo ident.</th>
-								<th class="d-none"></th>
-								<th>Ident.</th>
-								<th class="d-none"></th>
-								<th>Descripcion</th>
+								<th>Servicio</th>
+								<th>Descripción</th>
 								<th>Monto</th>
 								<th>Fecha</th>
 								<th>Referencia</th>
@@ -127,13 +122,17 @@
   	<script src="js/servicio.js"></script>
   	<script>
   		$(document).ready(function(){
-  			
   			borrar();
+  			loadListados();
 			eventoKeypress(document.getElementById('descripcion'),/^[0-9a-zA-Z\s]*$/);
 			eventoKeypress(document.getElementById('monto'),/^[0-9]*$/);
 			eventoKeypress(document.getElementById('referencia'),/^[0-9]*$/);
-			eventoKeyup(document.getElementById('monto'), montoExp, "Ingrese un monto Valido", undefined, function(elem){
+			eventoKeyup(document.getElementById('monto'), montoExp, "Ingrese un monto valido", undefined, function(elem){
 				elem.value = sepMiles(elem.value);
+			});
+			$("#monto").on("change",function(e){
+				$(this).val( sepMiles($(this).val()) );
+				validarKeyUp(montoExp,$(this),"ingrese un monto valido");
 			});
 			eventoKeyup(document.getElementById('descripcion'), /^[0-9a-zA-Z\s]{0,255}$/, "ingrese una descripción valida solo se permiten letras y números");
 			document.getElementById('descripcion').maxLength = 255;
@@ -144,23 +143,199 @@
 				validarKeyUp(fechaExp, $("#fecha"), "Ingrese una fecha valida");
 			});
 
+			$("#limpiar").on("click",function(){
+				borrar();
+				cambiarbotones();
+			});
+
 			$("#incluir").on("click", function () {
-				if (validarEnvioServicios()) {
+				if (validarPagoServicios()) {
 					$("#accion").val("incluir");
+					$("#descripcion").val( removeSpace($("#descripcion").val()) );
+					
 					var datos = new FormData($("#f")[0]);
 					enviaAjax(datos,function(respuesta){
 
-						console.log(respuesta);
 						var lee = JSON.parse(respuesta);
-						muestraMensaje(lee.mensaje, "", "success");
-						borrar();
+						if(lee.resultado == "incluir"){
+							borrar();
+							loadListados();
+							muestraMensaje(lee.mensaje, "", "success");
+
+						}
+						else if(lee.resultado == "error_no_borrar"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							loadListados();
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							loadListados();
+							borrar();
+						}
 
 					});
 				}
 			});
-  		});
 
-  		function validarEnvioServicios(){
+			$("#modificar").on("click", function () {
+				if (validarPagoServicios()) {
+					if($("#id").val()==''){
+						muestraMensaje("ERROR","Debe seleccionar un pago de servicio","error");
+						return false;
+					}
+					Swal.fire({
+						title: "¿Estás Seguro?",
+						text: "¿Está seguro que desea modificar el pago de Servicios?",
+						showCancelButton: true,
+						confirmButtonText: "Modificar",
+						confirmButtonColor: "#007bff",
+						cancelButtonText: `Cancelar`,
+						icon: "warning",
+					}).then((result) => {
+						if (result.isConfirmed) {
+							$("#accion").val("modificar");
+							var datos = new FormData($("#f")[0]);
+							enviaAjax(datos,function(respuesta){
+								var lee = JSON.parse(respuesta);
+								if(lee.resultado == "modificar"){
+									borrar();
+									loadListados();
+									muestraMensaje(lee.mensaje, "", "success");
+
+								}
+								else if(lee.resultado == "error_no_borrar"){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+									loadListados();
+								}
+								else{
+									muestraMensaje("ERROR", lee.mensaje,"error");
+									loadListados();
+									borrar();
+								}
+							});
+						}
+					});
+				}
+			});
+			$("#eliminar").on("click", function () {
+				Swal.fire({
+					title: "¿Estás Seguro?",
+					text: "¿Está seguro que desea eliminar el pago de Servicios?",
+					showCancelButton: true,
+					confirmButtonText: "Eliminar",
+					confirmButtonColor: "#dc3545",
+					cancelButtonText: `Cancelar`,
+					icon: "warning",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$("#accion").val("eliminar");
+						var datos = new FormData($("#f")[0]);
+						enviaAjax(datos,function(respuesta){
+							var lee = JSON.parse(respuesta);
+							if(lee.resultado == "eliminar"){
+								borrar();
+								loadListados();
+								muestraMensaje(lee.mensaje, "", "success");
+
+							}
+							else{
+								muestraMensaje("ERROR", lee.mensaje,"error");
+								loadListados();
+								borrar();
+							}
+						});
+					}
+				});
+			});
+
+
+
+			rowsEvent("listadoservicios",function(e){//colocar en los campos
+				$("#id").val($(e).find("td").eq(0).text());
+				$("#service").val($(e).find("td").eq(1).text());
+				$("#descripcion").val($(e).find("td").eq(3).text());
+
+				$("#monto").val($(e).find("td").eq(4).text());
+				$("#fecha").val($(e).find("td").eq(5).text());
+				$("#referencia").val($(e).find("td").eq(6).text());
+				$("#modalservicios").modal("hide");
+				cambiarbotones(false);
+			});
+
+
+
+		});
+
+  		function loadListados(){
+  			lista_select_servicios();
+  			lista_pagos_servicios();
+  		}
+  		function lista_pagos_servicios(){
+  			var datos = new FormData();
+  			datos.append("accion", "listadoPagosservicios");
+
+  			enviaAjax(datos,function(respuesta){
+  				var lee = JSON.parse(respuesta);
+  				console.log(lee);
+  				if (lee.resultado == "listadoPagosservicios") {
+  					if ($.fn.DataTable.isDataTable("#tablaservicios")) {
+  						$("#tablaservicios").DataTable().destroy();
+  					}
+  					$("#listadoservicios").html(lee.mensaje);
+  					if (!$.fn.DataTable.isDataTable("#tablaservicios")) {
+  						$("#tablaservicios").DataTable({
+  							language: {
+  								lengthMenu: "Mostrar _MENU_ por página",
+  								zeroRecords: "No se encontraron registros de pagos",
+  								info: "Mostrando página _PAGE_ de _PAGES_",
+  								infoEmpty: "No hay registros disponibles",
+  								infoFiltered: "(filtrado de _MAX_ registros totales)",
+  								search: "Buscar:",
+  								paginate: {
+  									first: "Primera",
+  									last: "Última",
+  									next: "Siguiente",
+  									previous: "Anterior",
+  								},
+  							},
+  							autoWidth: false,
+  							order: [[4, "desc"]],
+  							columns: [
+  							{ data: "col1" },
+  							{ data: "col2" },
+  							{ data: "col3" },
+  							{ data: "col4" },
+  							{ data: "col5" },
+  							{ data: "col6" },
+  							{ data: "col7" }
+  							]
+  						});
+  					}
+  				}
+  				else{
+					muestraMensaje("ERROR", lee.mensaje,"error");
+  				}
+
+  			});
+  		}
+
+		function lista_select_servicios(){
+  			var datos = new FormData();
+			datos.append('accion',"listaSelectServicios");
+
+  			enviaAjax(datos,function(respuesta){
+
+  				var lee = JSON.parse(respuesta);
+  				if(lee.resultado == "lista_select_servicios"){
+  					$("#service").html(lee.mensaje);
+  				}
+  				else{
+					muestraMensaje("ERROR", lee.mensaje,"error");
+  				}
+  			});
+		}
+
+		function validarPagoServicios(){
   			
 
 			if(!validarKeyUp(montoExp,$("#monto"),"Ingrese un monto Valido")){// valido numero de estacionamiento
@@ -189,7 +364,26 @@
 			return true;
 			
 
-  		}
-  	</script>
+		}
+
+
+		function borrar(func) {
+			$("form input").val("");
+			$("form select").val("");
+			limpiarvalidacion();
+		}
+
+		function limpiarvalidacion() {
+			$("form input").removeClass("is-valid");
+			$("form input").removeClass("is-invalid");
+			$("form select").removeClass("is-valid");
+			$("form select").removeClass("is-invalid");
+		}
+		function cambiarbotones(parametro=true) {
+		  $("#modificar").prop("disabled", parametro);
+		  $("#eliminar").prop("disabled", parametro);
+		  $("#incluir").prop("disabled", !parametro);
+		}
+	</script>
 	<?php require_once('comunes/foot.php'); ?>
 </body>
