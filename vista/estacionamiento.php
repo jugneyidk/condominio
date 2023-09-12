@@ -26,7 +26,7 @@
 
           <div class="col-md-3 col-6">
             <label for="estacCosto">Costo</label>
-              <input class="form-control text-right" placeholder="0,00" type="text" id="estacCosto" name="estacCosto" data-span="sestacCosto"/>
+              <input autocomplete="off" class="form-control text-right" placeholder="0,00" type="text" id="estacCosto" name="estacCosto" data-span="sestacCosto"/>
             <span id="sestacCosto" class="text-danger"></span>
           </div>
 

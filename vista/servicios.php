@@ -20,7 +20,7 @@
 						<div class="row mb-3">
 							<div class="col-6 col-md-5">
 								<label for="servicio">Servicio</label>
-								<select class="form-control" id="service" name="service">
+								<select class="form-control" id="service" name="service" data-span="sservicio">
 									<option value='' disabled selected>-</option>
 									<option value='corpoelec'>Corpoelec</option>
 									<option value='otro'>Otro</option>
@@ -29,7 +29,7 @@
 							</div>
 							<div class="col-12 col-md-5">
 								<label for="descripcion">Descripción:</label>
-								<input autocomplete="off" class="form-control" type="text" id="descripcion" name="descripcion" />
+								<input autocomplete="off" class="form-control" type="text" id="descripcion" name="descripcion" data-span="sdescripcion"/>
 								<span id="sdescripcion" class="text-danger"></span>
 							</div>
 
@@ -38,37 +38,125 @@
 						<div class="row mb-3">
 							<div class="col-12 col-md-3 mt-3 mt-md-0">
 								<label for="monto">Monto:</label>
-								<input autocomplete="off" class="form-control" type="text" id="monto" name="monto" />
+								<input autocomplete="off" class="form-control text-right" type="text" id="monto" name="monto" data-span="smonto"/>
 								<span id="smonto" class="text-danger"></span>
 							</div>
 							<div class="col-10 col-md-4 mt-3 mt-md-0">
 								<label for="referencia">Referencia:</label>
-								<input autocomplete="off" class="form-control" type="text" id="referencia" name="referencia" />
+								<input autocomplete="off" class="form-control" type="text" id="referencia" name="referencia" data-span="sreferencia"/>
 								<span id="sreferencia" class="text-danger"></span>
 							</div>
 							<div class="col-6 col-md-3">
 								<label for="descripcion">Fecha:</label>
-								<input autocomplete="off" class="form-control" type="date" id="fecha" name="fecha" />
+								<input autocomplete="off" class="form-control" type="date" id="fecha" name="fecha" data-span="sfecha"/>
 								<span id="sfecha" class="text-danger"></span>
 							</div>
 						</div>
 					</div>
 					<hr>
 					<div class="row justify-content-center">
-
-						<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-							<button type="button" class="btn btn-primary w-100 small-width" id="pagado" data-toggle="modal" data-target="#modalapartamentos" name="consultar">PAGADO<span class="fa fa-plus-circle ml-2"></span></button>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-							<button type="button" class="btn btn-danger w-100 small-width" id="cancelar" name="cancelar" >CANCELAR<span class="fa fa-trash ml-2"></span></button>
-						</div>
-
+						<?php if ($permisos[2] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-primary w-100 small-width" id="incluir" name="incluir">INCLUIR<span class="fa fa-plus-circle ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[3] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalEstacionamiento" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[4] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-warning w-100 small-width" id="modificar" name="modificar" disabled>MODIFICAR<span class="fa fa-pencil-square-o ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[5] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-danger w-100 small-width" id="eliminar" name="eliminar" disabled>ELIMINAR<span class="fa fa-trash ml-2"></span></button>
+							</div>
+						<?php endif; ?>
 					</div>
 				</div>
 
 		</form>
 	</div>
 	</div>
+	<script src="js/carga.js"></script>
+	<script src="js/comun_x.js"></script>
+  	<!-- <script src="js/estacionamiento.js"></script> -->
+  	<script>
+  		$(document).ready(function(){
+  			
+  			borrar();
+			eventoKeypress(document.getElementById('descripcion'),/^[0-9a-zA-Z\s]*$/);
+			eventoKeypress(document.getElementById('monto'),/^[0-9]*$/);
+			eventoKeypress(document.getElementById('referencia'),/^[0-9]*$/);
+			eventoKeyup(document.getElementById('monto'), montoExp, "Ingrese un monto Valido", undefined, function(elem){
+				elem.value = sepMiles(elem.value);
+			});
+			eventoKeyup(document.getElementById('descripcion'), /^[0-9a-zA-Z\s]{0,255}$/, "ingrese una descripción valida solo se permiten letras y números");
+			document.getElementById('descripcion').maxLength = 255;
+			eventoKeyup(document.getElementById('referencia'), /^[0-9]{0,30}$/, "Ingrese una referencia valida, solo se permiten números");
+			document.getElementById('referencia').maxLength = 30;
+			eventoKeyup(document.getElementById('fecha'), fechaExp, "Ingrese una fecha valida",undefined,function(elem){console.log(elem.value);});
+			$("#fecha").on("change",function(e){
+				validarKeyUp(fechaExp, $("#fecha"), "Ingrese una fecha valida");
+			});
+
+			$("#incluir").on("click", function () {
+				if (validarEnvioServicios()) {
+					$("#accion").val("incluir");
+					var datos = new FormData($("#f")[0]);
+					enviaAjax(datos,function(respuesta){
+
+						console.log(respuesta);
+						var lee = JSON.parse(respuesta);
+						muestraMensaje(lee.mensaje, "", "success");
+						borrar();
+
+					});
+				}
+			});
+  		});
+
+  		function validarEnvioServicios(){
+  			
+
+			if(!validarKeyUp(montoExp,$("#monto"),"Ingrese un monto Valido")){// valido numero de estacionamiento
+				muestraMensaje("ERROR", "Ingrese un monto Valido","error");
+				return false;
+			}
+			if(!validarKeyUp(/^[0-9a-zA-Z\s]{0,255}$/,$("#descripcion"),"ingrese una descripción valida solo se permiten letras y números")){
+				muestraMensaje("ERROR", "ingrese una descripción valida solo se permiten letras y números","error");
+				return false;   
+			}
+			if(!validarKeyUp(/^[0-9]{1,30}$/,$("#referencia"),"Ingrese una referencia valida, solo se permiten números")){
+				muestraMensaje("ERROR", "Ingrese una referencia valida, solo se permiten números", "error");
+				return false;
+
+			}if(!validarKeyUp(fechaExp,$("#fecha"),"Ingrese una fecha valida")){
+				muestraMensaje("ERROR", "Ingrese una fecha valida", "error");
+				return false;
+			}
+			if($("#service").val()==""){
+				muestraMensaje("ERROR", "Seleccione un servicio", "error");
+				return false;
+			}
+
+
+			vaciarSpanError();
+			return true;
+			
+
+  		}
+
+
+
+
+
+
+
+
+  	</script>
 	<?php require_once('comunes/foot.php'); ?>
 </body>

@@ -273,7 +273,7 @@ function validarKeyUp(er, etiqueta, mensaje, etiquetamensaje) {
 }
 
 
-function enviaAjax(datos,func) {
+function enviaAjax(datos) {
   $.ajax({
     async: true,
     url: "",

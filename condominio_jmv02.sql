@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-09-2023 a las 03:09:15
+-- Tiempo de generación: 12-09-2023 a las 07:27:07
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -272,7 +272,8 @@ INSERT INTO `modulos` (`id`, `nombre`) VALUES
 (5, 'pagos'),
 (6, 'tipoapto'),
 (7, 'usuarios-administracion'),
-(8, 'estacionamiento');
+(8, 'estacionamiento'),
+(9, 'servicios');
 
 -- --------------------------------------------------------
 
@@ -383,7 +384,25 @@ INSERT INTO `roles_modulos` (`id_rol`, `id_modulo`, `crear`, `consultar`, `modif
 (1, 7, 0, 0, 0, 0),
 (2, 7, 1, 1, 1, 1),
 (1, 8, 0, 1, 1, 0),
-(2, 8, 1, 1, 1, 1);
+(2, 8, 1, 1, 1, 1),
+(2, 9, 1, 1, 1, 1),
+(1, 9, 1, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `servicios`
+--
+
+CREATE TABLE `servicios` (
+  `id_servicios` int(11) NOT NULL,
+  `servicio` varchar(60) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `fecha` date NOT NULL,
+  `monto` double DEFAULT '0',
+  `referencia` int(30) NOT NULL,
+  `usuario_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -506,6 +525,13 @@ ALTER TABLE `roles_modulos`
   ADD KEY `id_modulo` (`id_modulo`);
 
 --
+-- Indices de la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  ADD PRIMARY KEY (`id_servicios`),
+  ADD KEY `usuario_id` (`usuario_id`);
+
+--
 -- Indices de la tabla `tipo_apartamento`
 --
 ALTER TABLE `tipo_apartamento`
@@ -556,7 +582,7 @@ ALTER TABLE `habitantes`
 -- AUTO_INCREMENT de la tabla `modulos`
 --
 ALTER TABLE `modulos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
@@ -569,6 +595,12 @@ ALTER TABLE `pago`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  MODIFY `id_servicios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_apartamento`
@@ -620,6 +652,12 @@ ALTER TABLE `pago`
 ALTER TABLE `roles_modulos`
   ADD CONSTRAINT `roles_modulos_ibfk_1` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`),
   ADD CONSTRAINT `roles_modulos_ibfk_2` FOREIGN KEY (`id_modulo`) REFERENCES `modulos` (`id`);
+
+--
+-- Filtros para la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  ADD CONSTRAINT `servicios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `datos_usuarios` (`id`);
 
 --
 -- Filtros para la tabla `usuarios_roles`
