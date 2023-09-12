@@ -52,7 +52,6 @@ if (isset($_SESSION['rol'])) {
 								<a class="dropdown-item" href="?p=deudas">Deudas</a>
 								<a class="dropdown-item" href="?p=pagos">Pagos</a>
 								<a class="dropdown-item" href="?p=generar-reporte">Generar Reporte</a>
-								<a class="dropdown-item" href="?p=estadistica">Estadística</a>
 
 							</div>
 						</li>
