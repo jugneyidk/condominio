@@ -1,4 +1,7 @@
 ----USUARIOS-----
+---superusuario----
+usuario:00000000
+contraseña:JoseMariaVargas
 ---admin--------
 usuario:28609560
 contraseña:Hola123
