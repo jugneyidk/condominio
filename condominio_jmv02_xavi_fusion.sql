@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-09-2023 a las 11:07:43
--- Versión del servidor: 10.4.21-MariaDB
--- Versión de PHP: 8.0.10
+-- Tiempo de generación: 12-09-2023 a las 23:07:23
+-- Versión del servidor: 10.1.38-MariaDB
+-- Versión de PHP: 7.3.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -20,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `condominio_jmv02`
 --
+CREATE DATABASE IF NOT EXISTS `condominio_jmv02` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `condominio_jmv02`;
 
 -- --------------------------------------------------------
 
@@ -261,7 +264,8 @@ CREATE TABLE `estacionamiento` (
 --
 
 INSERT INTO `estacionamiento` (`num_estacionamiento`, `id_apartamento`, `costo`) VALUES
-(1, 7, 2000);
+(1, 1, 2000),
+(2, NULL, 250);
 
 -- --------------------------------------------------------
 
@@ -287,8 +291,7 @@ CREATE TABLE `habitantes` (
 INSERT INTO `habitantes` (`id`, `cedula_rif`, `tipo_identificacion`, `nombres`, `apellidos`, `telefono`, `correo`, `domicilio_fiscal`) VALUES
 (1, '28609560', 1, 'Jugney', 'Vargas', '0424-5681343', 'jugneyv@gmail.com', 'br union'),
 (2, '26846371', 0, 'Diego Andres', 'Salazar Gonzalez', '0424-4034516', 'diego14asf@gmail.com', 'Calle 28 entre 19 y 20'),
-(3, '10846157', 0, 'Juan', 'Jimenez', '0426-5551234', 'juanjimenez@gmail.com', 'Conjunto residencial jose maria vargas'),
-(9, '286666', 1, 'gcgc', 'cfgcfg', 'cf51515', 'cfgfcg', 'ddfdfdf');
+(3, '10846157', 0, 'Juan', 'Jimenez', '0426-5551234', 'juanjimenez@gmail.com', 'Conjunto residencial jose maria vargas');
 
 -- --------------------------------------------------------
 
@@ -640,7 +643,7 @@ ALTER TABLE `roles`
 -- Indices de la tabla `roles_modulos`
 --
 ALTER TABLE `roles_modulos`
-ADD PRIMARY KEY (`id_rol`,`id_modulo`),
+  ADD PRIMARY KEY (`id_rol`,`id_modulo`),
   ADD KEY `id_rol` (`id_rol`),
   ADD KEY `id_modulo` (`id_modulo`);
 
@@ -679,7 +682,7 @@ ALTER TABLE `apartamento`
 -- AUTO_INCREMENT de la tabla `avisos`
 --
 ALTER TABLE `avisos`
-  MODIFY `id_aviso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_aviso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `datos_usuarios`
@@ -709,7 +712,7 @@ ALTER TABLE `empleado`
 -- AUTO_INCREMENT de la tabla `habitantes`
 --
 ALTER TABLE `habitantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `lista_servicios`
@@ -721,7 +724,7 @@ ALTER TABLE `lista_servicios`
 -- AUTO_INCREMENT de la tabla `modulos`
 --
 ALTER TABLE `modulos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `nomina`

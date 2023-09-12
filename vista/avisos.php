@@ -50,26 +50,26 @@
           </div>
           <hr>
           <div class="row justify-content-center">
-            <?php //if ($permisos[2] == 1): ?>
+            <?php if ($permisos[2] == 1): ?>
               <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
                 <button type="button" class="btn btn-primary w-100 small-width" id="incluir" name="incluir">INCLUIR<span class="fa fa-plus-circle ml-2"></span></button>
               </div>
-            <?php //endif; ?>
-            <?php //if ($permisos[3] == 1) : ?>
+            <?php endif; ?>
+            <?php if ($permisos[3] == 1) : ?>
               <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
                 <button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalAvisos" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
               </div>
-            <?php// endif; ?>
-            <?php //if ($permisos[4] == 1) : ?>
+            <?php endif; ?>
+            <?php if ($permisos[4] == 1) : ?>
               <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
                 <button type="button" class="btn btn-warning w-100 small-width" id="modificar" name="modificar" disabled>MODIFICAR<span class="fa fa-pencil-square-o ml-2"></span></button>
               </div>
-            <?php// endif; ?>
-            <?php// if ($permisos[5] == 1) : ?>
+            <?php endif; ?>
+            <?php if ($permisos[5] == 1) : ?>
               <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
                 <button type="button" class="btn btn-danger w-100 small-width" id="eliminar" name="eliminar" disabled>ELIMINAR<span class="fa fa-trash ml-2"></span></button>
               </div>
-            <?php //endif; ?>
+            <?php endif; ?>
           </div>
         </div>
       </div>
