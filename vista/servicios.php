@@ -17,13 +17,13 @@
 
 			<nav>
 				<div class="nav nav-tabs" id="nav-tab" role="tablist">
-					<a class="nav-item nav-link" id="nav-pagos-servicios-tab" data-toggle="tab" href="#nav-pagos-servicios" role="tab" aria-controls="nav-pagos-servicios" aria-selected="true">Pagos</a>
-					<a class="nav-item nav-link active" id="nav-servicios-tab" data-toggle="tab" href="#nav-servicios" role="tab" aria-controls="nav-servicios" aria-selected="false">Servicios</a>
+					<a class="nav-item nav-link active" id="nav-pagos-servicios-tab" data-toggle="tab" href="#nav-pagos-servicios" role="tab" aria-controls="nav-pagos-servicios" aria-selected="true">Pagos</a>
+					<a class="nav-item nav-link" id="nav-servicios-tab" data-toggle="tab" href="#nav-servicios" role="tab" aria-controls="nav-servicios" aria-selected="false">Servicios</a>
 				</div>
 			</nav>
 			<br>
 			<div class="tab-content" id="nav-tabContent">
-				<div class="tab-pane fade show" id="nav-pagos-servicios" role="tabpanel" aria-labelledby="nav-pagos-servicios-tab">
+				<div class="tab-pane fade show active" id="nav-pagos-servicios" role="tabpanel" aria-labelledby="nav-pagos-servicios-tab">
 					<form method="post" action="" id="f"> 
 						<div class="row">
 							<div class="col">
@@ -94,7 +94,7 @@
 						</div>
 					</form>
 				</div>
-				<div class="tab-pane fade show active" id="nav-servicios" role="tabpanel" aria-labelledby="nav-servicios-tab">
+				<div class="tab-pane fade show" id="nav-servicios" role="tabpanel" aria-labelledby="nav-servicios-tab">
 					<form method="POST" action="" id="f2">
 						<div class="row">
 							<div class="col">

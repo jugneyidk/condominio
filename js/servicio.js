@@ -18,7 +18,7 @@ $(document).ready(function(){
 	document.getElementById('descripcion').maxLength = 255;
 	eventoKeyup(document.getElementById('referencia'), /^[0-9]{0,30}$/, "Ingrese una referencia valida, solo se permiten números");
 	document.getElementById('referencia').maxLength = 30;
-	eventoKeyup(document.getElementById('fecha'), fechaExp, "Ingrese una fecha valida",undefined,function(elem){console.log(elem.value);});
+	eventoKeyup(document.getElementById('fecha'), fechaExp, "Ingrese una fecha valida");
 	$("#fecha").on("change",function(e){
 		validarKeyUp(fechaExp, $("#fecha"), "Ingrese una fecha valida");
 	});
