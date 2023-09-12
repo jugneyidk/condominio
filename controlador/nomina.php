@@ -6,18 +6,17 @@ if (!is_file("model/" . $p . ".php")) {
 }
 require_once("model/" . $p . ".php");
 if (is_file("vista/" . $p . ".php")) {
- // $o = new ();
- // $permisos = $o->chequearpermisos();
+  $o = new nomina();
+  $permisos = $o->chequearpermisos();
   if (!empty($_POST)) {
     $accion = $_POST['accion'];
-   /* if ($accion == '') {
+   if ($accion == '') {
       $respuesta = $o->listadoapartamentos();
       echo json_encode($respuesta);
-    } else if ($accion == '') {
-      $respuesta = $o->listadohabitantes();
-      echo json_encode($respuesta);
-    } else*/  if ($accion == 'incluir') {
-     /* $respuesta = $o->incluir(
+    } else if ($accion == 'incluir') {
+   $respuesta = $o->incluir(
+        $_POST['cedula_rif'], 
+        $_POST['tipo_identificacion'],
         $_POST['nombres'],
         $_POST['apellidos'],
         $_POST['cedula_rif'],
@@ -29,8 +28,8 @@ if (is_file("vista/" . $p . ".php")) {
         $_POST['fecha'],
         $_POST['monto'],
         $_POST['referencia']
-      );*/
-     // echo json_encode($respuesta);
+      );
+     echo json_encode($respuesta);
     } /*else if ($accion == 'modificar') {
       $respuesta = $o->modificar(
         $_POST['nombres'],

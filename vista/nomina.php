@@ -7,7 +7,7 @@
 	<div class="container-lg bg-white p-2 p-sm-4 p-md-5 mb-5">
 		<?php require_once('comunes/cabecera_modulos.php'); ?>
 		<div>
-			<h2 class="text-center h2 text-primary">Pago nomina</h2>
+			<h2 class="text-center h2 text-primary">Pago nomina</h2> 
 			<hr />
 		</div>
 		<form method="post" action="" id="f">
@@ -110,9 +110,11 @@
 		 </div>
   
 		 <div class="row justify-content-center">
-			
 					<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-						<button type="button" class="btn btn-primary w-100 small-width" id="pagado" data-toggle="modal" data-target="#modalapartamentos" name="pagado">PAGADO<span class="fa fa-plus-circle ml-2"></span></button>
+							<button type="button" class="btn btn-primary w-100 small-width" id="incluir" name="incluir">INCLUIR<span class="fa fa-plus-circle ml-2"></span></button>
+						</div>
+					<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+						<button type="button" class="btn btn-primary w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalapartamentos" name="consultar">CONSULTAR<span class="fa fa-plus-circle ml-2"></span></button>
 					</div>
 			
 					<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
@@ -136,7 +138,7 @@
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-light bg-info">
-					<h5 class="modal-title">Listado de Apartamentos</h5>
+					<h5 class="modal-title">Realizados</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -146,15 +148,16 @@
 						<thead>
 							<tr>
 								<th class="d-none"></th>
-								<th>Numero</th>
+								<th>ID</th>
 								<th class="d-none"></th>
-								<th>Propietario</th>
+								<th>Tipo ident.</th>
 								<th class="d-none"></th>
-								<th>Inquilino</th>
+								<th>Ident.</th>
 								<th class="d-none"></th>
-								<th>Tipo</th>
-								<th>Piso</th>
-								<th>Torre</th>
+								<th>Descripcion</th>
+								<th>Monto</th>
+								<th>Fecha</th>
+								<th>Referencia</th>
 							</tr>
 						</thead>
 						<tbody id="listadoapartamentos">
@@ -169,7 +172,8 @@
 		</div>
 	</div>
 
-
+<script src="js/carga.js"></script>
+	
 	<?php require_once('comunes/foot.php'); ?>
 </body>
 
