@@ -76,6 +76,8 @@ if (isset($_SESSION['rol'])) {
 								</div>
 							</li>
 						</div>
+						<a class="nav-link  text-light" href="?p=avisos" id="" data-toggle="">
+								Avisos</a>
 						<div class="collapse navbar-collapse" id="navbarNavDropdown">
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">

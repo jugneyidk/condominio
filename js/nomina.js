@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  //carga_tipos();
+  carga_nomina();
 $("#cedula_rif").on("keypress", function (e) {
     validarKeyPress(/^[0-9\b]*$/, e);
   });
@@ -196,6 +196,11 @@ function validarKeyUp(er, etiqueta, etiquetamensaje, mensaje) {
     return 0;
   }
 }
+function carga_nomina() {
+  var datos = new FormData();
+  datos.append("accion", "listadonomina");
+  enviaAjax(datos);
+}
 function cambiarTipoIdent(val) {
   switch (val) {
     case "0":
@@ -336,11 +341,11 @@ function muestraMensaje(titulo, mensaje, icono) {
     cancelButtonText: "Cerrar",
   });
 }
-function carga_tipos() {
+/*function carga_tipos() {
   var datos = new FormData();
   datos.append("accion", "listado_tipos");
   enviaAjax(datos);
-}
+}*/
 function cambiarbotones(parametro) {
   $("#modificar").prop("disabled", parametro);
   $("#eliminar").prop("disabled", parametro);
@@ -363,14 +368,16 @@ function enviaAjax(datos) {
       //si resulto exitosa la transmision
       try {
         var lee = JSON.parse(respuesta);
-         if (
+        if (lee.resultado == "listado_nomina") {
+          $("#listadonomina").html(lee.mensaje);
+        } else if (
           lee.resultado == "incluir" ||
           lee.resultado == "modificar" ||
           lee.resultado == "eliminar"
         ) {
           muestraMensaje(lee.mensaje, "", "success");
           limpia();
-          carga_tipos();
+          carga_nomina();
           cambiarbotones(true);
         } else if (lee.resultado == "error") {
           muestraMensaje(lee.mensaje, "", "error");

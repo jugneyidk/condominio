@@ -11,7 +11,7 @@
 			<hr />
 		</div>
 
-		<form method="post" action="" id="f">
+		<form method="post" action="" id="f"> 
 			<div class="row">
 				<div class="col">
 					<input autocomplete="off" type="text" class="form-control" name="accion" id="accion" style="display: none;">

@@ -25,7 +25,7 @@ class servicio extends datos
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
-	}
+	} 
 
 	PUBLIC function incluir()
 	{
@@ -81,7 +81,53 @@ class servicio extends datos
 		*/
 		
 	}
-
+PUBLIC function listadoservicios() 
+	{
+		$co = $this->conecta();
+		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$r = array();
+		try {
+			$resultado = $co->query("Select servicio, descripcion, fecha, monto, referencia, usuario_id
+			from 
+			servicios ORDER BY id_nom DESC");
+			$respuesta = '';
+			if ($resultado) {
+				foreach ($resultado as $r) {
+					$respuesta = $respuesta . "<tr style='cursor:pointer' onclick='colocatipo(this);'>";
+					$respuesta = $respuesta . "<td style='display:none'>";
+					$respuesta = $respuesta . $r[0];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[1];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[2];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[3];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[4];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[5];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[6];
+					$respuesta = $respuesta . "</td>";
+					
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "</tr>";
+				}
+			}
+			$r['resultado'] = 'listado_servicios';
+			$r['mensaje'] =  $respuesta;
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		return $r;
+	}
 	PUBLIC function get_servicio(){
 		return $this->servicio;
 	}

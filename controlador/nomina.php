@@ -16,7 +16,6 @@ if (is_file("vista/" . $p . ".php")) {
         $_POST['tipo_identificacion'],
         $_POST['nombres'],
         $_POST['apellidos'],
-        $_POST['cedula_rif'],
         $_POST['domicilio_fiscal'],
         $_POST['telefono'],
         $_POST['correo'],
@@ -45,9 +44,9 @@ if (is_file("vista/" . $p . ".php")) {
     } else*/ if ($accion == 'eliminar') {
      // $respuesta = $o->eliminar($_POST['id']);
      // echo json_encode($respuesta);
-    } else if ($accion == 'listado') {
-      //$respuesta = $o->listadotipos();
-     // echo json_encode($respuesta);
+    } else if ($accion == 'listadonomina') {
+      $respuesta = $o->listadonomina();
+     echo json_encode($respuesta);
     }
     exit;
   }

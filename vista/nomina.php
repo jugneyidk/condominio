@@ -114,7 +114,7 @@
 							<button type="button" class="btn btn-primary w-100 small-width" id="incluir" name="incluir">INCLUIR<span class="fa fa-plus-circle ml-2"></span></button>
 						</div>
 					<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-						<button type="button" class="btn btn-primary w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalapartamentos" name="consultar">CONSULTAR<span class="fa fa-plus-circle ml-2"></span></button>
+						<button type="button" class="btn btn-primary w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalnomina" name="consultar">CONSULTAR<span class="fa fa-plus-circle ml-2"></span></button>
 					</div>
 			
 					<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
@@ -134,7 +134,7 @@
 
 	</div>
 	<!-- modal apartamentos-->
-	<div class="modal fade" tabindex="-1" role="dialog" id="modalapartamentos">
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalnomina">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-light bg-info">
@@ -144,7 +144,7 @@
 					</button>
 				</div>
 				<div class="table-responsive">
-					<table class="table table-striped table-hover" id="tablaapartamentos">
+					<table class="table table-striped table-hover" id="tablanomina">
 						<thead>
 							<tr>
 								<th class="d-none"></th>
@@ -160,7 +160,7 @@
 								<th>Referencia</th>
 							</tr>
 						</thead>
-						<tbody id="listadoapartamentos">
+						<tbody id="listadonomina">
 
 						</tbody>
 					</table>

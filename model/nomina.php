@@ -15,38 +15,33 @@ class nomina extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	PUBLIC function incluir($cedula_rif, $tipo_identificacion, $nombres,$apellidos,$domicilio_fiscal,$telefono,$correo,$descripcion,$metodo,$fecha,$monto,$referencia)
+function incluir($cedula_rif, $tipo_identificacion, $nombres,$apellidos,$domicilio_fiscal,$telefono,$correo,$descripcion,$metodo,$fecha,$monto,$referencia)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		if (!$this->existe(0,$cedula_rif,2)) {
+	
 			try {
-				$guarda = $co->query("insert into nomina(cedula_rif,tipo_identificacion,nombres,apellidos,domicilio,telefono,correo,descripcion,metodo,fecha,monto,referencia) 
-			   values ('$cedula_rif', '$tipo_identificacion',.'$nombres','$apellidos','$domicilio_fiscal','$telefono','$correo','$descripcion','$metodo','$fecha','$monto','$referencia')");
+				$guarda = $co->query("insert into nomina(id_nom,cedula_rif,tipo_identificacion,nombres,apellidos,domicilio,telefono,correo,descripcion,metodo,fecha,monto,referencia) 
+			   values('NULL','$cedula_rif', '$tipo_identificacion', '$nombres','$apellidos','$domicilio_fiscal','$telefono','$correo','$descripcion','$metodo','$fecha','$monto','$referencia')");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Registro Incluido";
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
 			}			
-		} else {
-			$r['resultado'] = 'error';
-			$r['mensaje'] =  "Algo ha salido mal:("; 
-		}
+		
 		return $r;
 	}
-	PUBLIC function listadotipos() 
+	PUBLIC function listadonomina() 
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado = $co->query("Select id_tipo_apartamento, 
-			descripcion,
-			alicuota 
+			$resultado = $co->query("Select id_nom,cedula_rif,tipo_identificacion,nombres,apellidos,domicilio,telefono,correo,descripcion,metodo,fecha,monto,referencia
 			from 
-			tipo_apartamento ORDER BY id_tipo_apartamento DESC");
+			nomina ORDER BY id_nom DESC");
 			$respuesta = '';
 			if ($resultado) {
 				foreach ($resultado as $r) {
@@ -60,10 +55,37 @@ class nomina extends datos
 					$respuesta = $respuesta . "<td class='align-middle'>";
 					$respuesta = $respuesta . $r[2];
 					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[3];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[4];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[5];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[6];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[7];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[8];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[9];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[10];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td class='align-middle'>";
+					$respuesta = $respuesta . $r[11];
+					$respuesta = $respuesta . "</td>";
 					$respuesta = $respuesta . "</tr>";
 				}
 			}
-			$r['resultado'] = 'listado_tipos';
+			$r['resultado'] = 'listado_nomina';
 			$r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
@@ -71,7 +93,7 @@ class nomina extends datos
 		}
 		return $r;
 	}
-/*
+
 	PUBLIC function modificar($id_tipo_apartamento, $descripcion, $alicuota)
 	{
 		$co = $this->conecta();
@@ -120,6 +142,6 @@ class nomina extends datos
 			$r['mensaje'] =  "Tipo de apartamento no encontrado";
 		}
 		return $r;
-	}*/
+	}
 	
 }

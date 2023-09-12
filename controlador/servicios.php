@@ -21,7 +21,7 @@ if (is_file("vista/" . $p . ".php")) {
         $o->set_descripcion($_POST['descripcion']);
         $o->set_fecha($_POST['fecha']);
         $o->set_monto($_POST['monto']);
-        $o->set_referencia($_POST['referencia']);
+        $o->set_referencia($_POST['referencia']); 
 
 
       $respuesta = $o->incluir();
@@ -39,9 +39,9 @@ if (is_file("vista/" . $p . ".php")) {
     } else*/ if ($accion == 'eliminar') {
      // $respuesta = $o->eliminar($_POST['id']);
      // echo json_encode($respuesta);
-    } else if ($accion == 'listado') {
-      //$respuesta = $o->listadotipos();
-     // echo json_encode($respuesta);
+    } else if ($accion == 'listadoservicios') {
+      $respuesta = $o->listadoservicios();
+     echo json_encode($respuesta);
     }
     exit;
   }
