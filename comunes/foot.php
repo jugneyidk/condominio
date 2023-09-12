@@ -15,6 +15,7 @@
                     <li><a href="?p=habitantes" class="text-muted">Habitantes</a></li>
                     <li><a href="?p=tipoapto" class="text-muted">Tipos de Apartamento</a></li>
                     <li><a href="?p=apartamentos" class="text-muted">Apartamentos</a></li>
+                    <li><a href="?p=estacionamiento" class="text-muted">Estacionamiento</a></li>
                 </ul>
             </div>
             <div class="col-md-1">
