@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-09-2023 a las 07:47:11
+-- Tiempo de generación: 12-09-2023 a las 17:54:18
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.10
 
@@ -220,6 +220,13 @@ CREATE TABLE `estacionamiento` (
   `costo` double DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `estacionamiento`
+--
+
+INSERT INTO `estacionamiento` (`num_estacionamiento`, `id_apartamento`, `costo`) VALUES
+(1, 4, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -280,7 +287,7 @@ INSERT INTO `modulos` (`id`, `nombre`) VALUES
 CREATE TABLE `nomina` (
   `id_nom` int(11) NOT NULL,
   `cedula_rif` varchar(10) NOT NULL,
-  `tipo_identificacion` varchar(15) NOT NULL,
+  `tipo_identificacion` int(15) NOT NULL,
   `nombres` varchar(15) NOT NULL,
   `apellidos` varchar(15) NOT NULL,
   `domicilio` varchar(45) NOT NULL,
@@ -292,6 +299,15 @@ CREATE TABLE `nomina` (
   `monto` int(45) NOT NULL,
   `referencia` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `nomina`
+--
+
+INSERT INTO `nomina` (`id_nom`, `cedula_rif`, `tipo_identificacion`, `nombres`, `apellidos`, `domicilio`, `telefono`, `correo`, `descripcion`, `metodo`, `fecha`, `monto`, `referencia`) VALUES
+(1, '286666', 1, 'gcgc', 'cfgcfg', 'cfgcfg', 'cf51515', 'cfgfcg', 'cfgcfg', 'cfgcfg', '2023-09-13', 262266, 'cfgcfgcfg'),
+(2, '15254452', 4242, '4242', '42424', '4242', '4242', '4242', '4242', '4242', '2023-09-21', 42424, '424242'),
+(3, '54554545', 1, 'fghgfhg', 'fghgfhgf', 'gfhgfhfg', '0424-555555', 'hgjghjg@gmail.com', 'ghfghgfhgfh', 'pagomovil', '2023-09-07', 322, '12121');
 
 -- --------------------------------------------------------
 
@@ -403,6 +419,29 @@ INSERT INTO `roles_modulos` (`id_rol`, `id_modulo`, `crear`, `consultar`, `modif
 (2, 7, 1, 1, 1, 1),
 (1, 8, 0, 1, 1, 0),
 (2, 8, 1, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `servicios`
+--
+
+CREATE TABLE `servicios` (
+  `id_servicios` int(11) NOT NULL,
+  `servicio` varchar(60) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `fecha` date NOT NULL,
+  `monto` double DEFAULT 0,
+  `referencia` int(30) NOT NULL,
+  `usuario_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `servicios`
+--
+
+INSERT INTO `servicios` (`id_servicios`, `servicio`, `descripcion`, `fecha`, `monto`, `referencia`, `usuario_id`) VALUES
+(1, 'corpoelec', '1212', '2023-09-05', 12.12, 121212, 19);
 
 -- --------------------------------------------------------
 
@@ -531,6 +570,12 @@ ALTER TABLE `roles_modulos`
   ADD KEY `id_modulo` (`id_modulo`);
 
 --
+-- Indices de la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  ADD PRIMARY KEY (`id_servicios`);
+
+--
 -- Indices de la tabla `tipo_apartamento`
 --
 ALTER TABLE `tipo_apartamento`
@@ -587,7 +632,7 @@ ALTER TABLE `modulos`
 -- AUTO_INCREMENT de la tabla `nomina`
 --
 ALTER TABLE `nomina`
-  MODIFY `id_nom` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nom` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
@@ -600,6 +645,12 @@ ALTER TABLE `pago`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  MODIFY `id_servicios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_apartamento`
