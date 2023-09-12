@@ -12,13 +12,21 @@
     </div>
     <form method="post" action="" id="f">
       <input type="text" name="accion" id="accion" style="display:none" />
-      <inputt class="form-control" type="text" id="numEstac" name="numEstac" data-span="snumEstac" />
+      <input type="text" name="id" id="id" style="display:none" />
+      <div class="container">
+        <div class="row">
+
+
+
+          <div class="col-6 col-md-4 col-xl-3">
+            <label for="numEstac">Numero de Estacionamiento</label>
+            <input class="form-control" type="text" id="numEstac" name="numEstac" data-span="snumEstac" />
             <span id="snumEstac" class="text-danger"></span>
           </div>
 
           <div class="col-md-3 col-6">
             <label for="estacCosto">Costo</label>
-              <input autocomplete="off" class="form-control text-right" placeholder="0,00" type="text" id="estacCosto" name="estacCosto" data-span="sestacCosto"/>
+              <input class="form-control text-right" placeholder="0,00" type="text" id="estacCosto" name="estacCosto" data-span="sestacCosto"/>
             <span id="sestacCosto" class="text-danger"></span>
           </div>
 
@@ -62,15 +70,7 @@
         <?php endif; ?>
       </div>
   </div>
-  </form> type="text" name="id" id="id" style="display:none" />
-      <div class="container">
-        <div class="row">
-
-
-
-          <div class="col-6 col-md-4 col-xl-3">
-            <label for="numEstac">Numero de Estacionamiento</label>
-            <inpu
+  </form>
   </div>
   <!-- modal estacionamientos -->
 

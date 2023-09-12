@@ -1,5 +1,13 @@
 $(document).ready(function () {
-  carga_nomina();
+  carga_servicios();
+
+
+
+
+
+
+
+  
 function carga_servicios() {
   var datos = new FormData();
   datos.append("accion", "listadoservicios");
@@ -31,7 +39,7 @@ function enviaAjax(datos) {
         ) {
           muestraMensaje(lee.mensaje, "", "success");
           limpia();
-          carga_nomina();
+          carga_servicios();
           cambiarbotones(true);
         } else if (lee.resultado == "error") {
           muestraMensaje(lee.mensaje, "", "error");

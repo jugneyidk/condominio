@@ -63,7 +63,7 @@
 						<?php //endif; ?>
 						<?php //if ($permisos[3] == 1) : ?>
 							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-								<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalEstacionamiento" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+								<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalservicios" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
 							</div>
 						<?php// endif; ?>
 						<?php //if ($permisos[4] == 1) : ?>
@@ -79,12 +79,52 @@
 					</div>
 				</div>
 
+
 		</form>
 	</div>
 	</div>
+
+	<!-- modal-->
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalservicios">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-light bg-info">
+					<h5 class="modal-title">Realizados</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped table-hover" id="tablaservicios">
+						<thead>
+							<tr>
+								<th class="d-none"></th>
+								<th>ID</th>
+								<th class="d-none"></th>
+								<th>Tipo ident.</th>
+								<th class="d-none"></th>
+								<th>Ident.</th>
+								<th class="d-none"></th>
+								<th>Descripcion</th>
+								<th>Monto</th>
+								<th>Fecha</th>
+								<th>Referencia</th>
+							</tr>
+						</thead>
+						<tbody id="listadoservicios">
+
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer bg-light">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script src="js/carga.js"></script>
 	<script src="js/comun_x.js"></script>
-  	<!-- <script src="js/estacionamiento.js"></script> -->
+  	<script src="js/servicio.js"></script>
   	<script>
   		$(document).ready(function(){
   			

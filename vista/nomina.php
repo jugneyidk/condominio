@@ -133,7 +133,7 @@
 	</div>
 
 	</div>
-	<!-- modal apartamentos-->
+	<!-- modal-->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalnomina">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">

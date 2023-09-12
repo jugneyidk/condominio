@@ -87,9 +87,9 @@ PUBLIC function listadoservicios()
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado = $co->query("Select servicio, descripcion, fecha, monto, referencia, usuario_id
+			$resultado = $co->query("Select id_servicios,servicio, descripcion, fecha, monto, referencia, usuario_id
 			from 
-			servicios ORDER BY id_nom DESC");
+			servicios ORDER BY id_servicios DESC");
 			$respuesta = '';
 			if ($resultado) {
 				foreach ($resultado as $r) {
