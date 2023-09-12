@@ -4,7 +4,7 @@ require_once('model/datos.php');
 
 class tipoapto extends datos
 {
-	function chequearpermisos(){
+	PUBLIC function chequearpermisos(){
 		$id_rol = $_SESSION['rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
@@ -15,7 +15,7 @@ class tipoapto extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	function incluir($descripcion, $alicuota)
+	PUBLIC function incluir($descripcion, $alicuota)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -36,7 +36,7 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	function listadotipos()
+	PUBLIC function listadotipos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -71,7 +71,7 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	function modificar($id_tipo_apartamento, $descripcion, $alicuota)
+	PUBLIC function modificar($id_tipo_apartamento, $descripcion, $alicuota)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -94,7 +94,7 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	function eliminar($id_tipo_apartamento)
+	PUBLIC function eliminar($id_tipo_apartamento)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -120,7 +120,7 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	private function existe($id_tipo_apartamento,$descripcion,$caso)
+	PUBLIC private function existe($id_tipo_apartamento,$descripcion,$caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

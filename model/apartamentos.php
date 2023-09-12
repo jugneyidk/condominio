@@ -4,7 +4,7 @@ require_once('model/datos.php');
 
 class apto extends datos
 {
-	function chequearpermisos()
+	PUBLIC function chequearpermisos()
 	{
 		$id_rol = $_SESSION['rol'];
 		$modulo = $_GET['p'];
@@ -16,7 +16,7 @@ class apto extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
 	}
-	function incluir($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino)
+	PUBLIC function incluir($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -43,7 +43,7 @@ class apto extends datos
 		return $r;
 	}
 
-	function modificar($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento)
+	PUBLIC function modificar($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -84,7 +84,7 @@ class apto extends datos
 		return $r;
 	}
 
-	function eliminar($id_apartamento)
+	PUBLIC function eliminar($id_apartamento)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -109,7 +109,7 @@ class apto extends datos
 		return $r;
 	}
 
-	function listadoapartamentos()
+	PUBLIC function listadoapartamentos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -165,7 +165,7 @@ class apto extends datos
 		return $r;
 	}
 
-	function listadohabitantes()
+	PUBLIC function listadohabitantes()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -213,7 +213,7 @@ class apto extends datos
 		return $r;
 	}
 
-	function listadotipos()
+	PUBLIC function listadotipos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -241,7 +241,7 @@ class apto extends datos
 		}
 		return $r;
 	}
-	private function existe($id_apartamento, $torre, $piso, $caso)
+	PUBLIC function existe($id_apartamento, $torre, $piso, $caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

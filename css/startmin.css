@@ -657,3 +657,20 @@ table.dataTable thead .sorting:after {
     color: #fff; /* active text color */
     background-color: #a94442; /* active bg color */
 }
+
+.card-header{
+    cursor: pointer;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.no-select/*Evita seleccion (sombreado azul)*/
+{
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

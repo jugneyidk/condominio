@@ -2,7 +2,7 @@
 require_once('model/datos.php');
 class habitantes extends datos
 {
-	function chequearpermisos(){
+	PUBLIC function chequearpermisos(){
 		$id_rol = $_SESSION['rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
@@ -13,7 +13,7 @@ class habitantes extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	function incluir($cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal)
+	PUBLIC function incluir($cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal)
 	{
 		if (!$this->existe($cedula_rif, $tipo_identificacion, 1)) {
 			$co = $this->conecta();
@@ -48,7 +48,7 @@ class habitantes extends datos
 		}
 		return $r;
 	}
-	function modificar($id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal)
+	PUBLIC function modificar($id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -76,7 +76,7 @@ class habitantes extends datos
 		}
 		return $r;
 	}
-	function eliminar($id)
+	PUBLIC function eliminar($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -102,7 +102,7 @@ class habitantes extends datos
 		}
 		return $r;
 	}
-	function listadohabitantes()
+	PUBLIC function listadohabitantes()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -157,7 +157,7 @@ class habitantes extends datos
 		}
 		return $r;
 	}
-	private function existe($cedula_rif, $tipo_identificacion, $caso)
+	PRIVATE function existe($cedula_rif, $tipo_identificacion, $caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

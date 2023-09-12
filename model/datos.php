@@ -1,12 +1,12 @@
 <?php 
 class datos{
     // DATOS DE LA DB
-	private $ip = "localhost";
-    private $bd = "condominio_jmv02";
-    private $usuario = "root";
-    private $contrasena = "";
+	PRIVATE $ip = "localhost";
+    PRIVATE $bd = "condominio_jmv02";
+    PRIVATE $usuario = "root";
+    PRIVATE $contrasena = "";
     // FUNCION PARA ESTABLECER CONEXION
-    function conecta(){
+    PUBLIC function conecta(){
         $pdo = new PDO("mysql:host=".$this->ip.";dbname=".$this->bd."",$this->usuario,$this->contrasena);
          $pdo->exec("set names utf8");
          return $pdo;

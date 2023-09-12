@@ -4,7 +4,7 @@ require_once('model/enviar-correo.php');
 require_once('model/datos.php');
 class pagos extends datos
 {
-	function listadopagos()
+	PUBLIC function listadopagos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -62,7 +62,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	function listadopagospendientes()
+	PUBLIC function listadopagospendientes()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -116,7 +116,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	function listadopagosconfirmados()
+	PUBLIC function listadopagosconfirmados()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -164,7 +164,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	function listadopagosdeclinados()
+	PUBLIC function listadopagosdeclinados()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -212,7 +212,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	function detallespago($id)
+	PUBLIC function detallespago($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -303,7 +303,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	function confirmar_declinar_pago($id, $accion, $id_usuario)
+	PUBLIC function confirmar_declinar_pago($id, $accion, $id_usuario)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -340,7 +340,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	function existe($id)
+	PRIVATE function existe($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

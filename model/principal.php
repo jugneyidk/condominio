@@ -3,7 +3,7 @@
 require_once('model/datos.php');
 class principal extends datos
 {
-    function datos_barra()
+    PUBLIC function datos_barra()
     {
         $datos = array();
         try {
@@ -32,7 +32,7 @@ class principal extends datos
         }
         return $datos;
     }
-    function ultimos_pagos()
+    PUBLIC function ultimos_pagos()
     {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

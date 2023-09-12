@@ -4,7 +4,7 @@ require_once('model/datos.php');
 
 class usuarios extends datos
 {
-	function chequearpermisos(){
+	PUBLIC function chequearpermisos(){
 		$id_rol = $_SESSION['rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
@@ -15,7 +15,7 @@ class usuarios extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	function incluir($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
+	PUBLIC function incluir($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
 	{
 		if (!$this->existe($rif_cedula, $tipo_identificacion, 1)) {
 			$co = $this->conecta();
@@ -40,7 +40,7 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	function listadousuarios()
+	PUBLIC function listadousuarios()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -105,7 +105,7 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	function modificar($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
+	PUBLIC function modificar($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -147,7 +147,7 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	function eliminar($id)
+	PUBLIC function eliminar($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -177,7 +177,7 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	private function existe($rif_cedula, $tipo_identificacion, $caso)
+	PUBLIC private function existe($rif_cedula, $tipo_identificacion, $caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

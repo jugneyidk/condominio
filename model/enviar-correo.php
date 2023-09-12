@@ -9,7 +9,7 @@ require 'PHPMailer/src/SMTP.php';
 require_once('model/datos.php');
 class enviarcorreo extends datos
 {
-    function enviar_correo($id)
+    PUBLIC function enviar_correo($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -141,7 +141,7 @@ class enviarcorreo extends datos
 			return $e->getMessage();
 		}
 	}
-    function existe($id)
+    PUBLIC function existe($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

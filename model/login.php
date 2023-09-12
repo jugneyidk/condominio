@@ -3,7 +3,7 @@
 require_once('model/datos.php');
 class login extends datos
 {
-    function iniciarSesion($usuario,$clave)
+    PUBLIC function iniciarSesion($usuario,$clave)
     {
         if (!empty($usuario) && !empty($clave)) {            
             $co = $this->conecta();

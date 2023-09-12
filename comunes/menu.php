@@ -34,6 +34,7 @@ if (isset($_SESSION['rol'])) {
 								<a class="dropdown-item" href="?p=habitantes">Habitantes</a>
 								<a class="dropdown-item" href="?p=tipoapto">Tipos de Apartamento</a>
 								<a class="dropdown-item" href="?p=apartamentos">Apartamentos</a>
+								<a class="dropdown-item" href="?p=estacionamiento">Estacionamiento</a>
 							</div>
 							<div class="collapse navbar-collapse" id="navbarNavDropdown">
 						</li>
@@ -46,7 +47,7 @@ if (isset($_SESSION['rol'])) {
 								<a class="dropdown-item" href="?p=deudas">Deudas</a>
 								<a class="dropdown-item" href="?p=pagos">Pagos</a>
 								<a class="dropdown-item" href="?p=generar-reporte">Generar Reporte</a>
-								<a class="dropdown-item" href="?p=estadistica">Estadistica</a>
+								<a class="dropdown-item" href="?p=estadistica">Estadística</a>
 							</div>
 						</li>
 						<div class="collapse navbar-collapse" id="navbarNavDropdown">

@@ -9,7 +9,7 @@ require_once('model/datos.php');
 class generarreporte extends datos
 {
 
-    function generarPDF($datos)
+    PUBLIC function generarPDF($datos)
     {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -210,7 +210,7 @@ class generarreporte extends datos
         $pdf->render();
         $pdf->stream("Reporte {$nombre_archivo}.pdf", array("Attachment" => false));
     }
-    private function existe($id, $caso)
+    PRIVATE function existe($id, $caso)
     {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

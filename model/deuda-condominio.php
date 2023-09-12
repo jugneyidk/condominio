@@ -4,7 +4,7 @@ require_once('model/datos.php');
 
 class deudacondominio extends datos
 {
-	function chequearpermisos()
+	PUBLIC function chequearpermisos()
 	{
 		$id_rol = $_SESSION['rol'];
 		$modulo = $_GET['p'];
@@ -16,7 +16,7 @@ class deudacondominio extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
 	}
-	function incluir($monto, $concepto, $fecha)
+	PUBLIC function incluir($monto, $concepto, $fecha)
 	{
 		$usuario = $_SESSION['id_usuario'];
 		$co = $this->conecta();
@@ -33,7 +33,7 @@ class deudacondominio extends datos
 		}
 		return $r;
 	}
-	function listadodeudas()
+	PUBLIC function listadodeudas()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -91,7 +91,7 @@ class deudacondominio extends datos
 		}
 		return $r;
 	}
-	function modificar($id_deuda, $monto, $concepto, $fecha)
+	PUBLIC function modificar($id_deuda, $monto, $concepto, $fecha)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -117,7 +117,7 @@ class deudacondominio extends datos
 		}
 		return $r;
 	}
-	function calcular_deuda($id_deuda_condominio)
+	PUBLIC function calcular_deuda($id_deuda_condominio)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -165,7 +165,7 @@ class deudacondominio extends datos
 		}
 		return $r;
 	}
-	function distribuir_deuda($id_deuda_condominio)
+	PUBLIC function distribuir_deuda($id_deuda_condominio)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -212,7 +212,7 @@ class deudacondominio extends datos
 		}
 		return $r;
 	}
-	function eliminar($id_deuda)
+	PUBLIC function eliminar($id_deuda)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -238,7 +238,7 @@ class deudacondominio extends datos
 		}
 		return $r;
 	}
-	private function existe($id_deuda, $caso)
+	PRIVATE function existe($id_deuda, $caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

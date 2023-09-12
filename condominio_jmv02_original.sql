@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-09-2023 a las 03:09:15
--- Versión del servidor: 10.1.38-MariaDB
--- Versión de PHP: 7.3.2
+-- Tiempo de generación: 07-03-2023 a las 01:15:48
+-- Versión del servidor: 10.4.19-MariaDB
+-- Versión de PHP: 8.0.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -91,10 +90,10 @@ CREATE TABLE `datos_usuarios` (
 --
 
 INSERT INTO `datos_usuarios` (`id`, `rif_cedula`, `tipo_identificacion`, `razon_social`, `domicilio_fiscal`, `telefono`, `correo`) VALUES
-(1, '28609560', 0, 'Jugney Vargas', 'Barrio Unión', '0424-5698188', 'jugneyv@gmail.com'),
-(2, '26846371', 0, 'Diego Salazar', 'Calle 28', '0424-4034515', 'diego14asf@gmail.com'),
-(3, '27250544', 0, 'Xavier Suarez', 'Calle 28', '0424-5798958', '@gmail.com'),
-(4, '28406750', 0, 'Luis Colmenares', 'Calle 28', '0426-3525659', '@gmail.com');
+(01, '28609560', 0, 'Jugney Vargas', 'Barrio Unión', '0424-5698188', 'jugneyv@gmail.com'),
+(02, '26846371', 0, 'Diego Salazar', 'Calle 28', '0424-4034515', 'diego14asf@gmail.com'),
+(03, '27250544', 0, 'Xavier Suarez', 'Calle 28', '0424-5798958', '@gmail.com'),
+(04, '28406750', 0, 'Luis Colmenares', 'Calle 28', '0426-3525659', '@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -115,9 +114,9 @@ CREATE TABLE `deuda_condominio` (
 --
 
 INSERT INTO `deuda_condominio` (`id`, `fecha_generada`, `monto`, `concepto`, `usuario`) VALUES
-(1, '2023-01-05', '355.00', 'Deuda de Enero', 2),
-(3, '2022-12-05', '325.00', 'Deuda de Diciembre', 2),
-(4, '2023-02-01', '500.00', 'Deuda de Febrero', 2);
+(1, '2023-01-05', '355.00', 'Deuda de Enero', 20),
+(3, '2022-12-05', '325.00', 'Deuda de Diciembre', 20),
+(4, '2023-02-01', '500.00', 'Deuda de Febrero', 20);
 
 -- --------------------------------------------------------
 
@@ -214,18 +213,6 @@ INSERT INTO `deuda_pendiente` (`id`, `id_apartamento`, `id_deuda_condominio`, `f
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estacionamiento`
---
-
-CREATE TABLE `estacionamiento` (
-  `num_estacionamiento` int(11) NOT NULL,
-  `id_apartamento` int(11) DEFAULT NULL,
-  `costo` double DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `habitantes`
 --
 
@@ -271,8 +258,7 @@ INSERT INTO `modulos` (`id`, `nombre`) VALUES
 (4, 'habitantes'),
 (5, 'pagos'),
 (6, 'tipoapto'),
-(7, 'usuarios-administracion'),
-(8, 'estacionamiento');
+(7, 'usuarios-administracion');
 
 -- --------------------------------------------------------
 
@@ -296,38 +282,38 @@ CREATE TABLE `pago` (
 --
 
 INSERT INTO `pago` (`id_pago`, `referencia`, `fecha_entrega`, `tipo_pago`, `total`, `deuda`, `id_usuario`, `estado`) VALUES
-(59, '2233', '2023-01-15', 'Pago Movil', '10.16', 46, 1, 'pendiente'),
-(60, '2133', '2023-01-15', 'Zelle', '10.16', 43, 1, 'pendiente'),
-(61, '21332', '2023-01-15', 'Pago Movil', '10.16', 41, 1, 'confirmado'),
-(62, '5555', '2023-01-15', 'Pago Movil', '12.19', 38, 1, 'declinado'),
-(63, '3666', '2023-01-15', 'Efectivo', '12.19', 37, 1, 'confirmado'),
-(64, '3331', '2023-01-15', 'Pago Movil', '12.19', 36, 1, 'declinado'),
-(65, '4243', '2023-01-15', 'Pago Movil', '12.19', 35, 1, 'confirmado'),
-(66, '4566', '2023-01-15', 'Transferencia Bancaria', '12.19', 34, 1, 'confirmado'),
-(67, '3334', '2023-01-15', 'Efectivo', '12.19', 36, 1, 'confirmado'),
-(68, '4556', '2023-01-15', 'Pago Movil', '20.31', 27, 1, 'confirmado'),
-(69, '1233', '2023-01-15', 'Efectivo', '20.31', 26, 1, 'confirmado'),
-(70, '2333', '2023-01-21', 'Efectivo', '11.09', 22, 1, 'confirmado'),
-(71, '2333', '2023-01-21', 'Pago Movil', '11.09', 19, 1, 'confirmado'),
-(72, '2333', '2023-01-22', 'Efectivo', '11.09', 17, 1, 'confirmado'),
-(73, '7245', '2023-01-22', 'Zelle', '20.31', 25, 1, 'confirmado'),
-(74, '32555', '2023-01-22', 'Zelle', '12.19', 40, 1, 'confirmado'),
-(75, '1402', '2023-01-22', 'Zelle', '16.25', 30, 2, 'confirmado'),
-(76, '2333', '2023-01-21', 'Efectivo', '13.31', 11, 2, 'pendiente'),
-(77, '2333', '2023-01-20', 'Pago Movil', '17.75', 6, 2, 'declinado'),
-(78, '2525', '2023-01-22', 'Efectivo', '17.75', 6, 2, 'pendiente'),
-(79, '2333576', '2023-01-21', 'Pago Movil', '22.19', 2, 1, 'confirmado'),
-(81, '2333', '2023-02-04', 'Efectivo', '13.31', 14, 1, 'confirmado'),
-(82, '2333', '2023-02-04', 'Efectivo', '10.16', 48, 1, 'confirmado'),
-(83, '2236', '2023-02-07', 'Efectivo', '13.31', 10, 1, 'confirmado'),
-(84, '2626', '2023-02-12', 'Pago Movil', '12.19', 33, 1, 'confirmado'),
-(85, '2345', '2023-02-14', 'Efectivo', '13.31', 12, 1, 'confirmado'),
-(86, '2632', '2023-02-14', 'Efectivo', '22.19', 3, 1, 'confirmado'),
-(87, '2626', '2023-02-14', 'Efectivo', '12.19', 38, 1, 'declinado'),
-(91, '2333', '2023-02-21', 'Efectivo', '12.19', 38, 1, 'declinado'),
-(92, '2323', '2023-02-25', 'Efectivo', '13.31', 13, 1, 'declinado'),
-(93, '2333', '2023-02-25', 'Efectivo', '13.31', 13, 1, 'declinado'),
-(94, '1222', '2023-02-25', 'Pago Movil', '18.75', 110, 3, 'confirmado');
+(59, '2233', '2023-01-15', 'Pago Movil', '10.16', 46, 20, 'pendiente'),
+(60, '2133', '2023-01-15', 'Zelle', '10.16', 43, 20, 'pendiente'),
+(61, '21332', '2023-01-15', 'Pago Movil', '10.16', 41, 20, 'confirmado'),
+(62, '5555', '2023-01-15', 'Pago Movil', '12.19', 38, 20, 'declinado'),
+(63, '3666', '2023-01-15', 'Efectivo', '12.19', 37, 20, 'confirmado'),
+(64, '3331', '2023-01-15', 'Pago Movil', '12.19', 36, 20, 'declinado'),
+(65, '4243', '2023-01-15', 'Pago Movil', '12.19', 35, 20, 'confirmado'),
+(66, '4566', '2023-01-15', 'Transferencia Bancaria', '12.19', 34, 20, 'confirmado'),
+(67, '3334', '2023-01-15', 'Efectivo', '12.19', 36, 20, 'confirmado'),
+(68, '4556', '2023-01-15', 'Pago Movil', '20.31', 27, 20, 'confirmado'),
+(69, '1233', '2023-01-15', 'Efectivo', '20.31', 26, 20, 'confirmado'),
+(70, '2333', '2023-01-21', 'Efectivo', '11.09', 22, 20, 'confirmado'),
+(71, '2333', '2023-01-21', 'Pago Movil', '11.09', 19, 20, 'confirmado'),
+(72, '2333', '2023-01-22', 'Efectivo', '11.09', 17, 20, 'confirmado'),
+(73, '7245', '2023-01-22', 'Zelle', '20.31', 25, 20, 'confirmado'),
+(74, '32555', '2023-01-22', 'Zelle', '12.19', 40, 20, 'confirmado'),
+(75, '1402', '2023-01-22', 'Zelle', '16.25', 30, 19, 'confirmado'),
+(76, '2333', '2023-01-21', 'Efectivo', '13.31', 11, 19, 'pendiente'),
+(77, '2333', '2023-01-20', 'Pago Movil', '17.75', 6, 19, 'declinado'),
+(78, '2525', '2023-01-22', 'Efectivo', '17.75', 6, 19, 'pendiente'),
+(79, '2333576', '2023-01-21', 'Pago Movil', '22.19', 2, 20, 'confirmado'),
+(81, '2333', '2023-02-04', 'Efectivo', '13.31', 14, 20, 'confirmado'),
+(82, '2333', '2023-02-04', 'Efectivo', '10.16', 48, 20, 'confirmado'),
+(83, '2236', '2023-02-07', 'Efectivo', '13.31', 10, 20, 'confirmado'),
+(84, '2626', '2023-02-12', 'Pago Movil', '12.19', 33, 20, 'confirmado'),
+(85, '2345', '2023-02-14', 'Efectivo', '13.31', 12, 20, 'confirmado'),
+(86, '2632', '2023-02-14', 'Efectivo', '22.19', 3, 20, 'confirmado'),
+(87, '2626', '2023-02-14', 'Efectivo', '12.19', 38, 20, 'declinado'),
+(91, '2333', '2023-02-21', 'Efectivo', '12.19', 38, 20, 'declinado'),
+(92, '2323', '2023-02-25', 'Efectivo', '13.31', 13, 20, 'declinado'),
+(93, '2333', '2023-02-25', 'Efectivo', '13.31', 13, 20, 'declinado'),
+(94, '1222', '2023-02-25', 'Pago Movil', '18.75', 110, NULL, 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -357,10 +343,10 @@ INSERT INTO `roles` (`id`, `nombre`) VALUES
 CREATE TABLE `roles_modulos` (
   `id_rol` int(11) NOT NULL,
   `id_modulo` int(11) NOT NULL,
-  `crear` int(11) NOT NULL DEFAULT '1',
-  `consultar` int(11) NOT NULL DEFAULT '1',
-  `modificar` int(11) NOT NULL DEFAULT '1',
-  `eliminar` int(11) NOT NULL DEFAULT '1'
+  `crear` int(11) NOT NULL DEFAULT 1,
+  `consultar` int(11) NOT NULL DEFAULT 1,
+  `modificar` int(11) NOT NULL DEFAULT 1,
+  `eliminar` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -381,9 +367,7 @@ INSERT INTO `roles_modulos` (`id_rol`, `id_modulo`, `crear`, `consultar`, `modif
 (1, 6, 0, 1, 1, 0),
 (2, 6, 1, 1, 1, 1),
 (1, 7, 0, 0, 0, 0),
-(2, 7, 1, 1, 1, 1),
-(1, 8, 0, 1, 1, 0),
-(2, 8, 1, 1, 1, 1);
+(2, 7, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -424,10 +408,8 @@ CREATE TABLE `usuarios_roles` (
 --
 
 INSERT INTO `usuarios_roles` (`id_usuario`, `id_rol`, `clave`) VALUES
-(1, 1, 'Hola123'),
-(2, 1, 'Hola123'),
-(3, 2, 'Hola123'),
-(1, 1, 'Hola123');
+(19, 1, 'Hola123'),
+(20, 1, 'Hola123');
 
 --
 -- Índices para tablas volcadas
@@ -463,13 +445,6 @@ ALTER TABLE `deuda_pendiente`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_apartamento` (`id_apartamento`),
   ADD KEY `id_deuda_condominio` (`id_deuda_condominio`);
-
---
--- Indices de la tabla `estacionamiento`
---
-ALTER TABLE `estacionamiento`
-  ADD PRIMARY KEY (`num_estacionamiento`),
-  ADD UNIQUE KEY `id_apartamento` (`id_apartamento`);
 
 --
 -- Indices de la tabla `habitantes`
@@ -556,7 +531,7 @@ ALTER TABLE `habitantes`
 -- AUTO_INCREMENT de la tabla `modulos`
 --
 ALTER TABLE `modulos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
@@ -600,12 +575,6 @@ ALTER TABLE `deuda_condominio`
 ALTER TABLE `deuda_pendiente`
   ADD CONSTRAINT `deuda_pendiente_ibfk_1` FOREIGN KEY (`id_apartamento`) REFERENCES `apartamento` (`id_apartamento`),
   ADD CONSTRAINT `deuda_pendiente_ibfk_2` FOREIGN KEY (`id_deuda_condominio`) REFERENCES `deuda_condominio` (`id`);
-
---
--- Filtros para la tabla `estacionamiento`
---
-ALTER TABLE `estacionamiento`
-  ADD CONSTRAINT `estacionamiento_ibfk_1` FOREIGN KEY (`id_apartamento`) REFERENCES `apartamento` (`id_apartamento`);
 
 --
 -- Filtros para la tabla `pago`

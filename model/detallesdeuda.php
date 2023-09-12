@@ -3,7 +3,7 @@
 require_once('model/datos.php');
 class detallesdeuda extends datos
 {
-    function listadodeudas()
+    PUBLIC function listadodeudas()
     {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -46,7 +46,7 @@ class detallesdeuda extends datos
         }
         return $r;
     }
-    function historialpagos()
+    PUBLIC function historialpagos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -99,7 +99,7 @@ class detallesdeuda extends datos
 		}
 		return $r;
 	}
-    function registrarpago($id_deuda,$monto,$referencia,$tipo_pago){
+    PUBLIC function registrarpago($id_deuda,$monto,$referencia,$tipo_pago){
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();

@@ -4,7 +4,7 @@ require_once('model/datos.php');
 require_once('model/enviar-correo.php');
 class deuda extends datos
 {
-	function chequearpermisos()
+	PUBLIC function chequearpermisos()
 	{
 		$id_rol = $_SESSION['rol'];
 		$modulo = $_GET['p'];
@@ -16,7 +16,7 @@ class deuda extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
 	}
-	function listadodeudas()
+	PUBLIC function listadodeudas()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -62,7 +62,7 @@ class deuda extends datos
 		}
 		return $r;
 	}
-	function listadomorosos()
+	PUBLIC function listadomorosos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -108,7 +108,7 @@ class deuda extends datos
 		}
 		return $r;
 	}
-	function registrarpago($id_deuda, $monto, $referencia, $fecha, $tipo_pago)
+	PUBLIC function registrarpago($id_deuda, $monto, $referencia, $fecha, $tipo_pago)
 	{
 		$usuario = $_SESSION['id_usuario'];
 		$co = $this->conecta();
