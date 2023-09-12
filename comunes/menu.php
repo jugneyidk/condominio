@@ -18,10 +18,6 @@ if (isset($_SESSION['rol'])) {
 		<div class="col-12 col-md-8 col-lg-6 mt-2 m-md-0">
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav ml-auto">
-					
-							<a class="nav-link  text-light" href="?=dashboard" id="" data-toggle="">
-								Inicio</a>
-							<!-- <a class="nav-link  text-light" href="?p=estacionamiento">Estacionamiento</a> -->
 						
 					<?php
 					if ($rol == "1" or $rol == "2") {

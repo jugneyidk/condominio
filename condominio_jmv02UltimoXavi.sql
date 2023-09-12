@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-09-2023 a las 17:37:06
+-- Tiempo de generación: 12-09-2023 a las 18:30:33
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -528,14 +528,14 @@ CREATE TABLE `usuarios_roles` (
 --
 
 INSERT INTO `usuarios_roles` (`id_usuario`, `id_rol`, `clave`) VALUES
-(1, 1, 'Hola123'),
-(2, 1, 'Hola123'),
-(3, 2, 'Hola123'),
-(1, 1, 'Hola123'),
-(1, 1, 'Hola123'),
-(2, 1, 'Hola123'),
-(3, 2, 'Hola123'),
-(1, 1, 'Hola123');
+(1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
+(2, 1, '$2y$10$xJrc2hrFMX8FgdvlFyJApOz8qdYXQpmll5FFy3VI7Gw5dAAq4ubD6'),
+(3, 2, '$2y$10$5kjRIY36ZZr98OMxkblQAulSZeam0JDEoE9Jnzh.anHOEfjOCwaUC'),
+(1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
+(1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
+(2, 1, '$2y$10$xJrc2hrFMX8FgdvlFyJApOz8qdYXQpmll5FFy3VI7Gw5dAAq4ubD6'),
+(3, 2, '$2y$10$5kjRIY36ZZr98OMxkblQAulSZeam0JDEoE9Jnzh.anHOEfjOCwaUC'),
+(1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm');
 
 --
 -- Índices para tablas volcadas
@@ -660,7 +660,7 @@ ALTER TABLE `apartamento`
 -- AUTO_INCREMENT de la tabla `datos_usuarios`
 --
 ALTER TABLE `datos_usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `deuda_condominio`

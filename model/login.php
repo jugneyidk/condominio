@@ -12,7 +12,7 @@ class login extends datos
                 $consulta = $co->query("Select id,rif_cedula,id_rol,clave from datos_usuarios inner join usuarios_roles where usuarios_roles.id_usuario=datos_usuarios.id and datos_usuarios.rif_cedula='$usuario'");
                 $resultado = $consulta->fetch();
                 //if ($resultado && password_verify($clave,$resultado['clave'])) {
-                if ($resultado && $clave == $resultado['clave']) {
+                if ($resultado && password_verify($clave, $resultado['clave'])) {
                     session_start();
 			        $_SESSION['rol'] = $resultado['id_rol'];
 			        $_SESSION['id_usuario'] = $resultado['id'];
