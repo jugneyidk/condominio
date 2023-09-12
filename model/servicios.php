@@ -112,19 +112,87 @@ class servicio extends datos
 
 	PUBLIC function eliminar(){
 		$r = array();
-
-		if ($this->existe()) {
-			$consulta = $this->con->prepare("DELETE FROM servicios WHERE id_servicios = ?");
-			$consulta->execute([$this->id_pago_serv]);
-			$r['resultado'] = 'eliminar';
-			$r['mensaje'] =  'Registro Eliminado';
-		} else {
+		try {
+			if ($this->existe()) {
+				$consulta = $this->con->prepare("DELETE FROM servicios WHERE id_servicios = ?");
+				$consulta->execute([$this->id_pago_serv]);
+				$r['resultado'] = 'eliminar';
+				$r['mensaje'] =  'Registro Eliminado';
+			} else {
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  "El Registro no existe";
+			}
+		} catch (Exception $e) {
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  "El Registro no existe";
+			$r['mensaje'] =  $e->getMessage();
 		}
 		return $r;
 	}
 
+
+	PUBLIC function incluir_servicio(){
+		$r = array();
+		try {
+			$consulta = $this->con->prepare("SELECT * FROM lista_servicios WHERE nombre = ?");
+			$consulta->execute([$this->descripcion]);
+			if(!$consulta->fetch()){
+				$consulta = $this->con->prepare("INSERT INTO `lista_servicios` (nombre) VALUES (?)");
+				$consulta->execute([$this->descripcion]);
+				$r['resultado'] = 'incluir';
+				$r['mensaje'] =  'Registro Incluido';
+			}
+			else{
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  "El servicio ya esta registrado";
+			}
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		return $r;
+	}
+	PUBLIC function modificar_servicio(){
+		$r = array();
+		try {
+			$consulta = $this->con->prepare("SELECT * FROM lista_servicios WHERE nombre = ?");
+			$consulta->execute([$this->descripcion]);
+			if(!$consulta->fetch()){
+				$consulta = $this->con->prepare("UPDATE `lista_servicios` SET `nombre` = ? WHERE `id_servicios` = ?");
+				$consulta->execute([$this->descripcion,$this->id_pago_serv]);
+				$r['resultado'] = 'modificar';
+				$r['mensaje'] =  'Registro Modificado';
+			}
+			else{
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  "El servicio ya esta registrado";
+			}
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		return $r;
+	}
+	PUBLIC function eliminar_servicio(){
+		$r = array();
+		try {
+			$consulta = $this->con->prepare("SELECT * FROM lista_servicios WHERE id_servicios = ?");
+			$consulta->execute([$this->id_pago_serv]);
+			if($consulta->fetch()){
+				$consulta = $this->con->prepare("DELETE FROM lista_servicios WHERE id_servicios = ?");
+				$consulta->execute([$this->id_pago_serv]);
+				$r['resultado'] = 'eliminar';
+				$r['mensaje'] =  'Registro Eliminado';
+			}
+			else{
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  "El Registro no existe";
+			}
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		return $r;
+	}
 
 
 
@@ -168,6 +236,34 @@ class servicio extends datos
 			$r['resultado'] = 'listadoPagosservicios';
 
 			$r['mensaje'] =  $dom->saveHTML();
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		return $r;
+	}
+
+	PUBLIC function listadoServicios(){
+		try {
+			$respuesta = $this->con->query("SELECT * FROM `lista_servicios`")->fetchall();
+
+			
+
+			$dom = new DOMDocument();
+			$cont = 1;
+			foreach ($respuesta as $elem) {
+				$tr = $dom->createElement("tr");
+				$tr->appendChild($dom->createElement("td",str_pad($cont, 2, "0", STR_PAD_LEFT)));
+				$td = $dom->createElement("td",$elem["id_servicios"]);
+				$td->setAttribute("class","d-none");
+				$tr->appendChild($td);
+				$tr->appendChild($dom->createElement("td",$elem["nombre"]));
+				$dom->appendChild($tr);
+				$cont++;
+			}
+			$r['resultado'] = 'listadoServicios';
+			$r['mensaje'] =  $dom->saveHTML();
+			// $r['mensaje'] =  "hola";
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();

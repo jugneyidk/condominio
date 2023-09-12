@@ -20,10 +20,9 @@ if (is_file("vista/" . $p . ".php")) {
 			$o->set_fecha($_POST['fecha']);
 			$o->set_monto($_POST['monto']);
 			$o->set_referencia($_POST['referencia']); 
-
 			$respuesta = $o->incluir();
-
 			echo json_encode($respuesta);
+
 		} else if ($accion == 'modificar') {
 			$o->set_servicio($_POST['service']);
 			$o->set_descripcion($_POST['descripcion']);
@@ -31,22 +30,37 @@ if (is_file("vista/" . $p . ".php")) {
 			$o->set_monto($_POST['monto']);
 			$o->set_referencia($_POST['referencia']); 
 			$o->set_id_pago_serv($_POST["id"]);
-
 			$respuesta = $o->modificar();
-
 			echo json_encode($respuesta);
-	} else if ($accion == 'eliminar') {
-		$o->set_id_pago_serv($_POST["id"]);
-		
-		echo json_encode($o->eliminar());
-	} else if ($accion == 'listadoPagosservicios') {
-		$respuesta = $o->listadoPagosservicios();
-		echo json_encode($respuesta);
+
+		} else if ($accion == 'eliminar') {
+			$o->set_id_pago_serv($_POST["id"]);
+			echo json_encode($o->eliminar());
+
+		} else if ($accion == 'listadoPagosservicios') {
+			$respuesta = $o->listadoPagosservicios();
+			echo json_encode($respuesta);
+		}else if($accion == 'listadoServicios'){
+			$respuesta = $o->listadoServicios();
+			echo json_encode($respuesta);
+		}
+		else if ($accion == 'incluir_s') {
+			$o->set_descripcion($_POST['servicio']);
+			echo json_encode($o->incluir_servicio());
+		}
+		else if ($accion == 'modificar_s') {
+			$o->set_id_pago_serv($_POST["id"]);
+			$o->set_descripcion($_POST['servicio']);
+			echo json_encode($o->modificar_servicio());
+		}
+		else if ($accion == 'eliminar_s') {
+			$o->set_id_pago_serv($_POST["id"]);
+			echo json_encode($o->eliminar_servicio());
+		}
+		exit;
 	}
-	exit;
-}
-require_once("vista/" . $p . ".php");
-} else {
-	echo "pagina en construccion";
-}
+	require_once("vista/" . $p . ".php");
+	} else {
+		echo "pagina en construccion";
+	}
 ?>
