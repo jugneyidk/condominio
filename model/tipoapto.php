@@ -32,11 +32,11 @@ class tipoapto extends datos
 			}			
 		} else {
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  "El tipo de apartamento ya existe";
+			$r['mensaje'] =  "El tipo de apartamento ya existe"; 
 		}
 		return $r;
 	}
-	PUBLIC function listadotipos()
+	PUBLIC function listadotipos() 
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -120,7 +120,7 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	PUBLIC private function existe($id_tipo_apartamento,$descripcion,$caso)
+	 function existe($id_tipo_apartamento,$descripcion,$caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

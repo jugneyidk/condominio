@@ -23,6 +23,7 @@
 								<select class="form-control" id="service" name="service" data-span="sservicio">
 									<option value='' disabled selected>-</option>
 									<option value='corpoelec'>Corpoelec</option>
+									<option value='corpoelec'>CANTV</option>
 									<option value='otro'>Otro</option>
 								</select>
 								<span id="sservicio" class="text-danger"></span>

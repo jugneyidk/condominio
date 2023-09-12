@@ -173,7 +173,7 @@
 	</div>
 
 <script src="js/carga.js"></script>
-	
+	<script src="js/nomina.js"></script>
 	<?php require_once('comunes/foot.php'); ?>
 </body>
 

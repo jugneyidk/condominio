@@ -10,10 +10,7 @@ if (is_file("vista/" . $p . ".php")) {
   $permisos = $o->chequearpermisos();
   if (!empty($_POST)) {
     $accion = $_POST['accion'];
-   if ($accion == '') {
-      $respuesta = $o->listadoapartamentos();
-      echo json_encode($respuesta);
-    } else if ($accion == 'incluir') {
+   if ($accion == 'incluir') {
    $respuesta = $o->incluir(
         $_POST['cedula_rif'], 
         $_POST['tipo_identificacion'],

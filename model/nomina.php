@@ -20,9 +20,9 @@ class nomina extends datos
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		if (!$this->existe(0,$descripcion,2)) {
+		if (!$this->existe(0,$cedula_rif,2)) {
 			try {
-				$guarda = $co->query("insert into nomina(cedula_rif,tipo_identificacion,nombres,apellidos,domicilio_fiscal,telefono,correo,descripcion,metodo,fecha,monto,referencia) 
+				$guarda = $co->query("insert into nomina(cedula_rif,tipo_identificacion,nombres,apellidos,domicilio,telefono,correo,descripcion,metodo,fecha,monto,referencia) 
 			   values ('$cedula_rif', '$tipo_identificacion',.'$nombres','$apellidos','$domicilio_fiscal','$telefono','$correo','$descripcion','$metodo','$fecha','$monto','$referencia')");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Registro Incluido";
@@ -71,6 +71,7 @@ class nomina extends datos
 		}
 		return $r;
 	}
+/*
 	PUBLIC function modificar($id_tipo_apartamento, $descripcion, $alicuota)
 	{
 		$co = $this->conecta();
@@ -119,6 +120,6 @@ class nomina extends datos
 			$r['mensaje'] =  "Tipo de apartamento no encontrado";
 		}
 		return $r;
-	}
+	}*/
 	
 }

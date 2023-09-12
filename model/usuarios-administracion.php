@@ -177,7 +177,7 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	PUBLIC private function existe($rif_cedula, $tipo_identificacion, $caso)
+	function existe($rif_cedula, $tipo_identificacion, $caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

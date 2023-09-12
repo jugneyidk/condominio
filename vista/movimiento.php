@@ -33,8 +33,8 @@
  <div class="container11">
         <center><h2>Saldo</h2></center>
         <?php
-        // Simula un saldo ficticio
-        $balance = 1000.50;
+        // Simula un saldo 
+        $balance = 0.000;
         ?>
         <div class="balance">
             Balance actual: $<?php echo number_format($balance, 2); ?>
