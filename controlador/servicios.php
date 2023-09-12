@@ -18,14 +18,8 @@ if (is_file("vista/" . $p . ".php")) {
       echo json_encode($respuesta);
     } else*/  if ($accion == 'incluir') {
      /* $respuesta = $o->incluir(
-        $_POST['nombres'],
-        $_POST['apellidos'],
-        $_POST['cedula_rif'],
-        $_POST['domicilio_fiscal'],
-        $_POST['telefono'],
-        $_POST['correo'],
+        $_POST['servicio'],
         $_POST['descripcion'],
-        $_POST['metodo'],
         $_POST['fecha'],
         $_POST['monto'],
         $_POST['referencia']
@@ -33,14 +27,8 @@ if (is_file("vista/" . $p . ".php")) {
      // echo json_encode($respuesta);
     } /*else if ($accion == 'modificar') {
       $respuesta = $o->modificar(
-        $_POST['nombres'],
-        $_POST['apellidos'],
-        $_POST['cedula_rif'],
-        $_POST['domicilio_fiscal'],
-        $_POST['telefono'],
-        $_POST['correo'],
-         $_POST['descripcion'],
-        $_POST['metodo'],
+        $_POST['servicio'],
+        $_POST['descripcion'],
         $_POST['fecha'],
         $_POST['monto'],
         $_POST['referencia']

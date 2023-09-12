@@ -5,6 +5,8 @@
         </a>
     </div>
     <?php if ($p == "usuarios-administracion" || $p == "habitantes" || $p == "tipoapto" || $p == "apartamentos" || $p == "deuda-condominio" || $p == "estacionamiento"): ?>
+    <?php if ($p == "usuarios-administracion" || $p == "habitantes" || $p == "tipoapto" || $p == "apartamentos" || $p == "deuda-condominio" || $p == "nomina" || $p == "servicios"): ?>
+
     <div class="col d-flex justify-content-end">
         <button class="btn btn-warning" id="limpiar">
             <span class="ml-2">Limpiar</span><span class="fa fa-eraser ml-1"></span>

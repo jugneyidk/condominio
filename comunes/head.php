@@ -11,6 +11,7 @@
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/sweetalert2.js"></script>
+	<script src="js/chart.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="datatables/datatables.css"/> 
 	<script type="text/javascript" src="datatables/datatables.min.js"></script>
 	<link href="css/startmin.css" rel="stylesheet">

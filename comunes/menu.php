@@ -18,6 +18,11 @@ if (isset($_SESSION['rol'])) {
 		<div class="col-12 col-md-8 col-lg-6 mt-2 m-md-0">
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav ml-auto">
+					
+							<a class="nav-link  text-light" href="?=dashboard" id="" data-toggle="">
+								Inicio</a>
+							
+						
 					<?php
 					if ($rol == "1" or $rol == "2") {
 					?>
@@ -29,7 +34,7 @@ if (isset($_SESSION['rol'])) {
 								if ($rol == "2") :
 								?>
 									<a class="dropdown-item" href="?p=usuarios-administracion">Usuarios</a>
-									<a class="dropdown-item" href="?p=nomina">Nomina</a>
+									
 								<?php endif; ?>
 								<a class="dropdown-item" href="?p=habitantes">Habitantes</a>
 								<a class="dropdown-item" href="?p=tipoapto">Tipos de Apartamento</a>
@@ -48,8 +53,30 @@ if (isset($_SESSION['rol'])) {
 								<a class="dropdown-item" href="?p=pagos">Pagos</a>
 								<a class="dropdown-item" href="?p=generar-reporte">Generar Reporte</a>
 								<a class="dropdown-item" href="?p=estadistica">Estadística</a>
+
 							</div>
 						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">
+								Pago
+							</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="?p=nomina">Nomina</a>
+								<a class="dropdown-item" href="?p=servicios">Servicios</a>
+							</div>
+						</li>
+						<div class="collapse navbar-collapse" id="navbarNavDropdown">
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">
+									Ver
+								</a>
+								<div class="dropdown-menu dropdown-menu-right">
+									<a class="dropdown-item" href="?p=movimiento">Movimientos/Balance</a>
+									<a class="dropdown-item" href="?p=estadistica">Estadistica</a>
+									
+								</div>
+							</li>
+						</div>
 						<div class="collapse navbar-collapse" id="navbarNavDropdown">
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">
