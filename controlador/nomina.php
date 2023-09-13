@@ -14,11 +14,6 @@ if (is_file("vista/" . $p . ".php")) {
    $respuesta = $o->incluir(
         $_POST['cedula_rif'], 
         $_POST['tipo_identificacion'],
-        $_POST['nombres'],
-        $_POST['apellidos'],
-        $_POST['domicilio_fiscal'],
-        $_POST['telefono'],
-        $_POST['correo'],
         $_POST['descripcion'],
         $_POST['metodo'],
         $_POST['fecha'],

@@ -15,15 +15,15 @@ class nomina extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-function incluir($cedula_rif, $tipo_identificacion, $nombres,$apellidos,$domicilio_fiscal,$telefono,$correo,$descripcion,$metodo,$fecha,$monto,$referencia)
+function incluir($id_empleado,$descripcion,$metodo,$fecha,$monto,$referencia)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 	
 			try {
-				$guarda = $co->query("insert into nomina(id_nom,cedula_rif,tipo_identificacion,nombres,apellidos,domicilio,telefono,correo,descripcion,metodo,fecha,monto,referencia) 
-			   values('NULL','$cedula_rif', '$tipo_identificacion', '$nombres','$apellidos','$domicilio_fiscal','$telefono','$correo','$descripcion','$metodo','$fecha','$monto','$referencia')");
+				$guarda = $co->query("insert into nomina(id_empleado,descripcion,metodo,fecha,monto,referencia) 
+			   values('$id_empleado','$descripcion','$metodo','$fecha','$monto','$referencia')");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Registro Incluido";
 			} catch (Exception $e) {
@@ -39,9 +39,9 @@ function incluir($cedula_rif, $tipo_identificacion, $nombres,$apellidos,$domicil
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado = $co->query("Select id_nom,cedula_rif,tipo_identificacion,nombres,apellidos,domicilio,telefono,correo,descripcion,metodo,fecha,monto,referencia
+			$resultado = $co->query("Select id, id_empleado, descripcion,metodo,fecha,monto,referencia
 			from 
-			nomina ORDER BY id_nom DESC");
+			nomina ORDER BY id DESC");
 			$respuesta = '';
 			if ($resultado) {
 				foreach ($resultado as $r) {
@@ -67,20 +67,7 @@ function incluir($cedula_rif, $tipo_identificacion, $nombres,$apellidos,$domicil
 					$respuesta = $respuesta . "<td class='align-middle'>";
 					$respuesta = $respuesta . $r[6];
 					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r[7];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r[8];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r[9];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r[10];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r[11];
+
 					$respuesta = $respuesta . "</td>";
 					$respuesta = $respuesta . "</tr>";
 				}
