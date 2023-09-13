@@ -33,11 +33,11 @@
 											<div class="col-sm-12 col-md-5 col-xl-6">
 												<label class="d-block" for="propietario">Empleado</label>
 												<div class="input-group">
-													<input class="form-control" type="text" id="empleados_info" placeholder="- Sin SELECCIONAR -" name="empleados_info" readonly data-span="sSelecempleados"/>
-													<input class="form-control" type="text" id="empleados_id" name="empleados_id" style="display:none" data-span="sSelecempleados"/>
-													<button type="button" data-toggle="modal" data-target="#modalempleados" class="btn btn-primary" id="listadeempleados" name="listadodeempleados">SELECCIONAR</button>
+													<input class="form-control" type="text" id="apartamento_info" placeholder="- Sin SELECCIONAR -" name="apartamento_info" readonly data-span="sSelecApartamento"/>
+													<input class="form-control" type="text" id="apartamentos_id" name="apartamentos_id" style="display:none" data-span="sSelecApartamento"/>
+													<button type="button" class="btn btn-primary" id="btn_listaApartamentos" name="listadopropietarios">SELECCIONAR</button>
 												</div>
-												<span id="sSelecempleados" class="text-danger"></span>
+												<span id="sSelecApartamento" class="text-danger"></span>
 											</div>
 										</div>
 										<hr><hr>
@@ -90,7 +90,7 @@
 								<?php endif; ?>
 								<?php if ($permisos[3] == 1) : ?>
 									<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-										<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalnomina" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+										<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalservicios" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
 									</div>
 								<?php endif; ?>
 								<?php if ($permisos[4] == 1) : ?>
@@ -216,11 +216,7 @@
 								<?php endif; ?>
 								<?php if ($permisos[3] == 1) : ?>
 									<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-<<<<<<< Updated upstream
 										<button type="button" class="btn btn-info w-100 small-width" id="consultar_2" data-toggle="modal" data-target="#modalEmpleados" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
-=======
-										<button type="button" class="btn btn-info w-100 small-width" id="s" data-toggle="modal" data-target="#modalempleados2" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
->>>>>>> Stashed changes
 									</div>
 								<?php endif; ?>
 								<?php if ($permisos[4] == 1) : ?>
@@ -243,14 +239,8 @@
 
 	</div>
 
-<<<<<<< Updated upstream
 	<!-- modal-->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalEmpleados">
-=======
-	
-<!-- modal--> 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalnomina">
->>>>>>> Stashed changes
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-light bg-info">
@@ -263,7 +253,6 @@
 					<table class="table table-striped table-hover" id="tablaEmpleados">
 						<thead>
 							<tr>
-<<<<<<< Updated upstream
 								<th>Cedula</th>
 								<th>Nombre</th>
 								<th>Apellido</th>
@@ -275,18 +264,6 @@
 								<th>Cargo</th>
 								<th>Fecha Nacim</th>
 								<th>Estado Civil</th>
-=======
-								<th class="d-none"></th>
-								<th>ID empleado</th>
-								<th class="d-none"></th>
-								<th>Descripcion</th>
-								<th class="d-none"></th>
-								<th>Metodo de pago</th>
-								<th class="d-none"></th>
-								<th>Fecha</th>
-								<th>Monto</th>
-								<th>Referencia</th>
->>>>>>> Stashed changes
 							</tr>
 						</thead>
 						<tbody id="listadoEmpleados">
@@ -301,7 +278,6 @@
 		</div>
 	</div>
 
-<<<<<<< Updated upstream
 	<script src="js/carga.js"></script>
 	<script src="js/comun_x.js"></script>
 	<script>
@@ -387,92 +363,6 @@
 		}
 	</script>
 	<!-- <script src="js/nomina.js"></script> -->
-=======
-	<!-- modal--> 
-	<div class="modal fade" tabindex="-1" role="dialog" id="modalempleados">
-		<div class="modal-dialog modal-xl" role="document">
-			<div class="modal-content">
-				<div class="modal-header text-light bg-info">
-					<h5 class="modal-title">Empleados Registrados</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="table-responsive">
-					<table class="table table-striped table-hover" id="tablaempleados">
-						<thead>
-							<tr>
-								<th class="d-none"></th>
-								<th>Cedula</th>
-								<th class="d-none"></th>
-								<th>Tipo ident.</th>
-								<th class="d-none"></th>
-								<th>Nombre.</th>
-								<th class="d-none"></th>
-								<th>Apellido</th>
-								<th>Fecha cont</th>
-								<th>Salario</th>
-								<th>Telefono</th>
-								<th>Correo</th>
-								<th>Estado civil</th>
-							</tr>
-						</thead>
-						<tbody id="listadoempleados1">
-
-						</tbody>
-					</table>
-				</div>
-				<div class="modal-footer bg-light">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- modal--> 
-	<div class="modal fade" tabindex="-1" role="dialog" id="modalempleados2">
-		<div class="modal-dialog modal-xl" role="document">
-			<div class="modal-content">
-				<div class="modal-header text-light bg-info">
-					<h5 class="modal-title">Empleados Registrados</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="table-responsive">
-					<table class="table table-striped table-hover" id="tablaempleados">
-						<thead>
-							<tr>
-								<th class="d-none"></th>
-								<th>Cedula</th>
-								<th class="d-none"></th>
-								<th>Tipo ident.</th>
-								<th class="d-none"></th>
-								<th>Nombre.</th>
-								<th class="d-none"></th>
-								<th>Apellido</th>
-								<th>Fecha cont</th>
-								<th>Salario</th>
-								<th>Telefono</th>
-								<th>Correo</th>
-								<th>Estado civil</th>
-							</tr>
-						</thead>
-						<tbody id="listadoempleados2">
-
-						</tbody>
-					</table>
-				</div>
-				<div class="modal-footer bg-light">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-<script src="js/carga.js"></script>
-	<script src="js/nomina.js"></script>
->>>>>>> Stashed changes
 	<?php require_once('comunes/foot.php'); ?>
 </body>
 
