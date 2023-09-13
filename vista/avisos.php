@@ -20,22 +20,22 @@
           <input autocomplete="off" type="text" class="form-control" name="accion" id="accion" style="display: none;">
           <input autocomplete="off" type="text" class="form-control" name="id" id="id" style="display: none;">
           <div class="container">
-            <div class="row mb-3">
-              <div class="col-6 col-md-9">
+            <div class="row mb-3 justify-content-center">
+              <div class="col-12 col-md-9">
                 
-                <label for="descripcion">Titulo:</label>
-                <input autocomplete="off" class="form-control" type="text" id="descripcion" name="descripcion" data-span="sdescripcion"/>
-                <span id="sdescripcion" class="text-danger"></span>
+                <label for="titulo">Titulo:</label>
+                <input autocomplete="off" class="form-control" type="text" id="titulo" name="titulo" data-span="stitulo"/>
+                <span id="stitulo" class="text-danger"></span>
               </div>
               <div class="col-12 col-md-9">
                 <label for="descripcion">Descripción:</label>
-                <input autocomplete="off" class="form-control" type="text" id="descripcion" name="descripcion" data-span="sdescripcion" style="height: 120px" />
+                <textarea class="form-control text-justify" id="descripcion" name="descripcion" data-span="sdescripcion" style="resize: vertical;min-height: 120px"></textarea>
                 <span id="sdescripcion" class="text-danger"></span>
               </div>
 
             </div>
 
-            <div class="row mb-3">
+            <div class="row mb-3 justify-content-around">
               <div class="col-6 col-md-2">
                 <label for="descripcion">Desde:</label>
                 <input autocomplete="off" class="form-control" type="date" id="fecha" name="fecha" data-span="sfecha"/>
@@ -57,7 +57,7 @@
             <?php //endif; ?>
             <?php //if ($permisos[3] == 1) : ?>
               <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-                <button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalEstacionamiento" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+                <button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalAvisos" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
               </div>
             <?php// endif; ?>
             <?php //if ($permisos[4] == 1) : ?>
@@ -72,10 +72,298 @@
             <?php //endif; ?>
           </div>
         </div>
- </div>
+      </div>
     </form>
+    
   </div>
+
+
+  <div class="modal fade" tabindex="-1" role="dialog" id="modalAvisos">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-light bg-info">
+          <h5 class="modal-title">Realizados</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover rows-pointer" id="tablaAvisos">
+            <thead>
+              <tr>
+                <th>N</th>
+                <th>Titulo</th>
+                <th>Descripción</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+              </tr>
+            </thead>
+            <tbody id="listadoAvisos">
+
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <script src="js/carga.js"></script>
+  <script src="js/comun_x.js"></script>
+  <script>
+  $(document).ready(function(){
+    borrar();
+    loadAvisos();
+
+    eventoKeypress(document.getElementById('titulo'),/^[0-9a-zA-Z\s:]*$/);
+    // eventoKeypress(document.getElementById('descripcion'),/^[0-9a-zA-Z\s]*$/);
+    eventoKeypress(document.getElementById('fecha'),/^[0-9]*$/);
+    eventoKeypress(document.getElementById('fecha2'),/^[0-9]*$/);
+
+    eventoKeyup(document.getElementById('titulo'),/^[0-9a-zA-Z\s-]{1,80}$/,"Solo se permiten letras y números, no puede estar el campo vacio");//-----------
+    $("#titulo").on("change",function(e){
+      validarKeyUp(/^[0-9a-zA-Z\s-]{1,80}$/,$(this),"Solo se permiten letras y números, no puede estar el campo vacio");
+    });
+    document.getElementById('titulo').maxLenth = 80;
+    document.getElementById('descripcion').maxLenth = 30000;
+
+    eventoKeyup(document.getElementById('fecha'), fechaExp, "Ingrese una fecha valida");
+    $("#fecha").on("change",function(e){
+      validarKeyUp(fechaExp, $("#fecha"), "Ingrese una fecha valida");
+    });
+    eventoKeyup(document.getElementById('fecha2'), fechaExp, "Ingrese una fecha valida");
+    $("#fecha2").on("change",function(e){
+      validarKeyUp(fechaExp, $("#fecha2"), "Ingrese una fecha valida");
+    });
+
+    $("#incluir").on("click", function () {
+      if (validarAviso()) {
+        $("#accion").val("incluir");
+        $("#descripcion").val( removeSpace($("#descripcion").val()) );
+        $("#titulo").val( removeSpace($("#titulo").val()) );
+
+        var datos = new FormData($("#f")[0]);
+        enviaAjax(datos,function(respuesta){
+
+          var lee = JSON.parse(respuesta);
+          if(lee.resultado == "incluir"){
+            borrar();
+            loadAvisos();
+            muestraMensaje(lee.mensaje, "", "success");
+
+          }
+          else if(lee.resultado == "error_no_borrar"){
+            muestraMensaje("ERROR", lee.mensaje,"error");
+            loadAvisos();
+          }
+          else{
+            muestraMensaje("ERROR", lee.mensaje,"error");
+            loadAvisos();
+            borrar();
+          }
+
+        });
+      }
+    });
+
+    $("#modificar").on("click", function () {
+      if (validarAviso()) {
+        if($("#id").val()==''){
+          muestraMensaje("ERROR","Debe seleccionar un aviso","error");
+          return false;
+        }
+        Swal.fire({
+          title: "¿Estás Seguro?",
+          text: "¿Está seguro que desea modificar el aviso?",
+          showCancelButton: true,
+          confirmButtonText: "Modificar",
+          confirmButtonColor: "#007bff",
+          cancelButtonText: `Cancelar`,
+          icon: "warning",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $("#accion").val("modificar");
+            var datos = new FormData($("#f")[0]);
+            enviaAjax(datos,function(respuesta){
+              var lee = JSON.parse(respuesta);
+              if(lee.resultado == "modificar"){
+                borrar();
+                loadAvisos();
+                muestraMensaje(lee.mensaje, "", "success");
+
+              }
+              else if(lee.resultado == "error_no_borrar"){
+                muestraMensaje("ERROR", lee.mensaje,"error");
+                loadAvisos();
+              }
+              else{
+                muestraMensaje("ERROR", lee.mensaje,"error");
+                loadAvisos();
+                borrar();
+              }
+            });
+          }
+        });
+      }
+    });
+
+
+    $("#eliminar").on("click", function () {
+      if($("#id").val()==''){
+        muestraMensaje("ERROR","Debe seleccionar un aviso","error");
+        return false;
+      }
+      Swal.fire({
+        title: "¿Estás Seguro?",
+        text: "¿Está seguro que desea eliminar el pago de Servicios?",
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        confirmButtonColor: "#dc3545",
+        cancelButtonText: `Cancelar`,
+        icon: "warning",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $("#accion").val("eliminar");
+          var datos = new FormData($("#f")[0]);
+          enviaAjax(datos,function(respuesta){
+            var lee = JSON.parse(respuesta);
+            if(lee.resultado == "eliminar"){
+              borrar();
+              loadAvisos();
+              muestraMensaje(lee.mensaje, "", "success");
+
+            }
+            else{
+              muestraMensaje("ERROR", lee.mensaje,"error");
+              loadAvisos();
+              borrar();
+            }
+          });
+        }
+      });
+    });
+
+    rowsEvent("listadoAvisos",function(e){
+      $("#id").val($(e).find("td").eq(1).text());
+      $("#titulo").val($(e).find("td").eq(2).text());
+      $("#descripcion").val($(e).find("td").eq(3).text());
+      $("#element").text($("#element").text().replace("Hi", "Bye"));
+      $("#fecha").val($(e).find("td").eq(4).text().replace(/^(\d\d).(\d\d).(\d\d\d\d)$/,"$3-$2-$1"));
+      $("#fecha2").val($(e).find("td").eq(5).text().replace(/^(\d\d).(\d\d).(\d\d\d\d)$/,"$3-$2-$1"));
+      $("#modalAvisos").modal("hide");
+      cambiarbotones(false);
+    });
+
+    $("#limpiar").on("click",function(){
+      borrar();
+    });
+
+
+
+
+  });
+  function loadAvisos(){
+  var datos = new FormData();
+  datos.append("accion", "listaAvisos");
+
+  enviaAjax(datos,function(respuesta){
+    var lee = JSON.parse(respuesta);
+    if (lee.resultado == "listaAvisos") {
+      if ($.fn.DataTable.isDataTable("#tablaAvisos")) {
+        $("#tablaAvisos").DataTable().destroy();
+      }
+      $("#listadoAvisos").html(lee.mensaje);
+      if (!$.fn.DataTable.isDataTable("#tablaAvisos")) {
+        $("#tablaAvisos").DataTable({
+          language: {
+            lengthMenu: "Mostrar _MENU_ por página",
+            zeroRecords: "No se encontraron registros de Avisos",
+            info: "Mostrando página _PAGE_ de _PAGES_",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtrado de _MAX_ registros totales)",
+            search: "Buscar:",
+            paginate: {
+              first: "Primera",
+              last: "Última",
+              next: "Siguiente",
+              previous: "Anterior",
+            },
+          },
+          autoWidth: false,
+          order: [[0, "asc"]],
+          columns: [
+          { data: "col1" },
+          { data: "col2" },
+          { data: "col3" },
+          { data: "col4" },
+          { data: "col5" },
+          { data: "col6" }
+          ]
+        });
+      }
+    }
+    else{
+      muestraMensaje("ERROR", lee.mensaje,"error");
+    }
+
+  });
+}
+  function validarAviso(){
+
+  $("#descripcion").val( removeSpace($("#descripcion").val()) );
+  if($("#descripcion").text()!=''){
+    muestraMensaje("ERROR", "La descripción no puede estar vacío","error");
+    return false;   
+  }
+  if(!validarKeyUp(/^[0-9a-zA-Z\s]+$/,$("#titulo"),"ingrese un titulo valido solo se permiten letras y números")){
+    muestraMensaje("ERROR", "ingrese una descripción valida solo se permiten letras y números","error");
+    return false;   
+  }
+  if(!validarKeyUp(fechaExp,$("#fecha"),"Ingrese una fecha valida")){
+    muestraMensaje("ERROR", "Ingrese una fecha valida", "error");
+    return false;
+  }
+  if(!validarKeyUp(fechaExp,$("#fecha2"),"Ingrese una fecha valida")){
+    muestraMensaje("ERROR", "Ingrese una fecha valida", "error");
+    return false;
+  }
+  if(Date.parse($("#fecha2").val()) <= Date.parse($("#fecha").val())){
+    muestraMensaje("ERROR", 'La fecha "Desde" debe ser anterior o igual a la fecha "Hasta"', "error");
+    return false; 
+  }
+
+
+  vaciarSpanError();
+  return true;
+
+
+  }
+  function borrar(func) {
+    $("form input").val("");
+    $("form select").val("");
+    $("form textarea").val("");
+    limpiarvalidacion();
+    cambiarbotones();
+  }
+  function cambiarbotones(parametro=true) {
+    $("#modificar").prop("disabled", parametro);
+    $("#eliminar").prop("disabled", parametro);
+    $("#incluir").prop("disabled", !parametro);
+  }
+function limpiarvalidacion() {
+  $("form input").removeClass("is-valid");
+  $("form input").removeClass("is-invalid");
+  $("form select").removeClass("is-valid");
+  $("form select").removeClass("is-invalid");
+}
+
+
+  </script>
+
 
   <?php require_once('comunes/foot.php'); ?>
 
