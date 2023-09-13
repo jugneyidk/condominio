@@ -43,6 +43,14 @@ if (is_file("vista/" . $p . ".php")) {
       $respuesta = $o->listadoEmpleados();
      echo json_encode($respuesta);
     }
+    else if ($accion == 'listadoempleados1') {
+      $respuesta = $o->listadoempleados1();
+     echo json_encode($respuesta);
+    }
+    else if ($accion == 'listadoempleados2') {
+      $respuesta = $o->listadoempleados2();
+     echo json_encode($respuesta);
+    }
     exit;
   }
   require_once("vista/" . $p . ".php");

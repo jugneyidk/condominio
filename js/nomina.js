@@ -1,5 +1,7 @@
 $(document).ready(function () {
   carga_nomina();
+  carga_empleados1();
+  carga_empleados2();
 $("#cedula_rif").on("keypress", function (e) {
     validarKeyPress(/^[0-9\b]*$/, e);
   });
@@ -201,6 +203,17 @@ function carga_nomina() {
   datos.append("accion", "listadonomina");
   enviaAjax(datos);
 }
+function carga_empleados1() {
+  var datos = new FormData();
+  datos.append("accion", "listadoempleados1");
+  enviaAjax(datos);
+}
+function carga_empleados2() {
+  var datos = new FormData();
+  datos.append("accion", "listadoempleados2");
+  enviaAjax(datos);
+}
+
 function cambiarTipoIdent(val) {
   switch (val) {
     case "0":
@@ -321,15 +334,53 @@ function validarEnvio() {
 
   return true;
 }
-function colocatipo(linea) {
-  $("#id_tipo_apartamento").val($(linea).find("td:eq(0)").text());
-  $("#descripcion").val($(linea).find("td:eq(1)").text());
-  $("#alicuota").val($(linea).find("td:eq(2)").text());
-  cambiarbotones(false);
-  $("#modal1").modal("hide");
-  limpiarerror();
-  limpiarvalidacion();
-  agregarvalidacion();
+ $("#listadodeempleados").on("click", function () {
+    $("#modalempleados").modal("show");
+  });
+function colocanomina(linea) {
+ 
+  $("#descripcion").val($(linea).find("td:eq(2)").text());
+ $("#metodo").val($(linea).find("td:eq(3)").text());
+  $("#monto").val($(linea).find("td:eq(5)").text());
+   $("#referencia").val($(linea).find("td:eq(6)").text());
+   $("#fecha").val($(linea).find("td:eq(4)").text());
+   $("#empleados_id").val($(linea).find("td:eq(1)").text());
+ cambiarbotones(false);
+ $("#modalnomina").modal("hide");
+ limpiarerror();
+ limpiarvalidacion();
+agregarvalidacion();
+}
+function colocaempleados1(linea) {
+ 
+  $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ $("#").val($(linea).find("td:eq()").text());
+ 
+ cambiarbotones(false);
+ $("#modalempleados").modal("hide");
+ limpiarerror();
+ limpiarvalidacion();
+agregarvalidacion();
+}
+function colocaempleados2(linea) {
+ 
+  $("#empleados_info").val($(linea).find("td:eq(3)").text());
+ $("#empleados_id").val($(linea).find("td:eq(0)").text());
+ cambiarbotones(false);
+ $("#modalempleados2").modal("hide");
+ limpiarerror();
+ limpiarvalidacion();
+agregarvalidacion();
 }
 function muestraMensaje(titulo, mensaje, icono) {
   Swal.fire({
@@ -370,7 +421,13 @@ function enviaAjax(datos) {
         var lee = JSON.parse(respuesta);
         if (lee.resultado == "listado_nomina") {
           $("#listadonomina").html(lee.mensaje);
-        } else if (
+        }
+        if (lee.resultado == "listado_empleados1") {
+          $("#listadoempleados1").html(lee.mensaje);
+        } 
+        if (lee.resultado == "listado_empleados2") {
+          $("#listadoempleados2").html(lee.mensaje);
+        }else if (
           lee.resultado == "incluir" ||
           lee.resultado == "modificar" ||
           lee.resultado == "eliminar"
