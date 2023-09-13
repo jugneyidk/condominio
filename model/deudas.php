@@ -2,6 +2,9 @@
 
 require_once('model/datos.php');
 require_once('model/enviar-correo.php');
+require_once("model/bitacora.php");
+
+
 class deuda extends datos
 {
 	PUBLIC function chequearpermisos()
@@ -124,6 +127,9 @@ class deuda extends datos
 			if($correo == true){
 				$r['resultado'] = 'registrado';
 				$r['mensaje'] =  "Pago Registrado";
+				$bitacora = new Bitacora();
+				$bitacora->b_incluir();
+
 			}
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';

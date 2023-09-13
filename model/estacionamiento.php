@@ -1,6 +1,9 @@
 <?php 
 
 require_once('model/datos.php');
+require_once("model/bitacora.php");
+
+
 
 /**
  * 
@@ -130,6 +133,10 @@ class estac extends datos
 					if($this->existe()){ // si existe (se registro exitosamente)
 						$r['resultado'] = 'incluir';
 						$r['mensaje'] =  'Registro Incluido';
+						$bitacora = new Bitacora();
+						$bitacora->b_incluir();
+
+						
 					}
 					else{
 						$r['resultado'] = 'error';
@@ -170,6 +177,9 @@ class estac extends datos
 						if($this->existe()){ // si existe (se registro exitosamente)
 							$r['resultado'] = 'modificar';
 							$r['mensaje'] =  'Registro Modificado';
+							$bitacora = new Bitacora();
+							$bitacora->b_modificar();
+
 						}
 						else{
 							$r['resultado'] = 'error';
@@ -200,6 +210,9 @@ class estac extends datos
 			$consulta->execute([$this->num_estac]);
 			$r['resultado'] = 'eliminar';
 			$r['mensaje'] =  'Registro Eliminado';
+			
+			$bitacora = new Bitacora();
+			$bitacora->b_eliminar();
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "El numero de estacionamiento no existe";

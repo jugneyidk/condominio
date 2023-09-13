@@ -1,6 +1,10 @@
 <?php
 
 require_once('model/datos.php');
+require_once("model/bitacora.php");
+
+
+
 class login extends datos
 {
     PUBLIC function iniciarSesion($usuario,$clave)
@@ -17,6 +21,8 @@ class login extends datos
 			        $_SESSION['rol'] = $resultado['id_rol'];
 			        $_SESSION['id_usuario'] = $resultado['id'];
                     $r["resultado"]="correcto";
+                    $bitacora = new Bitacora();
+                    $bitacora->b_accion("Inicio sesion");
                     return $r;
                 }else{
                     $r['resultado'] = "incorrecto";

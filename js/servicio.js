@@ -425,9 +425,4 @@ function cambiarbotones_2(parametro=true) {
 	$("#modificar_2").prop("disabled", parametro);
 	$("#eliminar_2").prop("disabled", parametro);
 	$("#incluir_2").prop("disabled", !parametro);
-
-
-
-	
-	
 }

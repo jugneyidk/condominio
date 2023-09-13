@@ -1,6 +1,10 @@
 <?php
 
 require_once('model/datos.php');
+require_once("model/bitacora.php");
+
+
+
 class detallesdeuda extends datos
 {
     PUBLIC function listadodeudas()
@@ -110,6 +114,8 @@ class detallesdeuda extends datos
 		   values ('$referencia','$fecha','$tipo_pago','$monto',$id_deuda,NULL,'pendiente')");
 			$r['resultado'] = 'registrado';
 			$r['mensaje'] =  "Pago Registrado";
+			$bitacora = new Bitacora();
+			$bitacora->b_incluir();
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();

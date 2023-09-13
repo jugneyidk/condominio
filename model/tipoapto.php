@@ -1,6 +1,9 @@
 <?php
 
 require_once('model/datos.php');
+require_once("model/bitacora.php");
+
+
 
 class tipoapto extends datos
 {
@@ -26,6 +29,10 @@ class tipoapto extends datos
 			   values ('$descripcion','$alicuota')");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Registro Incluido";
+				$bitacora = new Bitacora();
+				$bitacora->b_incluir();
+
+				
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
@@ -85,6 +92,9 @@ class tipoapto extends datos
 						");
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  "Registro modificado correctamente";
+				$bitacora = new Bitacora();
+				$bitacora->b_modificar();
+
 			} catch (Exception $e) {
 				return $e->getMessage();
 			}
@@ -106,6 +116,9 @@ class tipoapto extends datos
 						");
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Registro Eliminado";
+				
+				$bitacora = new Bitacora();
+				$bitacora->b_eliminar();
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				if ($e->getCode()=='23000') {

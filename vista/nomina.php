@@ -216,7 +216,7 @@
 								<?php endif; ?>
 								<?php if ($permisos[3] == 1) : ?>
 									<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-										<button type="button" class="btn btn-info w-100 small-width" id="consultar_2" data-toggle="modal" data-target="#modalservicios_New" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+										<button type="button" class="btn btn-info w-100 small-width" id="consultar_2" data-toggle="modal" data-target="#modalEmpleados" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
 									</div>
 								<?php endif; ?>
 								<?php if ($permisos[4] == 1) : ?>
@@ -240,7 +240,7 @@
 	</div>
 
 	<!-- modal-->
-	<div class="modal fade" tabindex="-1" role="dialog" id="modalnomina">
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalEmpleados">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-light bg-info">
@@ -250,23 +250,23 @@
 					</button>
 				</div>
 				<div class="table-responsive">
-					<table class="table table-striped table-hover" id="tablanomina">
+					<table class="table table-striped table-hover" id="tablaEmpleados">
 						<thead>
 							<tr>
-								<th class="d-none"></th>
-								<th>ID</th>
-								<th class="d-none"></th>
-								<th>Tipo ident.</th>
-								<th class="d-none"></th>
-								<th>Ident.</th>
-								<th class="d-none"></th>
-								<th>Descripcion</th>
-								<th>Monto</th>
-								<th>Fecha</th>
-								<th>Referencia</th>
+								<th>Cedula</th>
+								<th>Nombre</th>
+								<th>Apellido</th>
+								<th>Salario.</th>
+								<th>Fecha de contrato</th>
+								<th>Domicilio</th>
+								<th>Teléfono</th>
+								<th>Correo</th>
+								<th>Cargo</th>
+								<th>Fecha Nacim</th>
+								<th>Estado Civil</th>
 							</tr>
 						</thead>
-						<tbody id="listadonomina">
+						<tbody id="listadoEmpleados">
 
 						</tbody>
 					</table>
@@ -278,8 +278,91 @@
 		</div>
 	</div>
 
-<script src="js/carga.js"></script>
-	<script src="js/nomina.js"></script>
+	<script src="js/carga.js"></script>
+	<script src="js/comun_x.js"></script>
+	<script>
+
+		listadoEmpleados();
+
+
+		function listadoEmpleados(){
+			var datos = new FormData();
+			datos.append("accion", "listadoEmpleados");
+
+			enviaAjax(datos,function(respuesta){
+				var lee = JSON.parse(respuesta);
+				if (lee.resultado == "listadoEmpleados") {
+					if ($.fn.DataTable.isDataTable("#tablaEmpleados")) {
+						$("#tablaEmpleados").DataTable().destroy();
+					}
+					$("#listadoEmpleados").html(lee.mensaje);
+					if (!$.fn.DataTable.isDataTable("#tablaEmpleados")) {
+						$("#tablaEmpleados").DataTable({
+							language: {
+								lengthMenu: "Mostrar _MENU_ por página",
+								zeroRecords: "No se encontraron registros de Empleados",
+								info: "Mostrando página _PAGE_ de _PAGES_",
+								infoEmpty: "No hay registros disponibles",
+								infoFiltered: "(filtrado de _MAX_ registros totales)",
+								search: "Buscar:",
+								paginate: {
+									first: "Primera",
+									last: "Última",
+									next: "Siguiente",
+									previous: "Anterior",
+								},
+							},
+							autoWidth: false,
+							order: [[0, "asc"]],
+							columns: [
+							{ data: "col1" },
+							{ data: "col2" },
+							{ data: "col3" },
+							{ data: "col4" },
+							{ data: "col5" },
+							{ data: "col6" },
+							{ data: "col7" },
+							{ data: "col8" },
+							{ data: "col9" },
+							{ data: "col10" },
+							{ data: "col11" },
+							]
+						});
+					}
+				}
+				else{
+					muestraMensaje("ERROR", lee.mensaje,"error");
+				}
+
+			});
+		}
+		function borrar(func) {
+			$("form input").val("");
+			$("form select").val("");
+			limpiarvalidacion();
+			cambiarbotones();
+			cambiarbotones_2();
+		}
+
+		function limpiarvalidacion() {
+			$("form input").removeClass("is-valid");
+			$("form input").removeClass("is-invalid");
+			$("form select").removeClass("is-valid");
+			$("form select").removeClass("is-invalid");
+		}
+		function cambiarbotones(parametro=true) {
+			$("#modificar").prop("disabled", parametro);
+			$("#eliminar").prop("disabled", parametro);
+			$("#incluir").prop("disabled", !parametro);
+		}
+
+		function cambiarbotones_2(parametro=true) {
+			$("#modificar_2").prop("disabled", parametro);
+			$("#eliminar_2").prop("disabled", parametro);
+			$("#incluir_2").prop("disabled", !parametro);
+		}
+	</script>
+	<!-- <script src="js/nomina.js"></script> -->
 	<?php require_once('comunes/foot.php'); ?>
 </body>
 

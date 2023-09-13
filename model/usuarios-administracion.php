@@ -1,6 +1,9 @@
 <?php
 
 require_once('model/datos.php');
+require_once("model/bitacora.php");
+
+
 
 class usuarios extends datos
 {
@@ -30,6 +33,11 @@ class usuarios extends datos
 		   values ('$lid','$rol','$contrasena')");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Usuario Incluido";
+				$bitacora = new Bitacora();
+				$bitacora->b_incluir();
+
+				
+
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
@@ -138,6 +146,9 @@ class usuarios extends datos
 				}
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  "Usuario modificado correctamente";
+				$bitacora = new Bitacora();
+				$bitacora->b_modificar();
+
 			} catch (Exception $e) {
 				return $e->getMessage();
 			}
@@ -163,6 +174,9 @@ class usuarios extends datos
 						");
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Usuario Eliminado";
+				
+				$bitacora = new Bitacora();
+				$bitacora->b_eliminar();
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				if ($e->getCode()=='23000') {

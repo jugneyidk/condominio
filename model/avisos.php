@@ -1,5 +1,8 @@
 <?php 
 require_once("model/datos.php");
+require_once("model/bitacora.php");
+
+
 
 /**
  * 
@@ -33,6 +36,8 @@ class avisos extends datos
 			$consulta->execute([$this->titulo, $this->descripcion, $this->desde, $this->hasta ]);
 			$r['resultado'] = 'incluir';
 			$r['mensaje'] =  'Registro Incluido';
+			$bitacora = new Bitacora();
+			$bitacora->b_incluir();
 
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
@@ -54,6 +59,11 @@ class avisos extends datos
 
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] =  'Registro Modificado';
+
+			$bitacora = new Bitacora();
+			$bitacora->b_modificar();
+
+
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
@@ -72,6 +82,9 @@ class avisos extends datos
 				$consulta->execute([$this->id]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  'Registro Eliminado';
+				
+				$bitacora = new Bitacora();
+				$bitacora->b_eliminar();
 			} else {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El Registro no existe";

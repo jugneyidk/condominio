@@ -1,6 +1,8 @@
 <?php 
 
 require_once("model/datos.php");
+require_once("model/bitacora.php");
+// $bitacora = new Bitacora();
 /**
  * 
  // CONTROL referencia duplicada
@@ -49,6 +51,9 @@ class servicio extends datos
 					$consulta->execute();
 					$r['resultado'] = 'incluir';
 					$r['mensaje'] =  'Registro Incluido';
+
+					$bitacora = new Bitacora();
+					$bitacora->b_incluir("pago de servicio");
 				}
 				else{
 					$r['resultado'] = 'error_no_borrar';
@@ -92,6 +97,8 @@ class servicio extends datos
 
 					$r['resultado'] = 'modificar';
 					$r['mensaje'] =  'Registro Modificado';
+					$bitacora = new Bitacora();
+					$bitacora->b_modificar("pago de servicio");
 				}
 				else{
 					$r['resultado'] = 'error_no_borrar';
@@ -118,6 +125,8 @@ class servicio extends datos
 				$consulta->execute([$this->id_pago_serv]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  'Registro Eliminado';
+				$bitacora = new Bitacora();
+				$bitacora->b_eliminar("pago de servicio");
 			} else {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El Registro no existe";
@@ -140,6 +149,8 @@ class servicio extends datos
 				$consulta->execute([$this->descripcion]);
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  'Registro Incluido';
+				$bitacora = new Bitacora();
+				$bitacora->b_incluir("un servicio");
 			}
 			else{
 				$r['resultado'] = 'error';
@@ -161,6 +172,8 @@ class servicio extends datos
 				$consulta->execute([$this->descripcion,$this->id_pago_serv]);
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  'Registro Modificado';
+				$bitacora = new Bitacora();
+				$bitacora->b_modificar("un servicio");
 			}
 			else{
 				$r['resultado'] = 'error';
@@ -182,6 +195,8 @@ class servicio extends datos
 				$consulta->execute([$this->id_pago_serv]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  'Registro Eliminado';
+				$bitacora = new Bitacora();
+				$bitacora->b_eliminar("un servicio");
 			}
 			else{
 				$r['resultado'] = 'error';
@@ -245,7 +260,7 @@ class servicio extends datos
 
 	PUBLIC function listadoServicios(){
 		try {
-			$respuesta = $this->con->query("SELECT * FROM `lista_servicios`")->fetchall();
+			$respuesta = $this->con->query("SELECT * FROM `lista_servicios`")->fetchall(PDO::FETCH_ASSOC);
 
 			
 

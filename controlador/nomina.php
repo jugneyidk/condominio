@@ -39,8 +39,8 @@ if (is_file("vista/" . $p . ".php")) {
     } else*/ if ($accion == 'eliminar') {
      // $respuesta = $o->eliminar($_POST['id']);
      // echo json_encode($respuesta);
-    } else if ($accion == 'listadonomina') {
-      $respuesta = $o->listadonomina();
+    } else if ($accion == 'listadoEmpleados') {
+      $respuesta = $o->listadoEmpleados();
      echo json_encode($respuesta);
     }
     exit;

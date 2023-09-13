@@ -2,6 +2,9 @@
 
 require_once('model/enviar-correo.php');
 require_once('model/datos.php');
+require_once("model/bitacora.php");
+
+
 class pagos extends datos
 {
 	PUBLIC function listadopagos()
@@ -321,6 +324,8 @@ class pagos extends datos
 					$r['resultado'] = 'confirmado';
 					$r['correo'] = $correo;
 					$r['mensaje'] =  "Pago confirmado correctamente";
+					$bitacora = new Bitacora();
+					$bitacora->b_accion("Confirmo pago en ");
 					return $r;
 				}
 			} elseif ($accion == 'declinar') {
@@ -332,6 +337,8 @@ class pagos extends datos
 							");
 				$r['resultado'] = 'declinado';
 				$r['mensaje'] =  "Pago declinado correctamente";
+				$bitacora = new Bitacora();
+				$bitacora->b_accion("Declino pago en ");
 			}
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
