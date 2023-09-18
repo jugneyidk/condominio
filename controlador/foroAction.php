@@ -1,25 +1,23 @@
 <?php 
-if (!is_file("model/" . $p . ".php")) {
-
-	echo "Falta definir la clase " . $p;
-	exit;
-}
-require_once("model/" . $p . ".php");
+require_once("model/foro.php");
 if (is_file("vista/" . $p . ".php")) {
-	$o = new avisos();
+	$o = new Foro();
 	$permisos = $o->chequearpermisos();
 	if (!empty($_POST)) {
 		$accion = $_POST['accion'];
-		if ($accion == 'listaAvisos') {
-			$respuesta = $o->listaAvisos();
+		if ($accion == 'listaForo') {
+			$respuesta = $o->listaForo();
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'incluir') {
 			$o->set_titulo($_POST["titulo"]);
 			$o->set_descripcion($_POST["descripcion"]);
-			$o->set_desde($_POST["fecha"]);
-			$o->set_hasta($_POST["fecha2"]); 
-			$respuesta = $o->incluir();
+
+
+			$o->set_create_by("2"); // //por ahora el creador es diego falta las sesiones de los habitantes
+
+
+			$respuesta = $o->incluir_s();
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'modificar') {
@@ -28,20 +26,19 @@ if (is_file("vista/" . $p . ".php")) {
 			$o->set_id($_POST["id"]);
 			$o->set_titulo($_POST["titulo"]);
 			$o->set_descripcion($_POST["descripcion"]);
-			$o->set_desde($_POST["fecha"]);
-			$o->set_hasta($_POST["fecha2"]);
-			$respuesta = $o->modificar();
+
+			$respuesta = $o->modificar_s();
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'eliminar') {
 			$o->set_id($_POST["id"]);
-			echo json_encode($o->eliminar());
+			echo json_encode($o->eliminar_s());
 			
 		}
 		exit;
 	}
 		require_once("vista/" . $p . ".php");
 } else {
-    require_once("vista/404.php"); 
+	require_once("vista/404.php");
 }
 ?>

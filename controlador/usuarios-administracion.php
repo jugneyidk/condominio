@@ -33,5 +33,5 @@ if (is_file("vista/" . $p . ".php")) {
     header("Location: . ");
   }
 } else {
-  echo "pagina en construccion";
+  require_once("vista/404.php");
 }

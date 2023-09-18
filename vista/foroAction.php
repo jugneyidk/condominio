@@ -10,7 +10,7 @@
 
 		<?php require_once('comunes/cabecera_modulos.php'); ?>
 		<div>
-			<h2 class="text-center h2 text-primary">Crear aviso</h2>
+			<h2 class="text-center h2 text-primary">Crear Foro</h2>
 			<hr />
 		</div>
 
@@ -34,38 +34,25 @@
 							</div>
 
 						</div>
-
-						<div class="row mb-3 justify-content-around">
-							<div class="col-6 col-md-2">
-								<label for="descripcion">Desde:</label>
-								<input autocomplete="off" class="form-control" type="date" id="fecha" name="fecha" data-span="sfecha"/>
-								<span id="sfecha" class="text-danger"></span>
-							</div>
-							<div class="col-6 col-md-2">
-								<label for="descripcion">Hasta:</label>
-								<input autocomplete="off" class="form-control" type="date" id="fecha2" name="fecha2" data-span="sfecha2"/>
-								<span id="sfecha2" class="text-danger"></span>
-							</div>
-						</div>
 					</div>
 					<hr>
 					<div class="row justify-content-center">
-						<?php if ($permisos[2] == 1): ?>
+						<?php if (true ||$permisos[2] == 1): ?>
 							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
 								<button type="button" class="btn btn-primary w-100 small-width" id="incluir" name="incluir">INCLUIR<span class="fa fa-plus-circle ml-2"></span></button>
 							</div>
 						<?php endif; ?>
-						<?php if ($permisos[3] == 1) : ?>
+						<?php if (true ||$permisos[3] == 1) : ?>
 							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-								<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalAvisos" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+								<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalForo" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
 							</div>
 						<?php endif; ?>
-						<?php if ($permisos[4] == 1) : ?>
+						<?php if (true ||$permisos[4] == 1) : ?>
 							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
 								<button type="button" class="btn btn-warning w-100 small-width" id="modificar" name="modificar" disabled>MODIFICAR<span class="fa fa-pencil-square-o ml-2"></span></button>
 							</div>
 						<?php endif; ?>
-						<?php if ($permisos[5] == 1) : ?>
+						<?php if (true ||$permisos[5] == 1) : ?>
 							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
 								<button type="button" class="btn btn-danger w-100 small-width" id="eliminar" name="eliminar" disabled>ELIMINAR<span class="fa fa-trash ml-2"></span></button>
 							</div>
@@ -78,7 +65,7 @@
 	</div>
 
 
-	<div class="modal fade" tabindex="-1" role="dialog" id="modalAvisos">
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalForo">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-light bg-info">
@@ -88,17 +75,17 @@
 					</button>
 				</div>
 				<div class="table-responsive">
-					<table class="table table-striped table-hover rows-pointer" id="tablaAvisos">
+					<table class="table table-striped table-hover rows-pointer" id="tablaForo">
 						<thead>
 							<tr>
 								<th>N</th>
 								<th>Titulo</th>
 								<th>Descripción</th>
-								<th>Desde</th>
-								<th>Hasta</th>
+								<th>Fecha</th>
+
 							</tr>
 						</thead>
-						<tbody id="listadoAvisos">
+						<tbody id="listaForo">
 
 						</tbody>
 					</table>
@@ -116,32 +103,21 @@
 	<script src="js/comun_x.js"></script>
 	<script>
 		$(document).ready(function(){
+			document.getElementsByClassName('regresar_btn')[0].href="?p=foro";
 			borrar();
-			loadAvisos();
+			loadForos();
 
 			eventoKeypress(document.getElementById('titulo'),/^[0-9a-zA-Z\s:-?¿!¡/,.+\-()]*$/);
 			// eventoKeypress(document.getElementById('descripcion'),/^[0-9a-zA-Z\s]*$/);
-			eventoKeypress(document.getElementById('fecha'),/^[0-9]*$/);
-			eventoKeypress(document.getElementById('fecha2'),/^[0-9]*$/);
 
-			eventoKeyup(document.getElementById('titulo'),/^[0-9a-zA-Z\s-]{1,80}$/,"ingrese un titulo valido, solo se permiten letras, números y los caracteres (:-?¿!¡/,.+-), no puede estar el campo vació");//-----------
+			eventoKeyup(document.getElementById('titulo'),/^[0-9a-zA-Z\s:-?¿!¡/,.+\-()]{1,80}$/,"Solo se permiten letras y números, no puede estar el campo vació");//-----------
 			$("#titulo").on("change",function(e){
-				validarKeyUp(/^[0-9a-zA-Z\s:-?¿!¡/,.+\-()]{1,80}$/,$(this),"ingrese un titulo valido, solo se permiten letras, números y los caracteres (:-?¿!¡/,.+-), no puede estar el campo vació");
+				validarKeyUp(/^[0-9a-zA-Z\s:-?¿!¡/,.+\-()]{1,80}$/,$(this),"Solo se permiten letras, números y los caracteres (:-?¿!¡/,.+-), no puede estar el campo vació");
 			});
 			document.getElementById('titulo').maxLenth = 80;
 			document.getElementById('descripcion').maxLenth = 30000;
-
-			eventoKeyup(document.getElementById('fecha'), fechaExp, "Ingrese una fecha valida");
-			$("#fecha").on("change",function(e){
-				validarKeyUp(fechaExp, $("#fecha"), "Ingrese una fecha valida");
-			});
-			eventoKeyup(document.getElementById('fecha2'), fechaExp, "Ingrese una fecha valida");
-			$("#fecha2").on("change",function(e){
-				validarKeyUp(fechaExp, $("#fecha2"), "Ingrese una fecha valida");
-			});
-
 			$("#incluir").on("click", function () {
-				if (validarAviso()) {
+				if (validarForo()) {
 					$("#accion").val("incluir");
 					$("#descripcion").val( removeSpace($("#descripcion").val()) );
 					$("#titulo").val( removeSpace($("#titulo").val()) );
@@ -152,17 +128,17 @@
 						var lee = JSON.parse(respuesta);
 						if(lee.resultado == "incluir"){
 							borrar();
-							loadAvisos();
+							loadForos();
 							muestraMensaje(lee.mensaje, "", "success");
 
 						}
 						else if(lee.resultado == "error_no_borrar"){
 							muestraMensaje("ERROR", lee.mensaje,"error");
-							loadAvisos();
+							loadForos();
 						}
 						else{
 							muestraMensaje("ERROR", lee.mensaje,"error");
-							loadAvisos();
+							loadForos();
 							borrar();
 						}
 
@@ -171,7 +147,7 @@
 			});
 
 			$("#modificar").on("click", function () {
-				if (validarAviso()) {
+				if (validarForo()) {
 					if($("#id").val()==''){
 						muestraMensaje("ERROR","Debe seleccionar un aviso","error");
 						return false;
@@ -192,17 +168,17 @@
 								var lee = JSON.parse(respuesta);
 								if(lee.resultado == "modificar"){
 									borrar();
-									loadAvisos();
+									loadForos();
 									muestraMensaje(lee.mensaje, "", "success");
 
 								}
 								else if(lee.resultado == "error_no_borrar"){
 									muestraMensaje("ERROR", lee.mensaje,"error");
-									loadAvisos();
+									loadForos();
 								}
 								else{
 									muestraMensaje("ERROR", lee.mensaje,"error");
-									loadAvisos();
+									loadForos();
 									borrar();
 								}
 							});
@@ -233,13 +209,13 @@
 							var lee = JSON.parse(respuesta);
 							if(lee.resultado == "eliminar"){
 								borrar();
-								loadAvisos();
+								loadForos();
 								muestraMensaje(lee.mensaje, "", "success");
 
 							}
 							else{
 								muestraMensaje("ERROR", lee.mensaje,"error");
-								loadAvisos();
+								loadForos();
 								borrar();
 							}
 						});
@@ -247,13 +223,11 @@
 				});
 			});
 
-			rowsEvent("listadoAvisos",function(e){
+			rowsEvent("listaForo",function(e){
 				$("#id").val($(e).find("td").eq(1).text());
 				$("#titulo").val($(e).find("td").eq(2).text());
 				$("#descripcion").val($(e).find("td").eq(3).text());
-				$("#fecha").val($(e).find("td").eq(4).text().replace(/^(\d\d).(\d\d).(\d\d\d\d)$/,"$3-$2-$1"));
-				$("#fecha2").val($(e).find("td").eq(5).text().replace(/^(\d\d).(\d\d).(\d\d\d\d)$/,"$3-$2-$1"));
-				$("#modalAvisos").modal("hide");
+				$("#modalForo").modal("hide");
 				cambiarbotones(false);
 			});
 
@@ -261,22 +235,22 @@
 				borrar();
 			});		
 		});
-		function loadAvisos(){
+		function loadForos(){
 			var datos = new FormData();
-			datos.append("accion", "listaAvisos");
+			datos.append("accion", "listaForo");
 
 			enviaAjax(datos,function(respuesta){
 				var lee = JSON.parse(respuesta);
-				if (lee.resultado == "listaAvisos") {
-					if ($.fn.DataTable.isDataTable("#tablaAvisos")) {
-						$("#tablaAvisos").DataTable().destroy();
+				if (lee.resultado == "listaForo") {
+					if ($.fn.DataTable.isDataTable("#tablaForo")) {
+						$("#tablaForo").DataTable().destroy();
 					}
-					$("#listadoAvisos").html(lee.mensaje);
-					if (!$.fn.DataTable.isDataTable("#tablaAvisos")) {
-						$("#tablaAvisos").DataTable({
+					$("#listaForo").html(lee.mensaje);
+					if (!$.fn.DataTable.isDataTable("#tablaForo")) {
+						$("#tablaForo").DataTable({
 							language: {
 								lengthMenu: "Mostrar _MENU_ por página",
-								zeroRecords: "No se encontraron registros de Avisos",
+								zeroRecords: "No se encontraron registros de Foros",
 								info: "Mostrando página _PAGE_ de _PAGES_",
 								infoEmpty: "No hay registros disponibles",
 								infoFiltered: "(filtrado de _MAX_ registros totales)",
@@ -295,8 +269,7 @@
 							{ data: "col2" },
 							{ data: "col3" },
 							{ data: "col4" },
-							{ data: "col5" },
-							{ data: "col6" }
+							{ data: "col5" }
 							]
 						});
 					}
@@ -307,35 +280,20 @@
 
 			});
 		}
-		function validarAviso(){
+		function validarForo(){
 
 			$("#descripcion").val( removeSpace($("#descripcion").val()) );
 			if($("#descripcion").text()!=''){
 				muestraMensaje("ERROR", "La descripción no puede estar vacío","error");
 				return false;   
 			}
-			if(!validarKeyUp(/^[0-9a-zA-Z\s:-?¿!¡/,.+\-()]{1,80}$/,$("#titulo"),"ingrese un titulo valido solo se permiten letras y números")){
+			if(!validarKeyUp(/^[0-9a-zA-Z\s:-?¿!¡/,.+\-()]+$/,$("#titulo"),"ingrese un titulo valido solo se permiten letras y números")){
 				muestraMensaje("ERROR", "ingrese un titulo valido, solo se permiten letras, números y los caracteres (:-?¿!¡/,.+-)","error");
 				return false;   
 			}
-			if(!validarKeyUp(fechaExp,$("#fecha"),"Ingrese una fecha valida")){
-				muestraMensaje("ERROR", "Ingrese una fecha valida", "error");
-				return false;
-			}
-			if(!validarKeyUp(fechaExp,$("#fecha2"),"Ingrese una fecha valida")){
-				muestraMensaje("ERROR", "Ingrese una fecha valida", "error");
-				return false;
-			}
-			if(Date.parse($("#fecha2").val()) <= Date.parse($("#fecha").val())){
-				muestraMensaje("ERROR", 'La fecha "Desde" debe ser anterior o igual a la fecha "Hasta"', "error");
-				return false; 
-			}
-
 
 			vaciarSpanError();
 			return true;
-
-
 		}
 		function borrar(func) {
 			$("form input").val("");

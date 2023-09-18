@@ -66,14 +66,16 @@ if (isset($_SESSION['rol'])) {
 									Ver
 								</a>
 								<div class="dropdown-menu dropdown-menu-right">
+									<a class="dropdown-item" href="?p=foro" id="" data-toggle="">Foro</a>
 									<a class="dropdown-item" href="?p=movimiento">Movimientos/Balance</a>
 									<a class="dropdown-item" href="?p=estadistica">Estadistica</a>
+									<a class="dropdown-item" href="?p=avisos" id="" data-toggle="">Avisos</a>
+
 									
 								</div>
 							</li>
 						</div>
-						<a class="nav-link  text-light" href="?p=avisos" id="" data-toggle="">
-								Avisos</a>
+						
 						<div class="collapse navbar-collapse" id="navbarNavDropdown">
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">

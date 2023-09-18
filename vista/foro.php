@@ -3,9 +3,15 @@
 <body>
     <?php require_once('comunes/menu.php');?>
     <div class="container bg-white p-4 text-center">
-        <h1>Error 404</h1>
-        <p class="mb-5 lead">La página que estás buscando no existe.</p>
-        <a class="btn btn-secondary text-light" href="?p=principal">Volver</a>
+        lienzo en blanco
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="container text-center">
+        <a class="btn btn-secondary text-light" href="?p=foroAction">Crear Foro</a>
+        	
+        </div>
     </div>
     <?php require_once('comunes/foot.php'); ?>
 </body>
