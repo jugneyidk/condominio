@@ -4,9 +4,13 @@ $(document).ready(function () {
   carga_habitantes();
   carga_tipos();
   $("#numapto").on("keypress", function (e) {
-    validarKeyPress(e, /^[A-Z0-9-\b]$/);
+    validarKeyPress(e, /^[A-Za-z0-9-\b]$/);
   });
   $("#numapto").on("keyup", function () {
+
+    $(this).val(function(i,value){
+      return value.replace(/^[a-zA-Z]/, function(v) { return v.toUpperCase(); });
+    })
     validarKeyUp(
       /^[A-Z]-[0-9]{1,3}$/,
       $(this),

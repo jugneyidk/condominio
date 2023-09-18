@@ -1,5 +1,6 @@
 <?php require_once('comunes/head.php'); ?>
 
+
 <body class="bg-light">
 	<?php require_once("comunes/carga.php"); ?>
 	<?php require_once("comunes/modal.php"); ?>
@@ -45,7 +46,7 @@
 					</div>
 					<div class="col">
 						<label for="numapto">Numero de Apartamento</label>
-						<input class="form-control" type="text" id="numapto" name="numapto" />
+						<input class="form-control" type="text" id="numapto" name="numapto" style="text-transform: uppercase;" />
 						<span id="snumapto" class="text-danger"></span>
 					</div>
 				</div>

@@ -163,8 +163,10 @@ function removeSpace(cadena)
 	{
 		if(/(?:^\s)|(?:[\s][\s])|(?:[\s]+$)/.test(cadena))
 		{
-			cadena=cadena.replace(/(?:^\s+)|(?:[\s]+$)/,"");
+			cadena = cadena.replace(/\n/mg,"---WHITE_ENDL_SPACE---");
+			cadena=cadena.replace(/(?:^\s+)|(?:[\s]+$)/mg,"");
 			while(/[\s][\s]/.test(cadena)) cadena=cadena.replace(/(?:[\s][\s])+/," ");
+			cadena = cadena.replace(/---WHITE_ENDL_SPACE---/g,"\n");
 		}
 		return cadena;
 	}

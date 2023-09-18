@@ -7,3 +7,12 @@ footer {
 table.rows-pointer tbody tr{
 	cursor: pointer !important;
 }
+
+.no-select/*Evita seleccion (sombreado azul)*/
+{
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

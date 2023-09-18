@@ -120,7 +120,9 @@ class servicio extends datos
 	PUBLIC function eliminar(){
 		$r = array();
 		try {
-			if ($this->existe()) {
+			$consulta = $this->con->prepare("SELECT * FROM servicios WHERE id_servicios = ?");
+			$consulta->execute([$this->id_pago_serv]);
+			if ($consulta->fetch()) {
 				$consulta = $this->con->prepare("DELETE FROM servicios WHERE id_servicios = ?");
 				$consulta->execute([$this->id_pago_serv]);
 				$r['resultado'] = 'eliminar';
@@ -348,5 +350,7 @@ class servicio extends datos
 		$this->id_pago_serv = $value;
 	}
 }
+
+
 
 ?>

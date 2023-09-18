@@ -6,8 +6,13 @@ if (!is_file("model/" . $p . ".php")) {
 require_once("model/" . $p . ".php");
 
 if (is_file("vista/" . $p . ".php")) {
-  if (!empty($_POST)) {
+  if(isset($_GET['out'])){
     session_destroy();
+  }
+  if(isset($_SESSION['id_habitante'])){
+    header("Location: ?p=detallesdeuda");
+  }
+  if (!empty($_POST)) {
     $o = new consulta();
     $accion = $_POST["accion"];
     if ($accion == "iniciar") {

@@ -1,4 +1,4 @@
-<?php
+<?php  
 
 require_once('model/datos.php');
 class consulta extends datos
@@ -12,7 +12,7 @@ class consulta extends datos
                 $consulta = $co->query("Select id,cedula_rif,correo from habitantes where cedula_rif = '$clave' and correo = '$usuario'");
                 $resultado = $consulta->fetch();
                 if ($resultado) {
-                    session_start();
+                    //session_start();
 			        $_SESSION['id_habitante'] = $resultado['id'];
                     $r["resultado"]="correcto";
                     return $r;
@@ -27,3 +27,4 @@ class consulta extends datos
         }
     }
 }
+?>

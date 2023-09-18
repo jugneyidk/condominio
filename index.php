@@ -3,7 +3,14 @@ $p = "principal";
 session_start();
  if (!empty($_GET['p'])){
    $p = $_GET['p'];
-   if (!isset($_SESSION['id_usuario']) && ($p != "principal" && $p != "login" && $p != "consulta" && $p != "detallesdeuda")) {
+   $p_verificar=[
+   		"principal",
+   		"login",
+   		"consulta",
+   		"detallesdeuda"
+   	];
+   //if (!isset($_SESSION['id_usuario']) && ($p != "principal" && $p != "login" && $p != "consulta" && $p != "detallesdeuda")) {
+   if (!isset($_SESSION['id_usuario']) && !in_array($p, $p_verificar)) {
      header("Location: ?p=login");
    }
  }
