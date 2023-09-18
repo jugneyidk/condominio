@@ -54,17 +54,23 @@ class usuarios extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado = $co->query("Select id, 
-			rif_cedula,
-			tipo_identificacion,
-			razon_social,
-			domicilio_fiscal,
-			telefono,
-			correo,
-			id_rol 
-			from 
-			datos_usuarios
-			inner join usuarios_roles where usuarios_roles.id_usuario=datos_usuarios.id ORDER BY id DESC");
+			$resultado = $co->query("SELECT
+			DISTINCT
+			    id,
+			    rif_cedula,
+			    tipo_identificacion,
+			    razon_social,
+			    domicilio_fiscal,
+			    telefono,
+			    correo,
+			    id_rol
+			FROM
+			    datos_usuarios
+			INNER JOIN usuarios_roles WHERE usuarios_roles.id_usuario = datos_usuarios.id
+			ORDER BY
+			    id
+			DESC
+			    ");
 			$respuesta = '';
 			if ($resultado) {
 				foreach ($resultado as $r) {
