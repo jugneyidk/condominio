@@ -68,11 +68,59 @@ class nomina extends datos
 					$respuesta = $respuesta . $r[6];
 					$respuesta = $respuesta . "</td>";
 				}
-
-
  			}
- 		}
+ 				$r['resultado'] = 'listado_empleados1';
+ 				$r['mensaje'] =  $respuesta;
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		return $r;
  	}
+
+ 	 	PUBLIC function listadoEmpleados() {
+ 	 		try {
+ 	 			$co = $this->conecta();
+ 				$respuesta = $co->query("SELECT * FROM `empleado`")->fetchall(PDO::FETCH_ASSOC);
+ 				$dom = new DOMDocument();
+ 				$cont = 1;
+ 				foreach ($respuesta as $elem) {
+ 					$tr = $dom->createElement("tr");
+ 					if($elem["tipo_identificacion"] == 1 ) $identf="V-";
+ 					else if($elem["tipo_identificacion"] == 2 ) $identf="E-";
+ 					else if($elem["tipo_identificacion"] == 3 ) $identf="J-";
+ 					$cedula = $identf.$elem["rif_cedula"];
+ 					$td =$dom->createElement("td",$cedula);
+ 					$td->setAttribute("class","text-nowrap");
+ 					$tr->appendChild($td);
+ 					$tr->appendChild($dom->createElement("td",$elem["nombre"]));
+ 					$tr->appendChild($dom->createElement("td",$elem["apellido"]));
+ 					$tr->appendChild($dom->createElement("td",$elem["salario"]));
+ 					$td = $dom->createElement("td",$elem["fecha_contratacion"]);
+ 					$td->setAttribute("class","text-nowrap");
+ 					$tr->appendChild($td);
+ 					$tr->appendChild($dom->createElement("td",$elem["domicilio"]));
+ 					$td =$dom->createElement("td",$elem["telefono"]);
+ 					$td->setAttribute("class","text-nowrap");
+ 					$tr->appendChild($td);
+ 					$tr->appendChild($dom->createElement("td",$elem["correo"]));
+ 					$tr->appendChild($dom->createElement("td",$elem["cargo"]));
+
+ 					$td =$dom->createElement("td",$elem["fecha_nacimiento"]);
+ 					$td->setAttribute("class","text-nowrap");
+ 					$tr->appendChild($td);
+ 					$tr->appendChild($dom->createElement("td",$elem["estado_civil"]));
+ 					$dom->appendChild($tr);
+ 				}
+ 				$r['resultado'] = 'listadoEmpleados';
+ 				$r['mensaje'] =  $dom->saveHTML();
+ 			} catch (Exception $e) {
+ 				$r['resultado'] = 'error';
+ 				$r['mensaje'] =  $e->getMessage();
+ 			}
+ 			return $r;
+ 		}
+ 	
 
 
 	PUBLIC function listadoempleados1() 
