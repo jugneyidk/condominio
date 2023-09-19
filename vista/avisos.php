@@ -143,7 +143,7 @@
 			$("#incluir").on("click", function () {
 				if (validarAviso()) {
 					$("#accion").val("incluir");
-					$("#descripcion").val( removeSpace($("#descripcion").val()) );
+					//$("#descripcion").val( removeSpace($("#descripcion").val()) );
 					$("#titulo").val( removeSpace($("#titulo").val()) );
 
 					var datos = new FormData($("#f")[0]);
