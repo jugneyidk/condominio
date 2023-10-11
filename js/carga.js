@@ -1,11 +1,16 @@
 function modalcarga(parametro) {
-  if (parametro) {
-    $("#carga").modal("show");
-    $("body").addClass("carga");
-  } else {
-    setTimeout(function () {
-      $("#carga").modal("hide");
-      $("body").removeClass("carga");
-    }, 100);
-  }
+
+	return new Promise((resolve, reject) => {
+		if (parametro) {
+		  $("#carga").modal("show");
+		  $("body").addClass("carga");
+		  resolve();
+		} else {
+		  setTimeout(function () {
+		    $("#carga").modal("hide");
+		    $("body").removeClass("carga");
+		    resolve();
+		  }, 100);
+		}
+	});
 }

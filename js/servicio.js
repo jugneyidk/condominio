@@ -1,27 +1,33 @@
 $(document).ready(function(){
 	borrar();
+
+
+	//********************************************
+	//********************************************
+	//********************************************
+	//********************************************
+	//********************************************
+
 	loadListados();
-	eventoKeypress(document.getElementById('descripcion'),/^[0-9a-zA-Z\s]*$/);
-	eventoKeypress(document.getElementById('monto'),/^[0-9]*$/);
-	eventoKeypress(document.getElementById('referencia'),/^[0-9]*$/);
-	eventoKeypress(document.getElementById('servicio_2'),/^[0-9a-zA-Z\s-]*$/);//-----------
-	eventoKeyup(document.getElementById('servicio_2'),/^[0-9a-zA-Z\s-]{1,50}$/,"Solo se permiten letras y números");//-----------
+
+	//********************************************
+	//********************************************
+	//********************************************
+	//********************************************
+	//********************************************
+	//********************************************
+
+	load_tipo_pago_comun();//eventos para el tipo de pago
+
+
+
+	eventoKeypress(document.getElementById('descripcion'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);
+	eventoKeypress(document.getElementById('servicio_2'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);//-----------
+	eventoKeyup(document.getElementById('servicio_2'),   /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,"El nombre de servicio tiene caracteres no permitidos");//-----------
+	eventoKeyup(document.getElementById('descripcion'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{0,100}$/, "La descripción tiene caracteres no permitidos");
 	document.getElementById('servicio_2').maxLength=50;
-	eventoKeyup(document.getElementById('monto'), montoExp, "Ingrese un monto valido", undefined, function(elem){
-		elem.value = sepMiles(elem.value);
-	});
-	$("#monto").on("change",function(e){
-		$(this).val( sepMiles($(this).val()) );
-		validarKeyUp(montoExp,$(this),"ingrese un monto valido");
-	});
-	eventoKeyup(document.getElementById('descripcion'), /^[0-9a-zA-Z\s]{0,255}$/, "ingrese una descripción valida solo se permiten letras y números");
-	document.getElementById('descripcion').maxLength = 255;
-	eventoKeyup(document.getElementById('referencia'), /^[0-9]{0,30}$/, "Ingrese una referencia valida, solo se permiten números");
-	document.getElementById('referencia').maxLength = 30;
-	eventoKeyup(document.getElementById('fecha'), fechaExp, "Ingrese una fecha valida");
-	$("#fecha").on("change",function(e){
-		validarKeyUp(fechaExp, $("#fecha"), "Ingrese una fecha valida");
-	});
+	document.getElementById('descripcion').maxLength = 100;
+
 
 	$("#limpiar").on("click",function(){
 		borrar();
@@ -31,8 +37,11 @@ $(document).ready(function(){
 		if (validarPagoServicios()) {
 			$("#accion").val("incluir");
 			$("#descripcion").val( removeSpace($("#descripcion").val()) );
-
+			var obj_pagos = objeto_tipo_pago_comun();
 			var datos = new FormData($("#f")[0]);
+
+			datos.append("tipo_pago", JSON.stringify(obj_pagos));
+
 			enviaAjax(datos,function(respuesta){
 
 				var lee = JSON.parse(respuesta);
@@ -46,8 +55,18 @@ $(document).ready(function(){
 					muestraMensaje("ERROR", lee.mensaje,"error");
 					loadListados();
 				}
+				else if(lee.resultado == 'console'){
+					console.log(lee.mensaje);
+				}
+				else if(lee.resultado == "mensajeError"){
+					console.error(lee.mensajeError);
+				}
+				else if(lee.resultado == 'is-invalid'){
+					muestraMensaje("ERROR", lee.mensaje,"error");
+				}
 				else{
 					muestraMensaje("ERROR", lee.mensaje,"error");
+					console.log(lee);
 					loadListados();
 					borrar();
 				}
@@ -72,8 +91,16 @@ $(document).ready(function(){
 				icon: "warning",
 			}).then((result) => {
 				if (result.isConfirmed) {
+
 					$("#accion").val("modificar");
+					$("#descripcion").val( removeSpace($("#descripcion").val()) );
+
+					var obj_pagos = objeto_tipo_pago_comun();
 					var datos = new FormData($("#f")[0]);
+
+					datos.append("tipo_pago", JSON.stringify(obj_pagos));
+
+
 					enviaAjax(datos,function(respuesta){
 						var lee = JSON.parse(respuesta);
 						if(lee.resultado == "modificar"){
@@ -84,12 +111,20 @@ $(document).ready(function(){
 						}
 						else if(lee.resultado == "error_no_borrar"){
 							muestraMensaje("ERROR", lee.mensaje,"error");
-							loadListados();
 						}
 						else{
 							muestraMensaje("ERROR", lee.mensaje,"error");
-							loadListados();
 							borrar();
+						}
+					}).then(function(e) {
+						try{
+							e = JSON.parse(e);
+							if(e.resultado == "console"){
+								console.log(e.mensaje);
+							}
+						}
+						catch(e){
+							console.log(e.getMessage());
 						}
 					});
 				}
@@ -129,7 +164,7 @@ $(document).ready(function(){
 
 
 	$("#incluir_2").on("click", function () {
-		if (validarKeyUp(/^[0-9a-zA-Z\s-]{1,50}$/,$("#servicio_2"),"Solo se permiten letras y números")) {
+		if (validarKeyUp(/^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,$("#servicio_2"),"El nombre de servicio tiene caracteres no permitidos")) {
 			$("#accion_2").val("incluir_s");
 			$("#servicio_2").val( removeSpace($("#servicio_2").val()) );
 
@@ -158,14 +193,14 @@ $(document).ready(function(){
 	});
 
 	$("#modificar_2").on("click", function () {
-		if (validarKeyUp(/^[0-9a-zA-Z\s-]{1,50}$/,$("#servicio_2"),"Solo se permiten letras y números")) {
+		if (validarKeyUp(/^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,$("#servicio_2"),"El nombre de servicio tiene caracteres no permitidos")) {
 			if($("#id_2").val()==''){
 				muestraMensaje("ERROR","Debe seleccionar un servicio","error");
 				return false;
 			}
 			Swal.fire({
 				title: "¿Estás Seguro?",
-				text: "¿Está seguro que desea modificar el Servicio?",
+				text: "¿Está seguro que desea modificar el nombre de Servicio? \nEsto modificara todos los pagos relacionados previamente",
 				showCancelButton: true,
 				confirmButtonText: "Modificar",
 				confirmButtonColor: "#007bff",
@@ -175,6 +210,7 @@ $(document).ready(function(){
 				if (result.isConfirmed) {
 					$("#accion_2").val("modificar_s");
 					var datos = new FormData($("#f2")[0]);
+
 					enviaAjax(datos,function(respuesta){
 						var lee = JSON.parse(respuesta);
 						if(lee.resultado == "modificar"){
@@ -230,6 +266,10 @@ $(document).ready(function(){
 		});
 	});
 
+	$("#consultar").on("click",function() {
+		lista_pagos_servicios(true);
+	});
+
 
 
 
@@ -237,14 +277,46 @@ $(document).ready(function(){
 
 
 	rowsEvent("listadoservicios",function(e){//colocar en los campos
-		$("#id").val($(e).find("td").eq(0).text());
-		$("#service").val($(e).find("td").eq(1).text());
-		$("#descripcion").val($(e).find("td").eq(3).text());
+		var datos = new FormData();
+		datos.append('accion',"seleccionar_pago");
+		datos.append('id', $(e).data('id'));
 
-		$("#monto").val($(e).find("td").eq(4).text());
-		$("#fecha").val($(e).find("td").eq(5).text());
-		$("#referencia").val($(e).find("td").eq(6).text());
-		$("#modalservicios").modal("hide");
+		enviaAjax(datos,function(respuesta){
+		
+			var lee = JSON.parse(respuesta);
+			if(lee.resultado == "seleccionar_pago"){
+				$("#id").val($(e).find("td").eq(0).text());
+				$("#service").val($(e).data("service"));
+				$("#descripcion").val($(e).find("td").eq(3).text());
+
+
+
+				cargar_tipo_pago_comun(lee.obj_pagos);
+				limpiarvalidacion(true);
+				
+			}
+			else if(lee.resultado == "error"){
+				muestraMensaje("ERROR", lee.mensaje,"error");
+				console.error(lee.mensaje);
+			}
+			else if(lee.resultado == "console"){
+				console.log(lee.mensaje);
+			}
+			else{
+				muestraMensaje("ERROR", lee.mensaje,"error");
+			}
+		}).then(function(e) {
+			$("#modalservicios").modal("hide");
+		});
+
+
+
+
+
+		
+		// $("#monto").val($(e).find("td").eq(4).text());
+		// $("#fecha").val($(e).find("td").eq(5).text());
+		// $("#referencia").val($(e).find("td").eq(6).text());
 		cambiarbotones(false);
 	});
 	rowsEvent("listadoservicios_New",function(e){
@@ -260,10 +332,10 @@ $(document).ready(function(){
 
 function loadListados(){
 	lista_select_servicios();
-	lista_pagos_servicios();
+	//lista_pagos_servicios();
 	lista_servicios();
 }
-function lista_pagos_servicios(){
+function lista_pagos_servicios(show = false){
 	var datos = new FormData();
 	datos.append("accion", "listadoPagosservicios");
 
@@ -299,10 +371,17 @@ function lista_pagos_servicios(){
 					{ data: "col4" },
 					{ data: "col5" },
 					{ data: "col6" },
-					{ data: "col7" }
+					{ data: "col7" },
+					{ data: "col8" }
 					]
 				});
 			}
+			if(show == true){
+				$("#modalservicios").modal("show");
+			}
+		}
+		else if(lee.resultado == "console"){
+			console.log(lee.mensaje);
 		}
 		else{
 			muestraMensaje("ERROR", lee.mensaje,"error");
@@ -370,51 +449,55 @@ function lista_servicios(){
 	});
 }
 
+
+
+
+
+
+
 function validarPagoServicios(){
 
+	if(!validarKeyUp(/^[0-9a-zA-Z\s]{0,100}$/,$("#descripcion"),"ingrese una descripción valida solo se permiten letras y números")){
+		muestraMensaje("ERROR", "ingrese una descripción valida solo se permiten letras y números","error");
+		return false;   
+	}
+	
+	if($("#service").val()==""){
+		muestraMensaje("ERROR", "Seleccione un servicio", "error");
+		return false;
+	}
 
-if(!validarKeyUp(montoExp,$("#monto"),"Ingrese un monto Valido")){// valido numero de estacionamiento
-	muestraMensaje("ERROR", "Ingrese un monto Valido","error");
-	return false;
-}
-if(!validarKeyUp(/^[0-9a-zA-Z\s]{0,255}$/,$("#descripcion"),"ingrese una descripción valida solo se permiten letras y números")){
-	muestraMensaje("ERROR", "ingrese una descripción valida solo se permiten letras y números","error");
-	return false;   
-}
-if(!validarKeyUp(/^[0-9]{1,30}$/,$("#referencia"),"Ingrese una referencia valida, solo se permiten números")){
-	muestraMensaje("ERROR", "Ingrese una referencia valida, solo se permiten números", "error");
-	return false;
-
-}if(!validarKeyUp(fechaExp,$("#fecha"),"Ingrese una fecha valida")){
-	muestraMensaje("ERROR", "Ingrese una fecha valida", "error");
-	return false;
-}
-if($("#service").val()==""){
-	muestraMensaje("ERROR", "Seleccione un servicio", "error");
-	return false;
+	return validar_tipo_pago_comunes();
 }
 
 
-vaciarSpanError();
-return true;
-
-
-}
-
-
-function borrar(func) {
-	$("form input").val("");
-	$("form select").val("");
+function borrar() {
+	$('input:not(:checkbox):not(:radio)').val("");
+	// $("form input").val("");
+	$("form select:not(#tipo_pago_comun)").val("");
 	limpiarvalidacion();
 	cambiarbotones();
 	cambiarbotones_2();
+	if (document.getElementById('tipo_pago_comun-divisa_cantidad')) {
+		document.getElementById('tipo_pago_comun-divisa_cantidad').dispatchEvent(new Event('input'));
+	}
+	return obj = {then:function(func){
+		func();
+	}}
 }
 
-function limpiarvalidacion() {
+function limpiarvalidacion(span = false) {
 	$("form input").removeClass("is-valid");
 	$("form input").removeClass("is-invalid");
 	$("form select").removeClass("is-valid");
 	$("form select").removeClass("is-invalid");
+	if(span === true){
+		$("form input").each(function(e) {
+			if($(this).data("span")){
+				$("#"+$(this).data("span")).html("");
+			}
+		});
+	}
 }
 function cambiarbotones(parametro=true) {
 	$("#modificar").prop("disabled", parametro);

@@ -10,7 +10,16 @@
 			<h2 class="text-center h2 text-primary">Deuda del condominio</h2>
 			<hr />
 		</div>
-		<form method="post" action="" id="f">
+
+
+
+
+
+
+
+
+
+		<form method="post" action="" id="f" class="d-none">
 			<input type="text" name="accion" id="accion" style="display:none" />
 			<input autocomplete="off" type="text" class="d-none" name="id_deuda" id="id_deuda">
 			<div class="container">

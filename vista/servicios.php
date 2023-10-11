@@ -34,14 +34,12 @@
 										<div class="col-6 col-md-5">
 											<label for="servicio">Servicio</label>
 											<select class="form-control" id="service" name="service" data-span="sservicio">
-												<option value='' disabled selected>-</option>
-												<option value='corpoelec'>Corpoelec</option>
-												<option value='corpoelec'>CANTV</option>
-												<option value='otro'>Otro</option>
+
+
 											</select>
 											<span id="sservicio" class="text-danger"></span>
 										</div>
-										<div class="col-12 col-md-5">
+										<div class="col-12 col-md">
 											<label for="descripcion">Descripción:</label>
 											<input autocomplete="off" class="form-control" type="text" id="descripcion" name="descripcion" data-span="sdescripcion"/>
 											<span id="sdescripcion" class="text-danger"></span>
@@ -49,7 +47,17 @@
 
 									</div>
 
-									<div class="row mb-3">
+
+
+
+
+									<?php require_once("comunes/tipo_pago.php"); ?>
+
+
+
+
+
+									<!-- <div class="row mb-3 d-none">
 										<div class="col-12 col-md-3 mt-3 mt-md-0">
 											<label for="monto">Monto:</label>
 											<input autocomplete="off" class="form-control text-right" type="text" id="monto" name="monto" data-span="smonto"/>
@@ -61,11 +69,11 @@
 											<span id="sreferencia" class="text-danger"></span>
 										</div>
 										<div class="col-6 col-md-3">
-											<label for="descripcion">Fecha:</label>
+											<label for="fecha">Fecha:</label>
 											<input autocomplete="off" class="form-control" type="date" id="fecha" name="fecha" data-span="sfecha"/>
 											<span id="sfecha" class="text-danger"></span>
 										</div>
-									</div>
+									</div> -->
 								</div>
 								<hr>
 								<div class="row justify-content-center">
@@ -76,7 +84,7 @@
 									<?php endif; ?>
 									<?php if ($permisos[3] == 1) : ?>
 										<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
-											<button type="button" class="btn btn-info w-100 small-width" id="consultar" data-toggle="modal" data-target="#modalservicios" name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+											<button type="button" class="btn btn-info w-100 small-width" id="consultar"  name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
 										</div>
 									<?php endif; ?>
 									<?php if ($permisos[4] == 1) : ?>
@@ -172,7 +180,8 @@
 								<th>Descripción</th>
 								<th>Monto</th>
 								<th>Fecha</th>
-								<th>Referencia</th>
+								<th>Tipo</th>
+								<th>usuario</th>
 							</tr>
 						</thead>
 						<tbody id="listadoservicios">
@@ -218,6 +227,8 @@
 	<script src="js/carga.js"></script>
 	<script src="js/comun_x.js"></script>
   	<script src="js/servicio.js"></script>
+	<script src="js/tipo_pago_comun.js"></script>
+
 
 	<?php require_once('comunes/foot.php'); ?>
 </body>
