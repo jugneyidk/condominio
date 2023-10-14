@@ -1,29 +1,12 @@
 let montoExp = /^\d{1,3}(?:[\.]\d{3})*[,]\d{2}$/; 
 let fechaExp = /^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$/;
-let alfanume = /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/;
+let alfanume = /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/;
 function eventoKeypress(etiqueta,exp){
 	if(typeof etiqueta === "string"){
 		etiqueta = document.getElementById(etiqueta);
 	}
 	etiqueta.onkeypress=function(e){
 		validarKeyPress(e,exp);
-	}
-}
-function eventoKeyup(etiqueta, exp, mensaje, etiquetamensaje, func, func2){
-	if(typeof etiqueta === "string"){
-		etiqueta = document.getElementById(etiqueta);
-	}
-	etiqueta.onkeyup=function(){
-		if(typeof func ==="function"){
-			func(this);
-		}
-
-		var resp = validarKeyUp(exp,$(this),mensaje,etiquetamensaje);
-
-		if(typeof func2 === "function"){
-			func2(this, resp);
-		}
-
 	}
 }
 
@@ -55,76 +38,14 @@ function cedulaKeypress(tag){
 	tag.maxLength = 12;
 }
 
-function eventoMonto(etiqueta,n = 29,mensaje = "Ingrese un monto valido"){
-	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }
+function eventoMonto(etiqueta,n=29,mensaje ="Ingrese un monto valido"){
+	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string",etiqueta); return false; }
 	eventoKeyup(etiqueta, montoExp, mensaje, undefined, function(e){e.value = sepMiles(e.value); });
 	eventoKeypress(etiqueta, /^[0-9]$/);
 	//Si se está repitiendo, ignorar
 	document.getElementById(etiqueta).addEventListener('keydown', function(keyboardEvent) {if (keyboardEvent.repeat) keyboardEvent.preventDefault(); });
 	document.getElementById(etiqueta).onchange = function(){this.value = sepMiles(this.value); validarKeyUp(montoExp, $(this), mensaje); }
-	document.getElementById(etiqueta).maxLength = n;
 
-}
-function eventoNombre(etiqueta,n = 45, expLimit = "1,45", mensaje = "nombre"){
-	mensaje = "El "+mensaje+" no es valido";
-	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }
-	var exp = new RegExp("^[a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{"+expLimit+"}$");
-	eventoKeyup(etiqueta, exp, mensaje);
-	eventoKeypress(etiqueta, /^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);
-	document.getElementById(etiqueta).maxLength = n;
-}
-
-function eventoAlfanumerico(etiqueta,n = 45, expLimit = "1,45", mensaje = "nombre"){
-	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }
-	var exp = new RegExp("^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{"+expLimit+"}$","m");
-	eventoKeyup(etiqueta, exp, mensaje);
-	eventoKeypress(etiqueta, /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);
-	document.getElementById(etiqueta).maxLength = n;
-}
-
-
-
-function eventosValidaciones(etiqueta,n, exp1, exp2, mensaje,func,func2){
-	if(typeof etiqueta !== "string"){console.error("La etiqueta debe ser un String");return 0;}
-	document.getElementById(etiqueta).maxLength=n;
-	eventoKeyup(etiqueta, exp1, mensaje, undefined, func, func2);
-	eventoKeypress(etiqueta, exp2);
-}
-
-
-function validarKeyUp(er, etiqueta, mensaje, etiquetamensaje) {
-	if(typeof etiqueta === 'string'){etiqueta = $("#"+etiqueta);}
-	if(etiqueta.data("span")){
-		etiquetamensaje = $("#"+etiqueta.data("span"));
-	}
-	else if(typeof etiquetamensaje === 'undefined'){
-		console.error("falta la etiqueta mensaje",etiqueta);
-	}
-	if(er === true||er === false){
-		a = er;
-	}
-	else{
-		a = er.test(etiqueta.val());
-	}
-	if (a) {
-		if (etiqueta.hasClass("is-invalid")) {
-			etiqueta.toggleClass("is-invalid");
-		}
-		if (!etiqueta.hasClass("is-valid")) {
-			etiqueta.toggleClass("is-valid");
-		}
-		etiquetamensaje.text("");
-		return true;
-	} else {
-		if (etiqueta.hasClass("is-valid")) {
-			etiqueta.toggleClass("is-valid");
-		}
-		if (!etiqueta.hasClass("is-invalid")) {
-			etiqueta.toggleClass("is-invalid");
-		}
-		etiquetamensaje.text(mensaje);
-		return false;
-	}
 }
 
 function validarKeyPress(e, er) {
@@ -137,6 +58,13 @@ function validarKeyPress(e, er) {
 	else return true;
 }
 
+function eventosValidaciones(etiqueta,n, exp1, exp2, mensaje,func,func2){
+	if(typeof etiqueta !== "string"){console.error("La etiqueta debe ser un String");return 0;}
+	document.getElementById(etiqueta).maxLength=n;
+	eventoKeyup(etiqueta, exp1, mensaje, undefined, func, func2);
+	eventoKeypress(etiqueta, exp2);
+}
+
 class Validaciones{
 
 	constructor(){
@@ -145,9 +73,8 @@ class Validaciones{
 		this.expHora = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
 		this.expTelefono = /^[0-9]{4}[-\s]?[0-9]{7}$/;
 		this.expEmail = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-		this.expMonto = montoExp;
-		///^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]$/
-		///^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]/
+		///^[a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]$/
+		///^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]/
 	}
 
 	cedula(ci,tipo=true)	{//tipo = true obligatorio v,e,j false no
@@ -224,15 +151,66 @@ class Validaciones{
 	}
 }
 
+
+
+
+
+
+
+
 const V = new Validaciones();
+function eventoKeyup(etiqueta, exp, mensaje, etiquetamensaje, func, func2){
+	if(typeof etiqueta === "string"){
+		etiqueta = document.getElementById(etiqueta);
+	}
+	etiqueta.onkeyup=function(){
+		if(typeof func ==="function"){
+			func(this);
+		}
 
+		var resp = validarKeyUp(exp,$(this),mensaje,etiquetamensaje);
 
+		if(typeof func2 === "function"){
+			func2(this, resp);
+		}
 
-
-
-
-
-
+	}
+}
+function validarKeyUp(er, etiqueta, mensaje, etiquetamensaje) {
+	if(etiqueta.data("span")){
+		etiquetamensaje = $("#"+etiqueta.data("span"));
+	}
+	else if(typeof etiquetamensaje === 'undefined'){
+		console.error("falta la etiqueta mensaje",etiqueta);
+	}
+	if(er === true||er === false){
+		a = er;
+	}
+	else{
+		a = er.test(etiqueta.val());
+		console.log(etiqueta.val());
+		console.log(er);
+	}
+	if (a) {
+		if (etiqueta.hasClass("is-invalid")) {
+			etiqueta.toggleClass("is-invalid");
+		}
+		if (!etiqueta.hasClass("is-valid")) {
+			etiqueta.toggleClass("is-valid");
+		}
+		etiquetamensaje.text("");
+		return true;
+	} else {
+		if (etiqueta.hasClass("is-valid")) {
+			etiqueta.toggleClass("is-valid");
+		}
+		if (!etiqueta.hasClass("is-invalid")) {
+			etiqueta.toggleClass("is-invalid");
+		}
+		etiquetamensaje.text(mensaje);
+		return false;
+	}
+}
 
 function enviaAjax(datos, func_success,func_beforesend="modal") {
 	if(typeof func_success !== "function"){

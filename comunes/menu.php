@@ -17,7 +17,7 @@ if (isset($_SESSION['rol'])) {
 		</div>
 		<div class="col-12 col-md-8 col-lg-6 mt-2 m-md-0">
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav ml-auto">
+				<ul class="navbar-nav ml-auto align-items-md-center">
 						
 					<?php
 					if ($rol == "1" or $rol == "2") {
@@ -60,33 +60,29 @@ if (isset($_SESSION['rol'])) {
 								<a class="dropdown-item" href="?p=servicios">Servicios</a>
 							</div>
 						</li>
-						<div class="collapse navbar-collapse" id="navbarNavDropdown">
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">
-									Ver
-								</a>
-								<div class="dropdown-menu dropdown-menu-right">
-									<a class="dropdown-item" href="?p=foro" id="" data-toggle="">Foro</a>
-									<a class="dropdown-item" href="?p=movimiento">Movimientos/Balance</a>
-									<a class="dropdown-item" href="?p=estadistica">Estadistica</a>
-									<a class="dropdown-item" href="?p=avisos" id="" data-toggle="">Avisos</a>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">
+								Ver
+							</a>
+							<div class="dropdown-menu dropdown-menu-right">
+								<a class="dropdown-item" href="?p=foro" id="" data-toggle="">Foro</a>
+								<a class="dropdown-item" href="?p=movimiento">Movimientos/Balance</a>
+								<a class="dropdown-item" href="?p=estadistica">Estadistica</a>
+								<a class="dropdown-item" href="?p=avisos" id="" data-toggle="">Avisos</a>
 
-									
-								</div>
-							</li>
-						</div>
-						
-						<div class="collapse navbar-collapse" id="navbarNavDropdown">
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">
-									Ayuda
-								</a>
-								<div class="dropdown-menu dropdown-menu-right">
-									<a class="dropdown-item" href="?p=acerca">Acerca de</a>
-									<a class="dropdown-item" href="?p=FAQ">FAQ</a>
-								</div>
-							</li>
-						</div>
+								
+							</div>
+						</li>
+					
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown">
+								Ayuda
+							</a>
+							<div class="dropdown-menu dropdown-menu-right">
+								<a class="dropdown-item" href="?p=acerca">Acerca de</a>
+								<a class="dropdown-item" href="?p=FAQ">FAQ</a>
+							</div>
+						</li>
 						<div class="d-none d-md-inline-flex">
 							<li class="nav-item ml-2">
 								<a class="btn btn-outline-light" href="?p=cerrarsesion">Cerrar sesión</a>

@@ -10,22 +10,8 @@ let contador_cantidad_divisa = 0;
 
 function load_tipo_pago_comun(){
 	// comunes -------------------------------------
-		//monto
-		eventoKeyup("tipo_pago_comun-monto_total", montoExp, "Ingrese un monto valido",undefined, function(e){
-			e.value = sepMiles(e.value);
-		});
-		//monto
-		eventoKeypress('tipo_pago_comun-monto_total', /^[0-9]*$/);
-		//monto
-		document.getElementById('tipo_pago_comun-monto_total').addEventListener('keydown', function(keyboardEvent) {
-		    //Si se está repitiendo, ignorar
-		     if (keyboardEvent.repeat) keyboardEvent.preventDefault();
-		});
-		//monto
-		document.getElementById('tipo_pago_comun-monto_total').onchange = function(){
-			this.value = sepMiles(this.value);
-			validarKeyUp(montoExp, $(this), "Ingrese un monto valido");
-		}
+		// monto
+		eventoMonto("tipo_pago_comun-monto_total",29,"Ingrese un monto valido");
 		//tipo_pago
 		document.getElementById('tipo_pago_comun').onchange=function(){
 			if(this.value!= ''){
