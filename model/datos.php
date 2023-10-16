@@ -1,11 +1,12 @@
 <?php 
 require_once ("model/validaciones.php");
+require_once ("model/const.php");
 class datos{
     // DATOS DE LA DB
-	PRIVATE $ip = "localhost";
-    PRIVATE $bd = "condominio_jmv02";
-    PRIVATE $usuario = "root";
-    PRIVATE $contrasena = "";
+	PRIVATE $ip = BD_IP;// constantes definidas en model/const.php
+    PRIVATE $bd = BD_NAME;
+    PRIVATE $usuario = BD_USER;
+    PRIVATE $contrasena = BD_PASS;
     // FUNCION PARA ESTABLECER CONEXION
     PUBLIC function conecta(){
         try {

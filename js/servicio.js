@@ -287,6 +287,7 @@ $(document).ready(function(){
 			if(lee.resultado == "seleccionar_pago"){
 				$("#id").val($(e).find("td").eq(0).text());
 				$("#service").val($(e).data("service"));
+				document.getElementById('service').disabled=true;
 				$("#descripcion").val($(e).find("td").eq(3).text());
 
 
@@ -481,6 +482,7 @@ function borrar() {
 	if (document.getElementById('tipo_pago_comun-divisa_cantidad')) {
 		document.getElementById('tipo_pago_comun-divisa_cantidad').dispatchEvent(new Event('input'));
 	}
+	document.getElementById('service').disabled=false;
 	return obj = {then:function(func){
 		func();
 	}}
@@ -492,7 +494,7 @@ function limpiarvalidacion(span = false) {
 	$("form select").removeClass("is-valid");
 	$("form select").removeClass("is-invalid");
 	if(span === true){
-		$("form input").each(function(e) {
+		$("form input, form select").each(function(e) {
 			if($(this).data("span")){
 				$("#"+$(this).data("span")).html("");
 			}

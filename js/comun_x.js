@@ -25,6 +25,9 @@ function eventoKeyup(etiqueta, exp, mensaje, etiquetamensaje, func, func2){
 		}
 
 	}
+	etiqueta.validarme = function(){
+		return validarKeyUp(exp, $(this), mensaje, etiquetamensaje);
+	}
 }
 
 function cedulaKeypress(tag){
@@ -55,7 +58,7 @@ function cedulaKeypress(tag){
 	tag.maxLength = 12;
 }
 
-function eventoMonto(etiqueta,n = 29,mensaje = "Ingrese un monto valido"){
+function eventoMonto(etiqueta,n = 26,mensaje = "Ingrese un monto valido"){
 	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }
 	eventoKeyup(etiqueta, montoExp, mensaje, undefined, function(e){e.value = sepMiles(e.value); });
 	eventoKeypress(etiqueta, /^[0-9]$/);
@@ -364,22 +367,18 @@ function removeSpace(cadena)
 		return undefined;
 	}
 };
-
-function rowsEvent(tbody,func,control=true){//
+//si se pasa false por el func elimina el rowsEvent si lo tiene
+function rowsEvent(tbody,func,control=true){//solo permite un evento del rowsEvent a la vez
 	if(typeof tbody==='string')
 	{
 		tbody=document.getElementById(tbody);
 	}
 
-	
-	if(typeof func==='function')
-	{
-		tbody.addEventListener('click',function(e){
+	var handler_rowsEvent = function(e){
 			var elem=e.target;
 			count=0;
-			if(control){
+			if(control){// trata de retorna la fila
 				while(elem.tagName!='TR'&&elem.tagName!='TBODY'&& elem!=this){
-					
 					count++;
 					if(count>100)
 					{
@@ -396,15 +395,34 @@ function rowsEvent(tbody,func,control=true){//
 					func(elem,e.target);
 				}
 			}
-			else{
+			else{//retorna el elemento donde se dio click ej un td de un talbe tr
 				func(elem);
 			}
-		},true);
+		}
+
+	var removeEvent = function (){
+		tbody.removeEventListener('click', handler_rowsEvent, true);
+	};
+
+
+	if(typeof func==='function')
+	{
+		if(typeof tbody.removeRowsEvent === "function"){
+			rowsEvent(tbody.id,false);
+		}
+
+		tbody.addEventListener('click', handler_rowsEvent, true);
+		tbody.removeRowsEvent = removeEvent;
+	}
+	else if(func === false){// si es false se elimina el evento
+		if(typeof tbody.removeRowsEvent === "function"){
+			tbody.removeRowsEvent();
+			tbody.removeRowsEvent = undefined;
+		}
 	}
 	else{
 		console.error('el segundo argumento debe ser una función que se ejecutara al hacer click en el table');
 	}
-	
 }
 
 function crearElem(type,attr='',content='')

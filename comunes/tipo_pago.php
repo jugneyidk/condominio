@@ -1,10 +1,12 @@
 <style>.uppercase{text-transform: uppercase;}</style>
 <div id="formulario_tipo_pago_comun">
 	<input type="hidden" id="id_tipo_pago_comun">
+	<input type="hidden" id="id_pago_comun">
+
 	<div class="row mb-2">
 		<div class="col-12 col-md-5">
 			<label for="tipo_pago_comun">Tipo de pago</label>
-			<select class="form-control" id="tipo_pago_comun">
+			<select class="form-control dont-erase" id="tipo_pago_comun">
 				<option value="1">Efectivo</option>
 				<option value="2">Transferencia</option>
 				<option value="3">Pago Móvil</option>

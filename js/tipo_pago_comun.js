@@ -215,6 +215,9 @@ function objeto_tipo_pago_comun(){
 		var obj={};
 
 		obj.id_detalles_pagos = document.getElementById('id_tipo_pago_comun').value;
+		if(document.getElementById('id_pago_comun').value != ''){
+			obj.id_pago = document.getElementById('id_pago_comun').value;
+		}
 
 		if(tipo_pago_comun.value=="1"){
 			if(validar_tipo_pago_comunes("efectivo")){
@@ -318,12 +321,16 @@ function calcular_total_divisa(){
 function cargar_tipo_pago_comun(obj){
 
 	document.getElementById('id_tipo_pago_comun').value = obj.id_detalles_pagos || '';
+	document.getElementById('id_pago_comun').value = obj.id_pago || '';
+
 
 	document.getElementById('tipo_pago_comun').value = obj.tipo_pago;
 	document.getElementById('tipo_pago_comun').onchange();
 	document.getElementById('tipo_pago_comun-fecha').value = obj.fecha;
 	document.getElementById('tipo_pago_comun-hora').value = obj.hora;
 	document.getElementById('tipo_pago_comun-monto_total').value = obj.monto;
+	document.getElementById('tipo_pago_comun-monto_total').onchange();
+
 
 	if(obj.tipo_pago == "2"){//transferencia
 
@@ -341,7 +348,6 @@ function cargar_tipo_pago_comun(obj){
 	}
 	else if(obj.tipo_pago == "4"){//divisa
 		document.getElementById('tipo_pago_comun-billetes_obj').value = JSON.stringify(obj.billetes);
-		document.getElementById('tipo_pago_comun-divisa_cantidad').value = obj.cantidad;
 		document.getElementById('tipo_pago_comun-divisa_cantidad').value = obj.cantidad;
 
 		document.getElementById('tipo_pago_comun-divisa_cantidad').dispatchEvent(new Event('input'));

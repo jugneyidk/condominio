@@ -16,6 +16,12 @@ table.rows-pointer tbody tr{
     -ms-user-select: none;
     user-select: none;
 }
+.cell-description
+{
+	max-width: 150px;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+}
 
 
 /*

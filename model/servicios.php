@@ -82,8 +82,8 @@ class servicio extends datos
 
 					// PRIMERO SE GUARDA EL  PAGO
 						$consulta = $this->con->prepare("INSERT INTO pagos (concepto_pago,estado,usuario_id) VALUES (?,?,?)");
-
-						$consulta->execute([$this->descripcion, 2, $_SESSION["id_usuario"]]);
+						$usuario_id = $_SESSION["id_usuario"];
+						$consulta->execute([$this->descripcion, 2, $usuario_id]);
 
 						$this->obj_pagos->id_pago = $this->con->lastInsertId();
 

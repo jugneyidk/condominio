@@ -116,8 +116,22 @@ class avisos extends datos
 				$td = $dom->createElement("td",$elem["id_aviso"]);
 				$td->setAttribute("class","d-none");
 				$tr->appendChild($td);
-				$tr->appendChild($dom->createElement("td",$elem["titulo"]));
-				$tr->appendChild($dom->createElement("td",$elem["descripcion"]));
+				$td = $dom->createElement("td",$elem["titulo"]);
+				$td->setAttribute("class","text-nowrap");
+				$tr->appendChild($td);
+
+
+
+
+
+				$td = $dom->createElement("td",$elem["descripcion"]);
+				$tr->appendChild($td);
+
+
+
+
+
+
 				$td = $dom->createElement("td",$elem["desde"]);
 				$td->setAttribute("class","text-nowrap");
 				$tr->appendChild($td);
