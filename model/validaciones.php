@@ -85,7 +85,7 @@ class Validaciones extends Exception
 		}
 	}
 	PUBLIC function monto($string, $mensaje = "El monto es invalido" ){
-		if(!preg_match("/^[0-9]{1,20}(?:[\,\.][0-9]{2})?$/", $string)){
+		if(!preg_match("/^[0-9]{1,18}(?:[\,\.][0-9]{2})?$/", $string)){
 			throw new Validaciones($mensaje, 1);
 			
 		}

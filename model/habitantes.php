@@ -5,8 +5,22 @@ require_once("model/bitacora.php");
 
 class habitantes extends datos
 {
+	PRIVATE $id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal;
+
+	PUBLIC function incluir_s($cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal){
+		return $this->incluir($cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal);
+	}
+	PUBLIC function modificar_s($id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal){
+		return $this->modificar($id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal);
+	}
+	PUBLIC function eliminar_s($id){
+		return $this->eliminar($id);
+	}
+
+
+
 	PUBLIC function chequearpermisos(){
-		$id_rol = $_SESSION['rol'];
+		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -205,4 +219,56 @@ class habitantes extends datos
 				break;
 		}
 	}
+
+
+	PUBLIC function get_id(){
+		return $this->id;
+	}
+	PUBLIC function set_id($value){
+		$this->id = $value;
+	}
+	PUBLIC function get_cedula_rif(){
+		return $this->cedula_rif;
+	}
+	PUBLIC function set_cedula_rif($value){
+		$this->cedula_rif = $value;
+	}
+	PUBLIC function get_tipo_identificacion(){
+		return $this->tipo_identificacion;
+	}
+	PUBLIC function set_tipo_identificacion($value){
+		$this->tipo_identificacion = $value;
+	}
+	PUBLIC function get_nombres(){
+		return $this->nombres;
+	}
+	PUBLIC function set_nombres($value){
+		$this->nombres = $value;
+	}
+	PUBLIC function get_apellidos(){
+		return $this->apellidos;
+	}
+	PUBLIC function set_apellidos($value){
+		$this->apellidos = $value;
+	}
+	PUBLIC function get_telefono(){
+		return $this->telefono;
+	}
+	PUBLIC function set_telefono($value){
+		$this->telefono = $value;
+	}
+	PUBLIC function get_correo(){
+		return $this->correo;
+	}
+	PUBLIC function set_correo($value){
+		$this->correo = $value;
+	}
+	PUBLIC function get_domicilio_fiscal(){
+		return $this->domicilio_fiscal;
+	}
+	PUBLIC function set_domicilio_fiscal($value){
+		$this->domicilio_fiscal = $value;
+	}
+	
+
 }

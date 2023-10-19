@@ -7,8 +7,21 @@ require_once("model/bitacora.php");
 
 class usuarios extends datos
 {
+	PRIVATE $id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol;
+
+	PUBLIC function incluir_S($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol){
+		return $this->incluir($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol);
+	}
+	PUBLIC function modificar_S($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol){
+		return $this->modificar($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol);
+	}
+	PUBLIC function eliminar_S($id){
+		return $this->eliminar($id);
+	}
+
+
 	PUBLIC function chequearpermisos(){
-		$id_rol = $_SESSION['rol'];
+		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -18,7 +31,7 @@ class usuarios extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	PUBLIC function incluir($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
+	PRIVATE function incluir($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
 	{
 		if (!$this->existe($rif_cedula, $tipo_identificacion, 1)) {
 			$co = $this->conecta();
@@ -119,7 +132,7 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	PUBLIC function modificar($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
+	PRIVATE function modificar($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -164,7 +177,7 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	PUBLIC function eliminar($id)
+	PRIVATE function eliminar($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -232,4 +245,63 @@ class usuarios extends datos
 				break;
 		}
 	}
+
+
+	PUBLIC function get_id(){
+		return $this->id;
+	}
+	PUBLIC function set_id($value){
+		$this->id = $value;
+	}
+	PUBLIC function get_rif_cedula(){
+		return $this->rif_cedula;
+	}
+	PUBLIC function set_rif_cedula($value){
+		$this->rif_cedula = $value;
+	}
+	PUBLIC function get_tipo_identificacion(){
+		return $this->tipo_identificacion;
+	}
+	PUBLIC function set_tipo_identificacion($value){
+		$this->tipo_identificacion = $value;
+	}
+	PUBLIC function get_razon_social(){
+		return $this->razon_social;
+	}
+	PUBLIC function set_razon_social($value){
+		$this->razon_social = $value;
+	}
+	PUBLIC function get_domicilio_fiscal(){
+		return $this->domicilio_fiscal;
+	}
+	PUBLIC function set_domicilio_fiscal($value){
+		$this->domicilio_fiscal = $value;
+	}
+	PUBLIC function get_telefono(){
+		return $this->telefono;
+	}
+	PUBLIC function set_telefono($value){
+		$this->telefono = $value;
+	}
+	PUBLIC function get_correo(){
+		return $this->correo;
+	}
+	PUBLIC function set_correo($value){
+		$this->correo = $value;
+	}
+	PUBLIC function get_password(){
+		return $this->password;
+	}
+	PUBLIC function set_password($value){
+		$this->password = $value;
+	}
+	PUBLIC function get_rol(){
+		return $this->rol;
+	}
+	PUBLIC function set_rol($value){
+		$this->rol = $value;
+	}
+
+
+
 }

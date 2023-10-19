@@ -518,7 +518,7 @@
 		$("#eliminar").on("click",()=>{
 			Swal.fire({
 				title: "¿Estás Seguro?",
-				text: "¿Está seguro que desea modificar el empleado?",
+				text: "¿Está seguro que desea eliminar el empleado?",
 				showCancelButton: true,
 				confirmButtonText: "eliminar",
 				confirmButtonColor: "#c82333",

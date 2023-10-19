@@ -16,18 +16,18 @@ if (is_file("vista/" . $p . ".php")) {
       $respuesta = $o->listadousuarios();
       echo json_encode($respuesta);
     } elseif ($accion == 'incluir') {
-      $respuesta = $o->incluir($_POST['rif_cedula'], $_POST['tipo_identificacion'], $_POST['razon_social'], $_POST['domicilio_fiscal'], $_POST['telefono'], $_POST['correo'], $_POST['password'], $_POST['rol']);
+      $respuesta = $o->incluir_s($_POST['rif_cedula'], $_POST['tipo_identificacion'], $_POST['razon_social'], $_POST['domicilio_fiscal'], $_POST['telefono'], $_POST['correo'], $_POST['password'], $_POST['rol']);
       echo json_encode($respuesta);
     } elseif ($accion == 'modificar') {
-      $respuesta = $o->modificar($_POST['id'], $_POST['rif_cedula'], $_POST['tipo_identificacion'], $_POST['razon_social'], $_POST['domicilio_fiscal'], $_POST['telefono'], $_POST['correo'], $_POST['password'], $_POST['rol']);
+      $respuesta = $o->modificar_s($_POST['id'], $_POST['rif_cedula'], $_POST['tipo_identificacion'], $_POST['razon_social'], $_POST['domicilio_fiscal'], $_POST['telefono'], $_POST['correo'], $_POST['password'], $_POST['rol']);
       echo json_encode($respuesta);
     } elseif ($accion == 'eliminar') {
-      $respuesta = $o->eliminar($_POST['id']);
+      $respuesta = $o->eliminar_s($_POST['id']);
       echo json_encode($respuesta);
     }
     exit;
   }
-  if ($_SESSION['rol'] == 2) {
+  if ($_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol']== 2) {
     require_once("vista/" . $p . ".php");
   }else {
     header("Location: . ");

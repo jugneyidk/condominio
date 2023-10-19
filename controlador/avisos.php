@@ -19,7 +19,7 @@ if (is_file("vista/" . $p . ".php")) {
 			$o->set_descripcion($_POST["descripcion"]);
 			$o->set_desde($_POST["fecha"]);
 			$o->set_hasta($_POST["fecha2"]); 
-			$respuesta = $o->incluir();
+			$respuesta = $o->incluir_s();
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'modificar') {
@@ -30,12 +30,12 @@ if (is_file("vista/" . $p . ".php")) {
 			$o->set_descripcion($_POST["descripcion"]);
 			$o->set_desde($_POST["fecha"]);
 			$o->set_hasta($_POST["fecha2"]);
-			$respuesta = $o->modificar();
+			$respuesta = $o->modificar_s();
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'eliminar') {
 			$o->set_id($_POST["id"]);
-			echo json_encode($o->eliminar());
+			echo json_encode($o->eliminar_s());
 			
 		}
 		exit;

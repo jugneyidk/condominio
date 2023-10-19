@@ -8,7 +8,7 @@ class apto extends datos
 {
 	PUBLIC function chequearpermisos()
 	{
-		$id_rol = $_SESSION['rol'];
+		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -18,7 +18,20 @@ class apto extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
 	}
-	PUBLIC function incluir($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino)
+
+	PUBLIC function incluir_s($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino){
+		return $this->incluir($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino);
+	}
+	PUBLIC function modificar_s($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento){
+		return $this->modificar($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento);
+	}
+	PUBLIC function eliminar_s($id_apartamento){
+		return $this->eliminar($id_apartamento);
+	}
+
+
+
+	PRIVATE function incluir($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -48,7 +61,7 @@ class apto extends datos
 		return $r;
 	}
 
-	PUBLIC function modificar($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento)
+	PRIVATE function modificar($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -94,7 +107,7 @@ class apto extends datos
 		return $r;
 	}
 
-	PUBLIC function eliminar($id_apartamento)
+	PRIVATE function eliminar($id_apartamento)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

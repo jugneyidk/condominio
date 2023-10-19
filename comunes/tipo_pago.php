@@ -13,6 +13,11 @@
 				<option value="4">Divisa</option>
 			</select>
 		</div>
+		<div class="col-12 col-md-5 d-none">
+			<label>Datos del Tipo de cambio en divisa</label>
+			<div><strong id="tipo_cambio_divisa_monto_to_show"></strong></div>
+			<div><strong id="tipo_cambio_divisa_fecha_to_show"></strong></div>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-12 col-md-5">

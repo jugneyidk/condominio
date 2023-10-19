@@ -460,7 +460,9 @@ function enviaAjax(datos) {
           muestraMensaje(lee.mensaje, "", "error");
         }
       } catch (e) {
-        alert("Error en JSON " + e.name + " !!!");
+        alert("Error en JSON " + e.name + " xxxx!!!");
+        console.error(e);
+        // console.log(respuesta);
       }
     },
     error: function (request, status, err) {

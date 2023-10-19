@@ -58,14 +58,25 @@ function cedulaKeypress(tag){
 	tag.maxLength = 12;
 }
 
-function eventoMonto(etiqueta,n = 26,mensaje = "Ingrese un monto valido"){
+function eventoMonto(etiqueta,mensaje = "Ingrese un monto valido"){
+	var n = 26;
 	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }
 	eventoKeyup(etiqueta, montoExp, mensaje, undefined, function(e){e.value = sepMiles(e.value); });
 	eventoKeypress(etiqueta, /^[0-9]$/);
+
 	//Si se está repitiendo, ignorar
 	document.getElementById(etiqueta).addEventListener('keydown', function(keyboardEvent) {if (keyboardEvent.repeat) keyboardEvent.preventDefault(); });
 	document.getElementById(etiqueta).onchange = function(){this.value = sepMiles(this.value); validarKeyUp(montoExp, $(this), mensaje); }
 	document.getElementById(etiqueta).maxLength = n;
+	document.getElementById(etiqueta).validarme = function(){
+		var value_temp = this.value.replace(/\./g, '');
+		if(/[0-9]{1,18}[,\.][0-9]{2}/.test(value_temp)){
+			return validarKeyUp(true, $(this), mensaje);
+		}
+		else{
+			return validarKeyUp(false, $(this), mensaje);
+		}
+	}
 
 }
 function eventoNombre(etiqueta,n = 45, expLimit = "1,45", mensaje = "nombre"){
@@ -84,7 +95,6 @@ function eventoAlfanumerico(etiqueta,n = 45, expLimit = "1,45", mensaje = "nombr
 	eventoKeypress(etiqueta, /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);
 	document.getElementById(etiqueta).maxLength = n;
 }
-
 
 
 function eventosValidaciones(etiqueta,n, exp1, exp2, mensaje,func,func2){
@@ -449,6 +459,10 @@ function crearElem(type,attr='',content='')
 				console.error('Los attr debent tener un valor separado por "," ej. id,value')
 				return undefined;
 			}
+		}
+		else if(content !=''){
+			if(content.tagName){elem.appendChild(content);}
+			else if(content!=''){elem.innerHTML=content;}
 		}
 		return elem;
 	}

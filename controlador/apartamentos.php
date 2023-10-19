@@ -17,7 +17,7 @@ if (is_file("vista/" . $p . ".php")) {
       $respuesta = $o->listadohabitantes();
       echo json_encode($respuesta);
     } else if ($accion == 'incluir') {
-      $respuesta = $o->incluir(
+      $respuesta = $o->incluir_s(
         $_POST['torre'],
         $_POST['piso'],
         $_POST['numapto'],
@@ -27,7 +27,7 @@ if (is_file("vista/" . $p . ".php")) {
       );
       echo json_encode($respuesta);
     } else if ($accion == 'modificar') {
-      $respuesta = $o->modificar(
+      $respuesta = $o->modificar_s(
         $_POST['id'],
         $_POST['numapto'],
         $_POST['propietario'],
@@ -38,7 +38,7 @@ if (is_file("vista/" . $p . ".php")) {
       );
       echo json_encode($respuesta);
     } else if ($accion == 'eliminar') {
-      $respuesta = $o->eliminar($_POST['id']);
+      $respuesta = $o->eliminar_s($_POST['id']);
       echo json_encode($respuesta);
     } else if ($accion == 'listadotipo') {
       $respuesta = $o->listadotipos();

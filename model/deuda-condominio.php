@@ -4,12 +4,444 @@ require_once('model/datos.php');
 require_once("model/bitacora.php");
 
 
-
-class deudacondominio extends datos
+class Deudacondominio extends datos
 {
+	PRIVATE $con;
+	//cargos
+	PRIVATE $id, $concepto, $monto, $tipo_monto, $tipo_cargo, $mensual, $aplicar_next_mes, $apartamentos;
+
+	PUBLIC function __construct(){
+		$this->con = $this->conecta();
+		$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+
+	PUBLIC function incluir_cargo_s(){
+		return $this->incluir_cargo();
+	}
+	PUBLIC function modificar_cargo_s(){
+		return $this->modificar_cargo();
+	}
+	PUBLIC function eliminar_cargo_s(){
+		return $this->eliminar_cargo();
+	}
+	PRIVATE function incluir_cargo(){
+
+
+		// ob_start();
+		
+		// echo "<pre>\n";
+		// var_dump($this);
+		// echo "</pre>";
+		
+		// $valor = ob_get_clean();
+		
+		// $r["resultado"] = "console";
+		// $r["mensaje"] = $valor;
+		
+		// // echo json_encode($r);
+		// return $r;
+
+
+
+
+
+
+		try {
+			$this->validar_conexion($this->con);
+			$V = new Validaciones();
+			$V->alfanumerico ($this->concepto,"1,80","El concepto tiene caracteres inválidos o esta vació");
+			$V->monto($this->monto);
+			if($this->tipo_monto === false){
+				throw new Validaciones("Debe seleccionar un tipo de monto", 1);
+			}
+			if($this->tipo_cargo === false){
+				throw new Validaciones("Debe seleccionar el tipo de cargo (global/dedicado)", 1);
+				
+			}
+			if($this->mensual === false){
+				throw new Validaciones("Debe seleccionar el tipo de cargo (mensual/único)", 1);
+				
+			}
+			if($this->tipo_cargo === 0){
+				if(!is_array($this->apartamentos)){
+					throw new Validaciones("Debe seleccionar el/los apartamentos a ser aplicados los cargos", 1);
+				}
+			}
+			if($this->aplicar_next_mes === false){
+				throw new Validaciones("Debe seleccionar si desea aplicar el cargo el siguiente mes o no", 1);
+			}
+
+			$this->con->beginTransaction();
+			$consulta = $this->con->prepare("INSERT INTO lista_cargos_d 
+				(`concepto`,
+				 `monto`,
+				 `tipo_monto`,
+				 `tipo_cargo`,
+				 `mensual`,
+				 `aplicar_next_mes`)
+				 VALUES
+				 (
+					 :concepto,
+					 :monto,
+					 :tipo_monto,
+					 :tipo_cargo,
+					 :mensual,
+					 :aplicar_next_mes
+				 );");
+			$consulta->bindValue(":concepto", $this->concepto);
+			$consulta->bindValue(":monto", $this->monto);
+			$consulta->bindValue(":tipo_monto", $this->tipo_monto);
+			$consulta->bindValue(":tipo_cargo", $this->tipo_cargo);
+			$consulta->bindValue(":mensual", $this->mensual);
+			$consulta->bindValue(":aplicar_next_mes", $this->aplicar_next_mes);
+
+			$consulta->execute();
+
+			
+
+			if($this->tipo_cargo == 0)//dedicado
+			{
+				$this->id = $this->con->lastInsertId();
+				$consulta = $this->con->prepare("INSERT INTO apartamentos_lista_cargos (id_apartamento,id_lista_cargos)
+					VALUES
+					((SELECT id_apartamento FROM apartamento WHERE num_letra_apartamento = ?), ?);");
+
+				for($i = 0;$i<count($this->apartamentos);$i++){
+					$consulta->execute([$this->apartamentos[$i][1], $this->id]);
+				}
+			}
+
+			$bitacora = new Bitacora();
+			$bitacora->b_incluir("lista cargos");
+
+			
+			//$consulta=$this->con->query("SELECT * FROM apartamentos_lista_cargos WHERE 1;")->fetchall(PDO::FETCH_ASSOC);
+			
+			
+			
+
+			
+			//$r['resultado'] = 'console';
+			$r['resultado'] = 'incluir_cargo';
+			$r['mensaje'] =  '';
+			$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+
+	}
+	PRIVATE function modificar_cargo(){
+		try {
+			$this->validar_conexion($this->con);
+			$V = new Validaciones();
+			$V->alfanumerico ($this->concepto,"1,80","El concepto tiene caracteres inválidos o esta vació");
+			$V->monto($this->monto);
+			if($this->tipo_monto === false){
+				throw new Validaciones("Debe seleccionar un tipo de monto", 1);
+			}
+			if($this->tipo_cargo === false){
+				throw new Validaciones("Debe seleccionar el tipo de cargo (global/dedicado)", 1);
+				
+			}
+			if($this->mensual === false){
+				throw new Validaciones("Debe seleccionar el tipo de cargo (mensual/único)", 1);
+				
+			}
+			if($this->tipo_cargo === 0){
+				if(!is_array($this->apartamentos)){
+					throw new Validaciones("Debe seleccionar el/los apartamentos a ser aplicados los cargos", 1);
+				}
+			}
+			if($this->aplicar_next_mes === false){
+				throw new Validaciones("Debe seleccionar si desea aplicar el cargo el siguiente mes o no", 1);
+			}
+			$this->con->beginTransaction();
+				
+				$consulta = $this->con->prepare("SELECT * FROM lista_cargos_d WHERE id_lista_cargos = ?;");
+				$consulta->execute([$this->id]);
+
+				if($consulta->fetch()){
+
+					$consulta = $this->con->prepare("UPDATE `lista_cargos_d` SET `concepto`= :concepto, `monto`= :monto, `tipo_monto`= :tipo_monto, `tipo_cargo`= :tipo_cargo, `mensual`= :mensual, `aplicar_next_mes`= :aplicar_next_mes] WHERE `id_lista_cargos` = :id_lista_cargos;");
+
+
+					$consulta->bindValue(":id_lista_cargos", $this->id);
+					$consulta->bindValue(":concepto", $this->concepto);
+					$consulta->bindValue(":monto", $this->monto);
+					$consulta->bindValue(":tipo_monto", $this->tipo_monto);
+					$consulta->bindValue(":tipo_cargo", $this->tipo_cargo);
+					$consulta->bindValue(":mensual", $this->mensual);
+					$consulta->bindValue(":aplicar_next_mes", $this->aplicar_next_mes);
+					$consulta->execute();
+
+
+					if($this->tipo_cargo == 0)//dedicado
+					{
+						$consulta = $this->con->prepare("DELETE FROM apartamentos_lista_cargos WHERE id_lista_cargos = ?;");
+						$consulta->execute([$this->id]);
+						
+						$consulta = $this->con->prepare("INSERT INTO apartamentos_lista_cargos (id_apartamento,id_lista_cargos)
+							VALUES
+							((SELECT id_apartamento FROM apartamento WHERE num_letra_apartamento = ?), ?);");
+
+						for($i = 0;$i<count($this->apartamentos);$i++){
+							$consulta->execute([$this->apartamentos[$i][1], $this->id]);
+						}
+					}
+
+
+					
+				}
+				else throw new Validaciones("El cargo a no existe o fue eliminado", 1);
+
+
+
+			
+			$r['resultado'] = 'modificar_cargo';
+			$r['mensaje'] =  "";
+			$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+	}
+	PRIVATE function eliminar_cargo(){
+		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+			$consulta = $this->con->prepare("SELECT * FROM lista_cargos_d WHERE id_lista_cargos = ?;");
+			$consulta->execute([$this->id]);
+
+			if($consulta->fetch()){
+				$consulta = $this->con->prepare("DELETE FROM lista_cargos_d WHERE id_lista_cargos = ?;");
+				$consulta->execute([$this->id]);
+			}
+			else throw new Validaciones("El cargo a no existe o fue eliminado", 1);
+			
+			
+			$r['resultado'] = 'eliminar_cargo';
+			$r['mensaje'] =  "El cargo fue eliminado exitosamente";
+			$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+	}
+
+	PUBLIC function lista_apartamentos(){
+		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+			if(!$this->id){
+				$consulta = $this->con->prepare("SELECT
+											NULL as extra,
+										    a.num_letra_apartamento,
+										    CONCAT(h.`nombres`,' ',h.apellidos) as nombre,
+										    a.torre,
+										    a.piso,
+										    ta.descripcion AS tipo_apartamento
+										FROM
+										    `apartamento` AS a
+										JOIN tipo_apartamento AS ta
+										ON
+										    a.tipo_apartamento = ta.id_tipo_apartamento
+										JOIN habitantes as h on h.id = a.propietario
+										WHERE
+										    1 ORDER BY a.num_letra_apartamento");
+				$consulta->execute();
+				
+				$r['resultado'] = 'lista_apartamentos';
+				$r['mensaje'] =  $consulta->fetchall(PDO::FETCH_NUM);;
+			}
+			else{
+				$consulta= $this->con->prepare("SELECT
+								    `concepto`,
+								    `monto`,
+								    `tipo_monto`,
+								    `tipo_cargo`,
+								    `mensual`,
+								    `aplicar_next_mes`,
+								    lc.`id_lista_cargos`,
+								    IF(tipo_cargo = 1,0,(SELECT COUNT(*) FROM apartamentos_lista_cargos AS alc WHERE alc.id_lista_cargos = lc.id_lista_cargos)) AS apartamentos
+								FROM
+								    `lista_cargos_d` AS lc
+								WHERE
+								    `id_lista_cargos` = ?");
+				$consulta->execute([$this->id]);
+
+
+
+
+
+
+
+
+
+
+				$resultado["cargo"] = $consulta->fetch(PDO::FETCH_ASSOC);
+				$resultado['lista'] = [];
+				$consulta = $this->con->prepare("SELECT NULL AS
+							    extra,
+							    a.num_letra_apartamento,
+							    CONCAT(h.`nombres`, ' ', h.apellidos) AS nombre,
+							    a.torre,
+							    a.piso,
+							    ta.descripcion AS tipo_apartamento
+							FROM
+							    `apartamento` AS a
+							JOIN tipo_apartamento AS ta
+							ON
+							    a.tipo_apartamento = ta.id_tipo_apartamento
+							JOIN habitantes AS h
+							ON
+							    h.id = a.propietario
+							JOIN apartamentos_lista_cargos as alc ON alc.id_apartamento = a.id_apartamento
+							WHERE
+							    alc.id_lista_cargos = ?
+							ORDER BY
+							    a.num_letra_apartamento");
+				$consulta->execute([$this->id]);
+				$consulta = $consulta->fetchall(PDO::FETCH_NUM);
+				foreach ($consulta as $elem) {
+					$resultado[$elem[1]] = 1;
+					$resultado['lista'][] = $elem;
+				}
+
+				$r['resultado'] = 'lista_apartamentos_select';
+				//$r['resultado'] = 'console';
+				$r['mensaje'] =  $resultado;
+			}
+			$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+	}
+
+	PUBLIC function lista_cargos(){
+		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+			$consulta = $this->con->query("SELECT
+								    `concepto`,
+								    `monto`,
+								    `tipo_monto`,
+								    `tipo_cargo`,
+								    `mensual`,
+								    `aplicar_next_mes`,
+								    lc.`id_lista_cargos`,
+								    IF(tipo_cargo = 1,0,(SELECT COUNT(*) FROM apartamentos_lista_cargos AS alc WHERE alc.id_lista_cargos = lc.id_lista_cargos)) AS apartamentos
+								FROM
+								    `lista_cargos_d` AS lc
+								WHERE
+								    1")->fetchall(PDO::FETCH_NUM);
+			
+
+			foreach ($consulta as &$elem) {
+				$elem[1] = number_format($elem[1],2,",",".");
+				$elem[2] = $elem[2]==0?"Bolívares":"Divisa";
+				$elem[3] = $elem[3]==0?"Dedicado ({$elem[7]})":"Global";
+				$elem[4] = $elem[4]==0?"Único":"Mensual";
+				$elem[5] = $elem[5]==0?"Si":"No";
+				//$elem[1]='x';
+			}
+			$r['resultado'] = 'lista_cargos';
+			$r['mensaje'] =  $consulta;
+			$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+
+	}
+
+
+
+
 	PUBLIC function chequearpermisos()
 	{
-		$id_rol = $_SESSION['rol'];
+		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -282,4 +714,63 @@ class deudacondominio extends datos
 			return false;
 		}
 	}
+
+	PUBLIC function get_apartamentos(){
+		return $this->apartamentos;
+	}
+	PUBLIC function set_apartamentos($value){
+		$value = json_decode($value);
+		$this->apartamentos = $value;
+	}
+
+	PUBLIC function get_id(){
+		return $this->id;
+	}
+	PUBLIC function set_id($value){
+		$this->id = $value;
+	}
+	PUBLIC function get_concepto(){
+		return $this->concepto;
+	}
+	PUBLIC function set_concepto($value){
+		$this->concepto = $value;
+	}
+	PUBLIC function get_monto(){
+		return $this->monto;
+	}
+	PUBLIC function set_monto($value){
+		$value = preg_replace(["/\./","/,/"], ["","."], $value);
+		$this->monto = $value;
+	}
+	PUBLIC function get_tipo_monto(){
+		return $this->tipo_monto;
+	}
+	PUBLIC function set_tipo_monto($value){
+		$value = ($value == 'divisa')?1:(($value == 'bolivar')?0:false);
+		$this->tipo_monto = $value;
+	}
+	PUBLIC function get_tipo_cargo(){
+		return $this->tipo_cargo;
+	}
+	PUBLIC function set_tipo_cargo($value){
+		$value = ($value == 'global')?1:(($value == "dedicado")?0:false);
+		$this->tipo_cargo = $value;
+	}
+	PUBLIC function get_mensual(){
+		return $this->mensual;
+	}
+	PUBLIC function set_mensual($value){
+		$value = ($value == 'mensual')?1:(($value == "unico")?0:false);
+		$this->mensual = $value;
+	}
+	PUBLIC function get_aplicar_next_mes(){
+		return $this->aplicar_next_mes;
+	}
+	PUBLIC function set_aplicar_next_mes($value){
+		$value = ($value == 'aplicar')?1:(($value == "no aplicar")?0:false);
+		$this->aplicar_next_mes = $value;
+	}
+
+
 }
+?>

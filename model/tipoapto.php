@@ -8,7 +8,7 @@ require_once("model/bitacora.php");
 class tipoapto extends datos
 {
 	PUBLIC function chequearpermisos(){
-		$id_rol = $_SESSION['rol'];
+		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

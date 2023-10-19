@@ -28,7 +28,7 @@
 				$cl->set_costo($_POST["estacCosto"]);
 				$cl->set_apartamento_id($_POST["apartamentos_id"]);
 
-				echo json_encode($cl->incluir());
+				echo json_encode($cl->incluir_s());
 				//echo json_encode(["resultado"=>'incluir',"mensaje"=>"Registro Incluido", "envio" => $_POST]);
 			}
 			else if($accion == "modificar"){
@@ -37,11 +37,11 @@
 				$cl->set_apartamento_id($_POST["apartamentos_id"]);
 				$cl->set_num_estac_original($_POST["id"]);
 
-				echo json_encode($cl->modificar());
+				echo json_encode($cl->modificar_s());
 			}
 			else if($accion == "eliminar"){
 				$cl->set_num_estac($_POST["numEstac"]);
-				echo json_encode($cl->eliminar());
+				echo json_encode($cl->eliminar_s());
 			}
 
 
