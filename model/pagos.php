@@ -3,11 +3,12 @@
 require_once('model/enviar-correo.php');
 require_once('model/datos.php');
 require_once("model/bitacora.php");
+require_once("model/enviar-ws.php");
 
 
 class pagos extends datos
 {
-	PUBLIC function listadopagos()
+	public function listadopagos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -65,7 +66,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	PUBLIC function listadopagospendientes()
+	public function listadopagospendientes()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -119,7 +120,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	PUBLIC function listadopagosconfirmados()
+	public function listadopagosconfirmados()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -167,7 +168,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	PUBLIC function listadopagosdeclinados()
+	public function listadopagosdeclinados()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -215,7 +216,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	PUBLIC function detallespago($id)
+	public function detallespago($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -306,7 +307,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	PUBLIC function confirmar_declinar_pago($id, $accion, $id_usuario)
+	public function confirmar_declinar_pago($id, $accion, $id_usuario)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -326,6 +327,9 @@ class pagos extends datos
 					$r['mensaje'] =  "Pago confirmado correctamente";
 					$bitacora = new Bitacora();
 					$bitacora->b_accion("Confirmo pago en ");
+					$mensajews = new enviarws();
+					$ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
+					$r['ws'] =  $ws;
 					return $r;
 				}
 			} elseif ($accion == 'declinar') {
@@ -339,6 +343,9 @@ class pagos extends datos
 				$r['mensaje'] =  "Pago declinado correctamente";
 				$bitacora = new Bitacora();
 				$bitacora->b_accion("Declino pago en ");
+				$mensajews = new enviarws();
+				$ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
+				$r['ws'] =  $ws;
 			}
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
@@ -347,7 +354,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	PRIVATE function existe($id)
+	private function existe($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
