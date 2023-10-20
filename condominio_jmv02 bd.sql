@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-10-2023 a las 00:15:12
+-- Tiempo de generación: 19-10-2023 a las 18:01:04
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -97,6 +97,13 @@ CREATE TABLE `apartamentos_lista_cargos` (
   `id_apartamento` int(11) NOT NULL,
   `id_lista_cargos` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `apartamentos_lista_cargos`
+--
+
+INSERT INTO `apartamentos_lista_cargos` (`id_apartamento`, `id_lista_cargos`) VALUES
+(1, 14);
 
 -- --------------------------------------------------------
 
@@ -240,7 +247,116 @@ INSERT INTO `bitacora` (`id`, `user`, `descrip`, `fecha`) VALUES
 (101, 3, 'Modificación en servicios pago de servicio', '2023-10-10 02:37:18'),
 (102, 3, 'Inicio sesionlogin', '2023-10-10 22:05:54'),
 (103, 3, 'Inicio sesionlogin', '2023-10-10 22:06:16'),
-(104, 3, 'Eliminación en servicios pago de servicio', '2023-10-10 22:13:59');
+(104, 3, 'Eliminación en servicios pago de servicio', '2023-10-10 22:13:59'),
+(105, 3, 'Inicio sesionlogin', '2023-10-11 03:47:03'),
+(106, 3, 'Registro en servicios pago de servicio', '2023-10-11 10:21:37'),
+(107, 3, 'Inicio sesionlogin', '2023-10-12 01:59:28'),
+(108, 3, 'Inicio sesionlogin', '2023-10-12 04:04:45'),
+(109, 3, 'Inicio sesionlogin', '2023-10-12 14:20:44'),
+(110, 3, 'Inicio sesionlogin', '2023-10-14 08:23:17'),
+(111, 3, 'Inicio sesionlogin', '2023-10-15 09:19:08'),
+(112, 3, 'Inicio sesionlogin', '2023-10-15 20:27:44'),
+(113, 3, 'Inicio sesionlogin', '2023-10-16 05:08:38'),
+(114, 3, 'Modificación en servicios pago de servicio', '2023-10-16 06:52:46'),
+(115, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:08:20'),
+(116, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:10:31'),
+(117, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:10:44'),
+(118, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:12:34'),
+(119, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:13:05'),
+(120, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:16:48'),
+(121, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:17:13'),
+(122, 3, 'Modificación en nomina pago de nomina', '2023-10-16 07:27:09'),
+(123, 3, 'Registro en nomina nomina_pago', '2023-10-16 08:14:20'),
+(124, 3, 'Registro en nomina detalles_pagos', '2023-10-16 08:14:20'),
+(125, 3, 'Eliminación en nomina pago de nomina', '2023-10-16 08:14:30'),
+(126, 3, 'Registro en nomina nomina_pago', '2023-10-16 08:31:42'),
+(127, 3, 'Registro en nomina detalles_pagos', '2023-10-16 08:31:42'),
+(128, 3, 'Inicio sesion login', '2023-10-16 09:06:58'),
+(129, 3, 'Registro en deuda-condominio lista cargos', '2023-10-16 20:03:56'),
+(130, 3, 'Registro en deuda-condominio lista cargos', '2023-10-16 20:10:39'),
+(131, 3, 'Registro en deuda-condominio lista cargos', '2023-10-16 20:15:53'),
+(132, 3, 'Registro en deuda-condominio lista cargos', '2023-10-16 20:28:36'),
+(133, 3, 'Registro en deuda-condominio lista cargos', '2023-10-16 20:30:26'),
+(134, 3, 'Inicio sesion login', '2023-10-16 22:28:23'),
+(135, 3, 'Inicio sesion login', '2023-10-17 00:17:33'),
+(136, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 02:00:46'),
+(137, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 02:06:11'),
+(138, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 02:07:24'),
+(139, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 02:07:57'),
+(140, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 02:10:06'),
+(141, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 02:14:18'),
+(142, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 02:14:50'),
+(143, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 04:45:56'),
+(144, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 04:47:44'),
+(145, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 04:48:14'),
+(146, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 04:50:53'),
+(147, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 04:51:11'),
+(148, 3, 'Registro en deuda-condominio lista cargos', '2023-10-17 04:53:12'),
+(149, 3, 'Inicio sesion login', '2023-10-17 09:19:46'),
+(150, 3, 'Inicio sesion login', '2023-10-17 09:36:38'),
+(151, 3, 'Inicio sesion login', '2023-10-17 09:40:48'),
+(152, 3, 'Inicio sesion login', '2023-10-17 09:42:29'),
+(153, 3, 'Inicio sesion login', '2023-10-17 09:46:33'),
+(154, 3, 'Inicio sesion login', '2023-10-17 09:49:51'),
+(155, 3, 'Inicio sesion login', '2023-10-17 09:56:31'),
+(156, 3, 'Inicio sesion login', '2023-10-17 10:04:54'),
+(157, 3, 'Inicio sesion login', '2023-10-17 10:05:09'),
+(158, 3, 'Inicio sesion login', '2023-10-17 10:06:21'),
+(159, 3, 'Inicio sesion login', '2023-10-17 10:06:48'),
+(160, 3, 'Inicio sesion login', '2023-10-17 10:09:30'),
+(161, 3, 'Inicio sesion login', '2023-10-17 10:25:18'),
+(162, 3, 'Inicio sesion login', '2023-10-17 10:49:16'),
+(163, 3, 'Inicio sesion login', '2023-10-17 10:51:16'),
+(164, 3, 'Inicio sesion login', '2023-10-17 10:58:15'),
+(165, 3, 'Modificación en apartamentos ', '2023-10-17 12:17:36'),
+(166, 3, 'Modificación en apartamentos ', '2023-10-17 12:18:31'),
+(167, 3, 'Modificación en apartamentos ', '2023-10-17 12:20:08'),
+(168, 3, 'Modificación en apartamentos ', '2023-10-17 12:20:42'),
+(169, 3, 'Modificación en apartamentos ', '2023-10-17 12:21:24'),
+(170, 3, 'Modificación en apartamentos ', '2023-10-17 12:21:30'),
+(171, 3, 'Modificación en usuarios-administracion ', '2023-10-17 13:03:35'),
+(172, 3, 'Modificación en usuarios-administracion ', '2023-10-17 13:04:01'),
+(173, 3, 'Registro en habitantes ', '2023-10-17 13:08:53'),
+(174, 3, 'Modificación en habitantes ', '2023-10-17 13:12:11'),
+(175, 3, 'Modificación en estacionamiento ', '2023-10-17 13:17:27'),
+(176, 3, 'Inicio sesion cerrarsesion', '2023-10-17 13:18:08'),
+(177, 3, 'Inicio sesion login', '2023-10-17 13:18:37'),
+(178, 3, 'Inicio sesion login', '2023-10-19 07:18:09'),
+(179, 3, 'Registro nuevo monto BCV', '2023-10-19 07:29:47'),
+(180, 3, 'Registro nuevo monto BCV', '2023-10-19 07:30:11'),
+(181, 3, 'Inicio sesion login', '2023-10-19 07:31:38'),
+(182, 3, 'Registro nuevo monto BCV', '2023-10-19 07:31:39'),
+(183, 3, 'Inicio sesion login', '2023-10-19 07:33:04'),
+(184, 3, 'Registro nuevo monto BCV', '2023-10-19 07:33:06'),
+(185, 3, 'Inicio sesion login', '2023-10-19 07:58:52'),
+(186, 3, 'Inicio sesion login', '2023-10-19 07:59:13'),
+(187, 3, 'Inicio sesion login', '2023-10-19 08:00:04'),
+(188, 3, 'Inicio sesion login', '2023-10-19 08:01:05'),
+(189, 3, 'Inicio sesion login', '2023-10-19 08:01:53'),
+(190, 3, 'Registro nuevo monto BCV', '2023-10-19 08:01:55'),
+(191, 3, 'Inicio sesion login', '2023-10-19 08:02:48'),
+(192, 3, 'Registro nuevo monto BCV', '2023-10-19 08:02:50'),
+(193, 3, 'Inicio sesion login', '2023-10-19 08:06:05'),
+(194, 3, 'Registro nuevo monto BCV', '2023-10-19 08:06:07'),
+(195, 3, 'Inicio sesion login', '2023-10-19 13:15:35'),
+(196, 3, 'Inicio sesion login', '2023-10-19 13:56:39'),
+(197, 3, 'Inicio sesion login', '2023-10-19 14:25:26'),
+(198, 3, 'Registro nuevo monto BCV', '2023-10-19 14:27:33'),
+(199, 3, 'Inicio sesion login', '2023-10-19 14:33:30'),
+(200, 3, 'Registro nuevo monto BCV', '2023-10-19 14:33:31'),
+(201, 3, 'Inicio sesion login', '2023-10-19 14:37:42'),
+(202, 3, 'Registro nuevo monto BCV', '2023-10-19 14:37:44'),
+(203, 3, 'Inicio sesion login', '2023-10-19 14:38:32'),
+(204, 3, 'Registro nuevo monto BCV', '2023-10-19 14:38:34'),
+(205, 3, 'Inicio sesion login', '2023-10-19 14:40:26'),
+(206, 3, 'Registro nuevo monto BCV', '2023-10-19 14:40:28'),
+(207, 3, 'Inicio sesion login', '2023-10-19 14:42:12'),
+(208, 3, 'Registro nuevo monto BCV', '2023-10-19 14:42:14'),
+(209, 3, 'Inicio sesion login', '2023-10-19 14:44:00'),
+(210, 3, 'Registro nuevo monto BCV', '2023-10-19 14:44:02'),
+(211, 3, 'Inicio sesion login', '2023-10-19 14:48:56'),
+(212, 3, 'Inicio sesion login', '2023-10-19 14:54:17'),
+(213, 3, 'Inicio sesion login', '2023-10-19 15:05:24');
 
 -- --------------------------------------------------------
 
@@ -265,6 +381,13 @@ CREATE TABLE `config` (
   `titulo` varchar(30) NOT NULL,
   `valor` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `config`
+--
+
+INSERT INTO `config` (`titulo`, `valor`) VALUES
+('hora_dolar', '13:00');
 
 -- --------------------------------------------------------
 
@@ -301,7 +424,9 @@ INSERT INTO `datos_usuarios` (`id`, `rif_cedula`, `tipo_identificacion`, `razon_
 CREATE TABLE `detalles_deudas` (
   `id_deuda` bigint(20) NOT NULL,
   `concepto` varchar(80) NOT NULL,
-  `monto` decimal(20,2) NOT NULL
+  `monto` decimal(20,2) NOT NULL,
+  `tipo_monto` tinyint(1) DEFAULT '1',
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -330,7 +455,11 @@ CREATE TABLE `detalles_pagos` (
 INSERT INTO `detalles_pagos` (`id_detalles_pagos`, `id_pago`, `tipo_pago`, `monto`, `fecha`, `tipo_monto`, `numero`, `emisor`, `cedula_rif`, `telefono`) VALUES
 (47, 72, 1, '1000.00', '2023-10-01 22:33:00', 0, NULL, NULL, NULL, NULL),
 (48, 73, 2, '2000.00', '2023-10-20 21:34:00', 0, '10497231313', 'provincial', 'v12434091', NULL),
-(49, 74, 3, '3000.00', '2023-10-10 21:40:00', 0, '32131312131', 'bamplus', 'v27250544', '04245798958');
+(49, 74, 3, '3000.00', '2023-10-10 21:40:00', 0, '32131312131', 'bamplus', 'v27250544', '04245798958'),
+(50, 75, 1, '2500.00', '2023-10-18 12:51:00', 0, NULL, NULL, NULL, NULL),
+(51, 85, 1, '250.00', '2023-10-10 17:31:00', 0, NULL, NULL, NULL, NULL),
+(53, 87, 4, '352.70', '2023-10-14 01:39:00', 0, NULL, NULL, NULL, NULL),
+(55, 89, 1, '250000.00', '2024-06-20 10:01:00', 0, NULL, NULL, NULL, NULL);
 
 --
 -- Disparadores `detalles_pagos`
@@ -370,6 +499,7 @@ DELIMITER ;
 CREATE TABLE `deudas` (
   `id_deuda` bigint(20) NOT NULL,
   `id_apartamento` int(11) NOT NULL,
+  `id_distribucion` int(11) NOT NULL,
   `concepto` varchar(80) NOT NULL,
   `fecha` date NOT NULL,
   `total` decimal(20,2) NOT NULL,
@@ -506,6 +636,19 @@ INSERT INTO `deuda_pendiente` (`id`, `id_apartamento`, `id_deuda_condominio`, `f
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `distribuciones`
+--
+
+CREATE TABLE `distribuciones` (
+  `id_distribucion` int(11) NOT NULL COMMENT 'id de la distribución',
+  `fecha` date NOT NULL COMMENT 'fecha de la distribución',
+  `concepto` varchar(100) NOT NULL COMMENT 'concepto de la distribución',
+  `usuario` int(11) NOT NULL COMMENT 'usuario que genero la distribución'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='almacena las distribuciones de las deudas';
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `divisa`
 --
 
@@ -514,6 +657,13 @@ CREATE TABLE `divisa` (
   `serial` varchar(20) NOT NULL,
   `denominacion` decimal(20,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `divisa`
+--
+
+INSERT INTO `divisa` (`id_detalles_pagos`, `serial`, `denominacion`) VALUES
+(53, '123', '10.00');
 
 -- --------------------------------------------------------
 
@@ -528,7 +678,7 @@ CREATE TABLE `empleado` (
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
   `fecha_contratacion` date DEFAULT NULL,
-  `salario` decimal(10,2) DEFAULT NULL,
+  `salario` decimal(20,2) DEFAULT NULL,
   `domicilio` varchar(100) DEFAULT NULL,
   `telefono` varchar(15) DEFAULT NULL,
   `correo` varchar(100) DEFAULT NULL,
@@ -542,7 +692,9 @@ CREATE TABLE `empleado` (
 --
 
 INSERT INTO `empleado` (`empleado_id`, `rif_cedula`, `tipo_identificacion`, `nombre`, `apellido`, `fecha_contratacion`, `salario`, `domicilio`, `telefono`, `correo`, `cargo`, `fecha_nacimiento`, `estado_civil`) VALUES
-(1, '12345678', 1, 'Maria Alejandra', 'Sanchez Rodriguez', '2023-09-12', '25.00', 'su casa', '0414-5555555', 'algo@algomas.algo', 'Vigilante', '1998-01-06', 'Soltero');
+(1, '12345678', 1, 'Maria Alejandra', 'Sanchez Rodriguez', '2023-09-12', '25.00', 'su casa', '0414-5555555', 'algo@algomas.algo', 'Vigilante', '1998-01-06', 'Soltero'),
+(9, '27250544', 0, 'xavier', 'suarez', '2023-01-01', '777777.77', 'mi casa', '04145550000', 'algo@esto.com', 'chanclas', '2023-01-01', 'Soltero'),
+(11, '27250544', 2, 'xavier david', 'suarez', '2023-01-01', '777777.77', 'mi casa', '04145550000', 'algo@esto.com', 'chanclas', '2023-01-01', 'Casado');
 
 -- --------------------------------------------------------
 
@@ -562,7 +714,7 @@ CREATE TABLE `estacionamiento` (
 
 INSERT INTO `estacionamiento` (`num_estacionamiento`, `id_apartamento`, `costo`) VALUES
 (1, 1, '2000.00'),
-(2, NULL, '250.00');
+(2, NULL, '25.00');
 
 -- --------------------------------------------------------
 
@@ -600,7 +752,7 @@ CREATE TABLE `habitantes` (
   `telefono` varchar(45) NOT NULL,
   `correo` varchar(45) NOT NULL,
   `domicilio_fiscal` varchar(45) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL DEFAULT '123'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -608,9 +760,10 @@ CREATE TABLE `habitantes` (
 --
 
 INSERT INTO `habitantes` (`id`, `cedula_rif`, `tipo_identificacion`, `nombres`, `apellidos`, `telefono`, `correo`, `domicilio_fiscal`, `password`) VALUES
-(1, '28609560', 1, 'Jugney', 'Vargas', '0424-5681343', 'jugneyv@gmail.com', 'br union', ''),
-(2, '26846371', 0, 'Diego Andres', 'Salazar Gonzalez', '0424-4034516', 'diego14asf@gmail.com', 'Calle 28 entre 19 y 20', ''),
-(3, '10846157', 0, 'Juan', 'Jimenez', '0426-5551234', 'juanjimenez@gmail.com', 'Conjunto residencial jose maria vargas', '');
+(1, '28609560', 1, 'Jugney', 'Vargas', '0424-5681343', 'jugneyv@gmail.com', 'br union', '123'),
+(2, '26846371', 0, 'Diego Andres', 'Salazar Gonzalez', '0424-4034516', 'diego14asf@gmail.com', 'Calle 28 entre 19 y 20', '123'),
+(3, '10846157', 0, 'Juan', 'Jimenez', '0426-5551234', 'juanjimenez@gmail.com', 'Conjunto residencial jose maria vargas', '123'),
+(4, '77777777', 1, 'xavier D', 'suarez', '0414-5555555', 'algo.esto@queso.com', 'mi casa', '123');
 
 -- --------------------------------------------------------
 
@@ -622,9 +775,32 @@ CREATE TABLE `lista_cargos_d` (
   `id_lista_cargos` int(11) NOT NULL,
   `concepto` varchar(80) NOT NULL,
   `monto` decimal(20,2) NOT NULL,
+  `tipo_monto` tinyint(1) DEFAULT '1',
   `tipo_cargo` tinyint(1) NOT NULL,
-  `mensualidad` tinyint(1) NOT NULL
+  `mensual` tinyint(1) NOT NULL,
+  `aplicar_next_mes` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `lista_cargos_d`
+--
+
+INSERT INTO `lista_cargos_d` (`id_lista_cargos`, `concepto`, `monto`, `tipo_monto`, `tipo_cargo`, `mensual`, `aplicar_next_mes`) VALUES
+(11, 'cable para los puercos', '7777.78', 1, 1, 1, 1),
+(13, 'probando otros', '8888.88', 0, 1, 0, 0),
+(14, 'combinaciones', '99.99', 1, 0, 0, 1);
+
+--
+-- Disparadores `lista_cargos_d`
+--
+DELIMITER $$
+CREATE TRIGGER `lista_cargos_d_AU` AFTER UPDATE ON `lista_cargos_d` FOR EACH ROW BEGIN
+IF (NEW.tipo_cargo = 1 AND OLD.tipo_cargo = 0) THEN
+	DELETE FROM apartamentos_lista_cargos WHERE id_lista_cargos = OLD.id_lista_cargos;
+END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -683,6 +859,15 @@ CREATE TABLE `nomina_pago` (
   `id_empleado` int(11) NOT NULL,
   `id_pago` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `nomina_pago`
+--
+
+INSERT INTO `nomina_pago` (`id_empleado`, `id_pago`) VALUES
+(9, 87),
+(11, 85),
+(11, 89);
 
 -- --------------------------------------------------------
 
@@ -762,7 +947,11 @@ CREATE TABLE `pagos` (
 INSERT INTO `pagos` (`id_pago`, `total_pago`, `concepto_pago`, `estado`, `usuario_id`) VALUES
 (72, '1000.00', 'probando efectivo', 2, 3),
 (73, '2000.00', 'probando transferencia', 2, 3),
-(74, '3000.00', 'probando pago movil', 2, 3);
+(74, '3000.00', 'probando pago movil', 2, 3),
+(75, '2500.00', '', 2, 3),
+(85, '250.00', 'servicio completo', 2, 3),
+(87, '352.70', 'probando divisa cambiendo la descrip por una mucho mas larga', 2, 3),
+(89, '250000.00', 'hola probando fecha', 2, 3);
 
 -- --------------------------------------------------------
 
@@ -868,7 +1057,8 @@ CREATE TABLE `servicios_pagos` (
 INSERT INTO `servicios_pagos` (`id_servicio`, `id_pago`) VALUES
 (1, 72),
 (1, 73),
-(1, 74);
+(1, 74),
+(2, 75);
 
 -- --------------------------------------------------------
 
@@ -909,7 +1099,8 @@ CREATE TABLE `tipo_cambio_divisa` (
 --
 
 INSERT INTO `tipo_cambio_divisa` (`fecha`, `monto`) VALUES
-('2023-10-06 05:18:02', '34.25');
+('2023-10-19 08:02:28', '0.00'),
+('2023-10-19 08:02:49', '34.86');
 
 -- --------------------------------------------------------
 
@@ -964,11 +1155,11 @@ CREATE TABLE `usuarios_roles` (
 INSERT INTO `usuarios_roles` (`id_usuario`, `id_rol`, `clave`) VALUES
 (1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
 (2, 1, '$2y$10$xJrc2hrFMX8FgdvlFyJApOz8qdYXQpmll5FFy3VI7Gw5dAAq4ubD6'),
-(3, 2, '$2y$10$.etrI43YBvlHp4wIO9Veq.GvSK0KOaFKxAdMCOAlWGwZ0XVWa6N2u'),
+(3, 2, '$2y$10$VAwQiX4aR3/60baTzh3ZQuafYmjSSx91sNX64JPBeOJobg5RtGIVW'),
 (1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
 (1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
 (2, 1, '$2y$10$xJrc2hrFMX8FgdvlFyJApOz8qdYXQpmll5FFy3VI7Gw5dAAq4ubD6'),
-(3, 2, '$2y$10$.etrI43YBvlHp4wIO9Veq.GvSK0KOaFKxAdMCOAlWGwZ0XVWa6N2u'),
+(3, 2, '$2y$10$VAwQiX4aR3/60baTzh3ZQuafYmjSSx91sNX64JPBeOJobg5RtGIVW'),
 (1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm');
 
 -- --------------------------------------------------------
@@ -992,6 +1183,7 @@ CREATE TABLE `votos` (
 --
 ALTER TABLE `apartamento`
   ADD PRIMARY KEY (`id_apartamento`),
+  ADD UNIQUE KEY `num_letra_apartamento` (`num_letra_apartamento`),
   ADD KEY `propietario` (`propietario`),
   ADD KEY `inquilino` (`inquilino`),
   ADD KEY `id_tipo_apartamento` (`tipo_apartamento`) USING BTREE;
@@ -1001,7 +1193,7 @@ ALTER TABLE `apartamento`
 --
 ALTER TABLE `apartamentos_lista_cargos`
   ADD PRIMARY KEY (`id_apartamento`,`id_lista_cargos`),
-  ADD KEY `id_lista_cargos` (`id_lista_cargos`);
+  ADD KEY `apartamentos_lista_cargos_ibfk_2` (`id_lista_cargos`);
 
 --
 -- Indices de la tabla `avisos`
@@ -1056,7 +1248,8 @@ ALTER TABLE `detalles_pagos`
 --
 ALTER TABLE `deudas`
   ADD PRIMARY KEY (`id_deuda`,`id_apartamento`),
-  ADD KEY `id_apartamento` (`id_apartamento`);
+  ADD KEY `id_apartamento` (`id_apartamento`),
+  ADD KEY `id_distribucion` (`id_distribucion`);
 
 --
 -- Indices de la tabla `deuda_condominio`
@@ -1079,6 +1272,13 @@ ALTER TABLE `deuda_pendiente`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_apartamento` (`id_apartamento`),
   ADD KEY `id_deuda_condominio` (`id_deuda_condominio`);
+
+--
+-- Indices de la tabla `distribuciones`
+--
+ALTER TABLE `distribuciones`
+  ADD PRIMARY KEY (`id_distribucion`),
+  ADD KEY `usuario` (`usuario`);
 
 --
 -- Indices de la tabla `divisa`
@@ -1136,7 +1336,7 @@ ALTER TABLE `modulos`
 --
 ALTER TABLE `nomina_pago`
   ADD PRIMARY KEY (`id_empleado`,`id_pago`),
-  ADD KEY `id_pago` (`id_pago`);
+  ADD KEY `nomina_pago_ibfk_2` (`id_pago`);
 
 --
 -- Indices de la tabla `pago`
@@ -1245,7 +1445,7 @@ ALTER TABLE `avisos`
 -- AUTO_INCREMENT de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
 
 --
 -- AUTO_INCREMENT de la tabla `datos_usuarios`
@@ -1257,7 +1457,7 @@ ALTER TABLE `datos_usuarios`
 -- AUTO_INCREMENT de la tabla `detalles_pagos`
 --
 ALTER TABLE `detalles_pagos`
-  MODIFY `id_detalles_pagos` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id_detalles_pagos` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `deudas`
@@ -1278,10 +1478,16 @@ ALTER TABLE `deuda_pendiente`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
+-- AUTO_INCREMENT de la tabla `distribuciones`
+--
+ALTER TABLE `distribuciones`
+  MODIFY `id_distribucion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la distribución';
+
+--
 -- AUTO_INCREMENT de la tabla `empleado`
 --
 ALTER TABLE `empleado`
-  MODIFY `empleado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `empleado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `foro`
@@ -1293,13 +1499,13 @@ ALTER TABLE `foro`
 -- AUTO_INCREMENT de la tabla `habitantes`
 --
 ALTER TABLE `habitantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `lista_cargos_d`
 --
 ALTER TABLE `lista_cargos_d`
-  MODIFY `id_lista_cargos` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_lista_cargos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `lista_servicios`
@@ -1323,7 +1529,7 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id_pago` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id_pago` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -1366,7 +1572,7 @@ ALTER TABLE `apartamento`
 --
 ALTER TABLE `apartamentos_lista_cargos`
   ADD CONSTRAINT `apartamentos_lista_cargos_ibfk_1` FOREIGN KEY (`id_apartamento`) REFERENCES `apartamento` (`id_apartamento`),
-  ADD CONSTRAINT `apartamentos_lista_cargos_ibfk_2` FOREIGN KEY (`id_lista_cargos`) REFERENCES `lista_cargos_d` (`id_lista_cargos`);
+  ADD CONSTRAINT `apartamentos_lista_cargos_ibfk_2` FOREIGN KEY (`id_lista_cargos`) REFERENCES `lista_cargos_d` (`id_lista_cargos`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `bitacora`
@@ -1398,7 +1604,8 @@ ALTER TABLE `detalles_pagos`
 -- Filtros para la tabla `deudas`
 --
 ALTER TABLE `deudas`
-  ADD CONSTRAINT `deudas_ibfk_1` FOREIGN KEY (`id_apartamento`) REFERENCES `apartamento` (`id_apartamento`);
+  ADD CONSTRAINT `deudas_ibfk_1` FOREIGN KEY (`id_apartamento`) REFERENCES `apartamento` (`id_apartamento`),
+  ADD CONSTRAINT `deudas_ibfk_2` FOREIGN KEY (`id_distribucion`) REFERENCES `distribuciones` (`id_distribucion`);
 
 --
 -- Filtros para la tabla `deuda_condominio`
@@ -1437,7 +1644,7 @@ ALTER TABLE `estacionamiento`
 --
 ALTER TABLE `nomina_pago`
   ADD CONSTRAINT `nomina_pago_ibfk_1` FOREIGN KEY (`id_empleado`) REFERENCES `empleado` (`empleado_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `nomina_pago_ibfk_2` FOREIGN KEY (`id_pago`) REFERENCES `pagos` (`id_pago`);
+  ADD CONSTRAINT `nomina_pago_ibfk_2` FOREIGN KEY (`id_pago`) REFERENCES `pagos` (`id_pago`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `pago`

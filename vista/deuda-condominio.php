@@ -11,15 +11,206 @@
 			<hr />
 		</div>
 
+		<nav>
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				<a class="nav-item nav-link active" id="nav-pagos-servicios-tab" data-toggle="tab" href="#nav-deudas" role="tab" aria-controls="nav-deudas" aria-selected="true">Deudas</a>
+				<a class="nav-item nav-link" id="nav-cargos-tab" data-toggle="tab" href="#nav-cargos" role="tab" aria-controls="nav-cargos" aria-selected="false">Cargos</a>
+				<!-- <a class="nav-item nav-link" id="nav-config-tab" data-toggle="tab" href="#nav-config" role="tab" aria-controls="nav-config" aria-selected="false">Configuración</a> -->
+			</div>
+		</nav>
+		<br>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-deudas" role="tabpanel" aria-labelledby="nav-pagos-servicios-tab">
+				<div class="container">
+					<form id="f_deudas" action="" method="POST" onsubmit="return false">
+						<input type="hidden" id="cargo_id_hidden" class="d-none" name="id">
+						<div class="row">
+							<div class="col-12 col-md">
+								<label for="deuda_fecha">Fecha</label>
+								<input type="date" class="form-control" id="deuda_fecha" name="deuda_fecha" data-span="invalid-span-deuda_fecha">
+								<span id="invalid-span-deuda_fecha" class="invalid-span text-danger"></span>
+							</div>
+							<div class="col-12 col-md">
+								<label for="deuda_concepto">Concepto</label>
+								<input type="text" class="form-control" id="deuda_concepto" name="deuda_concepto" data-span="invalid-span-deuda_concepto">
+								<span id="invalid-span-deuda_concepto" class="invalid-span text-danger"></span>
+							</div>
+						</div>
+					</form>
+					<div class="container my-5">
+						<div class="row">
+							<div class="col">
+								<h3 class="text-center">Resumen de la siguiente distribución</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="row justify-content-center mt-3">
+						<?php if ($permisos[2] == 1): ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-primary w-100 small-width" id="incluir_deuda" name="incluir">INCLUIR<span class="fa fa-plus-circle ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[3] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-info w-100 small-width" id="consultar_deuda"  name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[4] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-warning w-100 small-width" id="modificar_deuda" name="modificar" disabled>MODIFICAR<span class="fa fa-pencil-square-o ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[5] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-danger w-100 small-width" id="eliminar_deuda" name="eliminar" disabled>ELIMINAR<span class="fa fa-trash ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+					</div>
+
+
+				</div>
+			</div>
+			<div class="tab-pane fade show" id="nav-cargos" role="tabpanel" aria-labelledby="nav-cargos-tab">
+				<div class="container">
+					<form id="f_cargos" action="" method="POST" onsubmit="return false">
+						<input type="hidden" id="cargo_id_hidden" class="d-none" name="id">
+						
+						<div class="row">
+							<div class="col-12 col-md-3">
+								<label for="cargo_concepto">Concepto</label>
+								<input type="text" maxlength="80" class="form-control" id="cargo_concepto" name="cargo_concepto" data-span="invalid-span-cargo_concepto">
+								<span id="invalid-span-cargo_concepto" class="invalid-span text-danger"></span>
+							</div>
+							<div class="col-12 col-md-3">
+								<label for="cargo_monto">Monto</label>
+								<input type="tel" class="form-control text-right" id="cargo_monto" name="cargo_monto" data-span="invalid-span-cargo_monto">
+								<span id="invalid-span-cargo_monto" class="invalid-span text-danger"></span>
+							</div>
+							<div class="col-5 col-md-3 col-xl-2 ">
+								<label class="w-100">Tipo de monto</label>
+								<div class="text-nowrap">
+									<label class="cursor-pointer no-select" for="cargo_tipo_monto_divisa">Divisa</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_monto_divisa" name="cargo_tipo_monto" data-span="invalid-span-cargo_tipo_monto_moneda" value="divisa">
+									<label class="cursor-pointer no-select" for="cargo_tipo_monto_bolivar">Bolívar</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_monto_bolivar" name="cargo_tipo_monto" data-span="invalid-span-cargo_tipo_monto_moneda" value="bolivar">
+								</div>
+								<span id="invalid-span-cargo_tipo_monto_moneda" class="invalid-span text-danger"></span>
+							</div>
+							<div class="col d-flex align-items-center">
+								<span class="w-100 item-align-center" id="cargo_tipo_monto_info"></span>
+							</div>
+
+						</div>
+						<hr>
+						<p>Opciones del cargo</p>
+						<hr>
+						<div class="row">
+							<div class="col-5 col-md-3 col-xl-2">
+								<div class="text-nowrap">
+									<label class="cursor-pointer no-select" for="cargo_tipo_cargo_mensual">Mensual</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_cargo_mensual" name="cargo_tipo_cargo" data-span="invalid-span-cargo_tipo_cargo_unico_mens" value="mensual">
+									<label class="cursor-pointer no-select" for="cargo_tipo_cargo_unico">Único</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_cargo_unico" name="cargo_tipo_cargo" data-span="invalid-span-cargo_tipo_cargo_unico_mens" value="unico">
+								</div>
+								<span id="invalid-span-cargo_tipo_cargo_unico_mens" class="invalid-span text-danger"></span>
+							</div>
+							<div class="col d-flex align-items-center">
+								<div class="w-100" id="cargo_tipo_cargo_info"></div>
+							</div>
+						</div>
+						<div class="row border-top pt-1">
+							<div class="col-12">
+								<label class="w-100">Aplicar el cargo el siguiente mes?</label>
+								<div class="text-nowrap">
+									<label class="cursor-pointer no-select" for="cargo_tipo_cargo_aplicar_next">Si</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_cargo_aplicar_next" name="cargo_aplicar_next" data-span="invalid-span-cargo_tipo_cargo_aplicar_si_no" value="aplicar">
+									<label class="cursor-pointer no-select" for="cargo_tipo_cargo_no_aplicar">No</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_cargo_no_aplicar" name="cargo_aplicar_next" data-span="invalid-span-cargo_tipo_cargo_aplicar_si_no" value="no aplicar">
+								</div>
+								<span id="invalid-span-cargo_tipo_cargo_aplicar_si_no" class="invalid-span text-danger"></span>
+							</div>
+						</div>
+
+						<div class="row border-top pt-1">
+							<div class="col-5 col-md-3 col-xl-2">
+								<div class="text-nowrap">
+									<label class="cursor-pointer no-select" for="cargo_tipo_cargo_global">Global</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_cargo_global" name="cargo_tipo_cargo_global_dedicado" data-span="invalid-span-cargo_tipo_cargo_gd" value="global">
+									<label class="cursor-pointer no-select" for="cargo_tipo_cargo_dedicado">Dedicado</label>
+									<input type="radio" class="dont-erase" id="cargo_tipo_cargo_dedicado" name="cargo_tipo_cargo_global_dedicado" data-span="invalid-span-cargo_tipo_cargo_gd" value="dedicado">
+								</div>
+									<span id="invalid-span-cargo_tipo_cargo_gd" class="invalid-span text-danger"></span>
+							</div>
+							<div class="col d-flex align-items-center">
+								<div id="cargo_tipo_cargo_gd_info" class="w-100"></div>
+							</div>
+						</div>
+					</form>
+					<div class="container d-none" id="cargo_dedicado_to_show">
+						<div class="table-responsive" style="overflow-y: auto; max-height: 500px;">
+							<table class="table table-striped table-hover" id="cargo_apartamento_table">
+								<thead>
+									<tr>
+										<th>apartamento</th>
+										<th>propietario</th>
+										<th>torre</th>
+										<th>piso</th>
+										<th>tipo apartamento</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody id="cargo_apartamentos_seleccionados">
+									<tr><td colspan="6" class="text-center">No ha seleccionado un apartamento</td></tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="text-right mt-3">
+							<button type="button" id="cargo_apartamento_nuevo_btn" class="btn btn-info">Nuevo +</button>
+						</div>
+					</div>
+
+					
+
+
+					
+
+
+					<div class="row justify-content-center mt-3">
+						<?php if ($permisos[2] == 1): ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-primary w-100 small-width" id="incluir_cargo" name="incluir">INCLUIR<span class="fa fa-plus-circle ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[3] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-info w-100 small-width" id="consultar_cargo"  name="consultar">CONSULTAR<span class="fa fa-table ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[4] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-warning w-100 small-width" id="modificar_cargo" name="modificar" disabled>MODIFICAR<span class="fa fa-pencil-square-o ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+						<?php if ($permisos[5] == 1) : ?>
+							<div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center mb-3">
+								<button type="button" class="btn btn-danger w-100 small-width" id="eliminar_cargo" name="eliminar" disabled>ELIMINAR<span class="fa fa-trash ml-2"></span></button>
+							</div>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade show" id="nav-config" role="tabpanel" aria-labelledby="nav-config-tab">
+				<div class="container">
+					<h1>Config</h1>
+				</div>
+			</div>
 
 
 
+		</div>
 
-
-
-
-
-		<form method="post" action="" id="f" class="d-none">
+		<!-- <form method="post" action="" id="f" class="d-none">
 			<input type="text" name="accion" id="accion" style="display:none" />
 			<input autocomplete="off" type="text" class="d-none" name="id_deuda" id="id_deuda">
 			<div class="container">
@@ -70,8 +261,86 @@
 					<?php endif; ?>
 				</div>
 			</div>
-		</form>
+		</form> -->
 	</div>
+
+
+
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="modal_cargo_lista_apartamentos">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-light bg-info">
+					<h5 class="modal-title">Listado de Deudas</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="container">
+					<div class="table-responsive">
+						<table class="table table-striped table-hover row-vertical-middle" id="cargo_apartamento_table_info">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Apartamento</th>
+									<th>Propietario</th>
+									<th>Torre</th>
+									<th>Piso</th>
+									<th>Tipo</th>
+								</tr>
+							</thead>
+							<tbody id="cargo_apartamentos_seleccionados_info">
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer bg-light">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" tabindex="-1" role="dialog" id="modal_cargo_lista_cargos">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-light bg-info">
+					<h5 class="modal-title">Listado de Deudas</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="container">
+					<div class="table-responsive">
+						<table class="table table-striped table-hover rows-pointer" id="cargo_table_info">
+							<thead>
+								<tr>
+									<th>Concepto</th>
+									<th>Monto</th>
+									<th>Tipo de monto</th>
+									<th colspan="2">Configuración</th>
+									
+									<th>Siguiente mes<!-- global/dedicado --></th>
+								</tr>
+							</thead>
+							<tbody id="cargos_info">
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer bg-light">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
 	<div class="modal fade" tabindex="-1" role="dialog" id="modal1">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
@@ -108,7 +377,582 @@
 		<?php require_once('comunes/modalconfirmacion.php'); ?>
 	<?php endif; ?>
 	<script src="js/carga.js"></script>
-	<script src="js/deuda-condominio.js"></script>
+	<script src="js/comun_x.js"></script>
+	<script>
+		var lista_apartamentos_seleccionados = {lista:[]};
+		document.addEventListener("DOMContentLoaded", function(){
+
+			// load_extra_stuff();
+
+
+
+			// cargarLoqueras();
+
+			//--------------------------------------
+			//--------------------------------------
+			//--------- CARGOS ---------------------
+			//--------------------------------------
+			//--------------------------------------
+				//document.getElementById('nav-cargos-tab').click();
+
+
+				eventoAlfanumerico("cargo_concepto",80, "1,80", "Tiene caracteres inválidos o esta vació");
+				eventoMonto("cargo_monto");
+				$("#limpiar").on("click",borrar);
+
+
+
+
+
+				document.getElementById('cargo_tipo_monto_divisa').onchange = document.getElementById('cargo_tipo_monto_bolivar').onchange = function(){
+					var mensaje = {divisa:"El monto del cargo se calculara según la tasa del día", bolivar:"El monto sera fijo en bolívares"}
+					if(this.checked == true){
+						document.getElementById('cargo_tipo_monto_info').innerHTML = mensaje[this.value];
+					}
+					document.getElementById(this.dataset.span).innerHTML="";
+				}
+
+				document.getElementById('cargo_tipo_cargo_mensual').onchange = document.getElementById('cargo_tipo_cargo_unico').onchange = function(){
+					var mensaje = {mensual:"El cargo se aplicara mensualmente",unico:"El cargo se aplicara una única vez y se desactivara una vez aplicado"};
+					if(this.checked==true){
+						document.getElementById('cargo_tipo_cargo_info').innerHTML = mensaje[this.value];
+					}
+					document.getElementById(this.dataset.span).innerHTML="";
+				}
+				document.getElementById('cargo_tipo_cargo_global').onchange = document.getElementById('cargo_tipo_cargo_dedicado').onchange = function(){
+					var mensaje = {global:"El cargo se aplicara global-mente",dedicado:"El cargo se aplicara a los siguiente apartamentos"};
+					if(this.checked==true){
+						document.getElementById('cargo_tipo_cargo_gd_info').innerHTML = mensaje[this.value];
+						if(this.value == "dedicado"){
+							document.getElementById('cargo_dedicado_to_show').classList.remove("d-none");
+						}
+						else{
+							document.getElementById('cargo_dedicado_to_show').classList.add("d-none");
+						}
+					}
+					document.getElementById(this.dataset.span).innerHTML="";
+				}
+
+				document.getElementById('cargo_tipo_cargo_aplicar_next').onchange = document.getElementById('cargo_tipo_cargo_no_aplicar').onchange = function(){
+					document.getElementById(this.dataset.span).innerHTML="";
+				}
+
+
+
+
+				$("#cargo_apartamento_nuevo_btn").on("click",()=>{
+					var datos = new FormData();
+					datos.append("accion","lista_apartamentos");
+					enviaAjax(datos,function(respuesta){
+					
+						var lee = JSON.parse(respuesta);
+						if(lee.resultado == "lista_apartamentos"){
+							if ($.fn.DataTable.isDataTable("#cargo_apartamento_table_info")) {
+								$("#cargo_apartamento_table_info").DataTable().destroy();
+							}
+
+							$("#cargo_apartamentos_seleccionados_info").html("");
+
+							if (!$.fn.DataTable.isDataTable("#cargo_apartamento_table_info")) {
+								$("#cargo_apartamento_table_info").DataTable({
+									language: {
+										lengthMenu: "Mostrar _MENU_ por página",
+										zeroRecords: "No se encontraron registros de apartamentos",
+										info: "Mostrando página _PAGE_ de _PAGES_",
+										infoEmpty: "No hay registros disponibles",
+										infoFiltered: "(filtrado de _MAX_ registros totales)",
+										search: "Buscar:",
+										paginate: {
+											first: "Primera",
+											last: "Última",
+											next: "Siguiente",
+											previous: "Anterior",
+										},
+									},
+									data:lee.mensaje,
+									createdRow: function(row,data){
+										var checkbox = crearElem("input","type,checkbox,class,apartamentos_check");
+										if(lista_apartamentos_seleccionados[data[1]]){
+											checkbox.checked = true;
+										}
+
+										checkbox.onchange=function(){
+											checkbox_func(this,data);
+										}
+										row.querySelector("td:first-child").appendChild(checkbox);
+										row.querySelector("td:nth-of-type(2)").classList.add("text-center");
+										row.querySelector("td:nth-of-type(3)").classList.add("text-truncate");
+										row.querySelector("td:nth-of-type(3)").style = "max-width:125px";
+										row.querySelector("td:nth-of-type(3)").setAttribute("title",data[2]);
+
+
+									},
+									autoWidth: false,
+									order: [[1, "asc"]],
+									columnDefs: [
+											{
+											targets: [0],
+											"orderable": false
+											}
+										]  
+								});
+							}
+						}
+						else if (lee.resultado == 'is-invalid'){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+						else if(lee.resultado == "error"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							console.error(lee.mensaje);
+						}
+						else if(lee.resultado == "console"){
+							console.log(lee.mensaje);
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+					}).then(()=>{
+						$("#modal_cargo_lista_apartamentos").modal("show");
+					});
+				});
+
+				$("#consultar_cargo").on("click",()=>{
+					var datos = new FormData();
+					datos.append("accion","lista_cargos");
+					enviaAjax(datos,function(respuesta){
+					
+						var lee = JSON.parse(respuesta);
+						if(lee.resultado == "lista_cargos"){
+
+							//console.log(lee.mensaje);
+							//return false;
+
+
+							if ($.fn.DataTable.isDataTable("#cargo_table_info")) {
+								$("#cargo_table_info").DataTable().destroy();
+							}
+							
+							$("#cargos_info").html("");
+
+							if (!$.fn.DataTable.isDataTable("#cargo_table_info")) {
+								$("#cargo_table_info").DataTable({
+									language: {
+										lengthMenu: "Mostrar _MENU_ por página",
+										zeroRecords: "No se encontraron registros de apartamentos",
+										info: "Mostrando página _PAGE_ de _PAGES_",
+										infoEmpty: "No hay registros disponibles",
+										infoFiltered: "(filtrado de _MAX_ registros totales)",
+										search: "Buscar:",
+										paginate: {
+											first: "Primera",
+											last: "Última",
+											next: "Siguiente",
+											previous: "Anterior",
+										},
+									},
+									data:lee.mensaje,
+									createdRow: function(row,data){
+										row.dataset.id=data[6];
+									},
+									autoWidth: false
+									//order: [[1, "asc"]],
+									
+								});
+							}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							
+							
+						}
+						else if (lee.resultado == 'is-invalid'){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+						else if(lee.resultado == "error"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							console.error(lee.mensaje);
+						}
+						else if(lee.resultado == "console"){
+							console.log(lee.mensaje);
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+					}).then(()=>{
+						$("#modal_cargo_lista_cargos").modal("show");
+					});
+				});
+
+				rowsEvent("cargos_info",function(e){
+					var datos = new FormData();
+					datos.append("accion","lista_apartamentos_select");
+					datos.append("id",e.dataset.id);
+					enviaAjax(datos,function(respuesta){
+					
+						var lee = JSON.parse(respuesta);
+						if(lee.resultado == "lista_apartamentos_select"){
+							console.log(lee.mensaje);
+							borrar();
+							var cargo = lee.mensaje.cargo;
+							document.getElementById('cargo_id_hidden').value = cargo.id_lista_cargos;
+
+
+
+							$("#cargo_concepto").val(cargo.concepto);
+							$("#cargo_monto").val(cargo.monto);
+							document.getElementById('cargo_monto').onchange();
+							var etiqueta = "cargo_tipo_monto_"+((cargo.tipo_monto == 1)?'divisa':"bolivar");
+							document.getElementById(etiqueta).checked=true;
+							document.getElementById(etiqueta).onchange();
+							var etiqueta = "cargo_tipo_cargo_"+((cargo.mensual == 1)?'mensual':"unico");
+							document.getElementById(etiqueta).checked=true;
+							document.getElementById(etiqueta).onchange();
+							var etiqueta = "cargo_tipo_cargo_"+((cargo.aplicar_next_mes == 1)?'aplicar_next':"no_aplicar");
+							document.getElementById(etiqueta).checked=true;
+							document.getElementById(etiqueta).onchange();
+							var etiqueta = "cargo_tipo_cargo_"+((cargo.tipo_cargo == 1)?'global':"dedicado");
+							document.getElementById(etiqueta).checked=true;
+							document.getElementById(etiqueta).onchange();
+
+							if(cargo.tipo_cargo === '0'){
+								// delete lee.mensaje.cargo;
+								set_cargos_seleccionados_in_table(lee.mensaje);
+							}
+
+							cambiarbotones_cargos(false);
+
+
+
+
+
+
+
+
+						}
+						else if (lee.resultado == 'is-invalid'){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+						else if(lee.resultado == "error"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							console.error(lee.mensaje);
+						}
+						else if(lee.resultado == "console"){
+							console.log(lee.mensaje);
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+					}).then(()=>{
+						$("#modal_cargo_lista_cargos").modal("hide");
+					});
+				})
+
+
+				$("#incluir_cargo").on("click",()=>{
+					if(validar_cargos()){
+						var datos = new FormData($("#f_cargos")[0]);
+						datos.append("accion","incluir_cargo");
+						if(document.getElementById('cargo_tipo_cargo_dedicado').checked){
+							datos.append("lista", JSON.stringify(lista_apartamentos_seleccionados.lista));
+						}
+						enviaAjax(datos,function(respuesta){
+						
+							var lee = JSON.parse(respuesta);
+							if(lee.resultado == "incluir_cargo"){
+								muestraMensaje("El cargo fue registrado exitosamente", "", "success");
+								borrar();
+							}
+							else if (lee.resultado == 'is-invalid'){
+								muestraMensaje("ERROR", lee.mensaje,"error");
+							}
+							else if(lee.resultado == "error"){
+								muestraMensaje("ERROR", lee.mensaje,"error");
+								console.error(lee.mensaje);
+							}
+							else if(lee.resultado == "console"){
+								console.log(lee.mensaje);
+							}
+							else{
+								muestraMensaje("ERROR", lee.mensaje,"error");
+							}
+						});
+					}
+				});
+
+				$("#modificar_cargo").on("click",()=>{
+					Swal.fire({
+						title: "¿Estás Seguro?",
+						text: "¿Está seguro que desea modificar el cargo?",
+						showCancelButton: true,
+						confirmButtonText: "Modificar",
+						confirmButtonColor: "#ffc107",
+						cancelButtonText: `Cancelar`,
+						icon: "warning",
+					}).then((result) => {
+						if (result.isConfirmed) {
+
+							if(validar_cargos()){
+								var datos = new FormData($("#f_cargos")[0]);
+								datos.append("accion","modificar_cargo");
+								if(document.getElementById('cargo_tipo_cargo_dedicado').checked){
+									datos.append("lista", JSON.stringify(lista_apartamentos_seleccionados.lista));
+								}
+								enviaAjax(datos,function(respuesta){
+								
+									var lee = JSON.parse(respuesta);
+									if(lee.resultado == "modificar_cargo"){
+										muestraMensaje("El cargo fue modificado exitosamente", "", "success");
+										borrar();
+									}
+									else if (lee.resultado == 'is-invalid'){
+										muestraMensaje("ERROR", lee.mensaje,"error");
+									}
+									else if(lee.resultado == "error"){
+										muestraMensaje("ERROR", lee.mensaje,"error");
+										console.error(lee.mensaje);
+									}
+									else if(lee.resultado == "console"){
+										console.log(lee.mensaje);
+									}
+									else{
+										muestraMensaje("ERROR", lee.mensaje,"error");
+									}
+								});
+							}
+
+
+
+						}
+					});
+				});
+
+				$("#eliminar_cargo").on("click",()=>{
+
+					Swal.fire({
+						title: "¿Estás Seguro?",
+						text: "¿Está seguro que desea eliminar el cargo?",
+						showCancelButton: true,
+						confirmButtonText: "eliminar",
+						confirmButtonColor: "#c82333",
+						cancelButtonText: `Cancelar`,
+						icon: "warning",
+					}).then((result) => {
+						if (result.isConfirmed) {
+							var datos = new FormData();
+							datos.append("accion","eliminar_cargo");
+							datos.append("id",document.getElementById('cargo_id_hidden').value);
+							enviaAjax(datos,function(respuesta){
+							
+								var lee = JSON.parse(respuesta);
+								if(lee.resultado == "eliminar_cargo"){
+									muestraMensaje(lee.mensaje, '', "success");
+									borrar();
+								}
+								else if (lee.resultado == 'is-invalid'){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+								else if(lee.resultado == "error"){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+									console.error(lee.mensaje);
+								}
+								else if(lee.resultado == "console"){
+									console.log(lee.mensaje);
+								}
+								else{
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+							});
+						}
+					});
+				});
+
+			//--------------------------------------
+			//--------------------------------------
+			//--------------------------------------
+			//--------------------------------------
+			//--------------------------------------
+
+			
+
+		});
+
+		
+
+		//--------------------------------------
+		//--------------------------------------
+		//--------- CARGOS ---------------------
+		//--------------------------------------
+		//--------------------------------------
+			function validar_cargos(){
+				if(!document.getElementById('cargo_concepto').validarme()){
+					muestraMensaje("Campo Invalido", "El concepto es invalido", "error");
+					return false;
+				}
+				else if(!document.getElementById('cargo_monto').validarme()){
+					muestraMensaje("Campo Invalido", "El monto es invalido", "error");
+					return false;
+				}
+				else if(!validar_radio(document.querySelectorAll("input[name='cargo_tipo_monto']"))){
+					document.getElementById(document.querySelector("input[name='cargo_tipo_monto']").dataset.span).innerHTML="Seleccione un valor";
+					muestraMensaje("Campo Invalido", "Debe seleccionar un tipo de monto", "error");
+					return false;
+				}
+				else if(!validar_radio(document.querySelectorAll("input[name='cargo_tipo_cargo']"))){
+					document.getElementById(document.querySelector("input[name='cargo_tipo_cargo']").dataset.span).innerHTML="Seleccione un valor";
+					muestraMensaje("Campo Invalido", "Debe seleccionar el tipo de cargo (mensual/único)", "error");
+					return false;
+				}
+				else if(!validar_radio(document.querySelectorAll("input[name='cargo_aplicar_next']"))){
+					document.getElementById(document.querySelector("input[name='cargo_aplicar_next']").dataset.span).innerHTML="Seleccione un valor";
+					muestraMensaje("Campo Invalido", "Debe seleccionar si desea aplicar el cargo el siguiente mes o no", "error");
+					return false;
+				}
+				else if(!validar_radio(document.querySelectorAll("input[name='cargo_tipo_cargo_global_dedicado']"))){
+					document.getElementById(document.querySelector("input[name='cargo_tipo_cargo_global_dedicado']").dataset.span).innerHTML="Seleccione un valor";
+					muestraMensaje("Campo Invalido", "Debe seleccionar el tipo de cargo (global/dedicado)", "error");
+					return false;
+				}
+				else if(document.getElementById('cargo_tipo_cargo_dedicado').checked){
+					if(!lista_apartamentos_seleccionados.lista.length){
+						muestraMensaje("Campo Invalido", "Debe seleccionar el/los apartamentos a ser aplicados los cargos", "error");
+						return false;
+					}
+				}
+				
+
+
+				console.error("");
+				return true;
+			}
+
+			$("#modal_cargo_lista_apartamentos").on("hide.bs.modal",()=>{
+
+				set_cargos_seleccionados_in_table(lista_apartamentos_seleccionados);
+
+			});
+
+			function set_cargos_seleccionados_in_table(obj){
+				console.log(obj);
+				//console.log(obj.lista);
+				obj.lista.sort((r1, r2) => {return (r1[1] > r2[1]) ? 1 : (r1[1] < r2[1]) ? -1 : 0;});
+				// console.log(obj.lista);
+
+				document.getElementById('cargo_apartamentos_seleccionados').innerHTML='';
+				for (x of obj.lista){
+					// console.log(x);
+					var tr = crearElem("tr",`id,cod_${x[0]}`);
+					tr.appendChild(crearElem("td","class,text-nowrap",x[1]));
+					tr.appendChild(crearElem("td","class,text-nowrap",x[2]));
+					tr.appendChild(crearElem("td","class,text-nowrap",x[3]));
+					tr.appendChild(crearElem("td","class,text-nowrap",x[4]));
+					tr.appendChild(crearElem("td","class,text-nowrap",x[5]));
+					// tr.appendChild(crearElem("td","class,text-nowrap",x[1]));
+					// tr.appendChild(crearElem("td","class,text-nowrap",x[2]));
+					// tr.appendChild(crearElem("td","class,text-nowrap",x[3]));
+					// tr.appendChild(crearElem("td","class,text-nowrap",x[4]));
+					document.getElementById('cargo_apartamentos_seleccionados').appendChild(tr);
+				}
+				if(document.getElementById('cargo_apartamentos_seleccionados').innerHTML == ""){
+					var tr = crearElem("tr");
+					tr.appendChild(crearElem("td","colspan,6,class,text-center","No ha seleccionado un apartamento"));
+					document.getElementById('cargo_apartamentos_seleccionados').appendChild(tr);
+				}
+				lista_apartamentos_seleccionados = obj;
+			}
+
+			function checkbox_func(elem,data){
+				if(elem.checked){
+					lista_apartamentos_seleccionados.lista.push(data);
+					lista_apartamentos_seleccionados[data[1]] = 1;
+				}
+				else{
+					if(lista_apartamentos_seleccionados[data[1]]){
+						for(var i = 0; i<lista_apartamentos_seleccionados.lista.length;i++){
+							if(lista_apartamentos_seleccionados.lista[i][1] == data[1]){
+								lista_apartamentos_seleccionados.lista.splice(i,1);
+								break;
+							}
+						}
+						delete lista_apartamentos_seleccionados[data[1]];
+					}
+				}
+				//console.log(elem);
+				//console.log(data);
+
+				// console.log(lista_apartamentos_seleccionados);
+			}
+
+			 
+		//--------------------------------------
+		//--------------------------------------
+		//--------- CARGOS ---------------------
+		//--------------------------------------
+		//--------------------------------------
+		function validar_radio(elements){
+			var ok = false;
+			for(x of elements){
+				if(x.checked){
+					ok = true;
+					break;
+				}
+			}
+			return ok
+		}
+
+		function borrar() {
+			$('form input:not(.dont-erase)').val("");
+			// $("form input").val("");
+			$("form select:not(.dont-erase)").val("");
+			$("form input[type='radio']").each(function(a,b){
+				b.checked=false;
+			});
+			
+			limpiarvalidacion();
+			cambiarbotones_cargos();
+			//cambiarbotones_2();
+			lista_apartamentos_seleccionados = {lista:[]};
+			document.getElementById('cargo_apartamentos_seleccionados').innerHTML='';
+			var tr = crearElem("tr");
+			tr.appendChild(crearElem("td","colspan,6,class,text-center","No ha seleccionado un apartamento"));
+			document.getElementById('cargo_apartamentos_seleccionados').appendChild(tr);
+			document.getElementById('cargo_tipo_monto_info').innerHTML="";
+			document.getElementById('cargo_tipo_cargo_info').innerHTML="";
+			document.getElementById('cargo_tipo_cargo_gd_info').innerHTML="";
+			document.getElementById('cargo_dedicado_to_show').classList.add("d-none");
+
+		}
+
+
+		function cambiarbotones_cargos(parametro = true) {
+			$("#modificar_cargo").prop("disabled", parametro);
+			$("#eliminar_cargo").prop("disabled", parametro);
+			$("#incluir_cargo").prop("disabled", !parametro);
+		}
+		function limpiarvalidacion() {
+			$("form input").removeClass("is-valid");
+			$("form input").removeClass("is-invalid");
+			$("form select").removeClass("is-valid");
+			$("form select").removeClass("is-invalid");
+		}
+
+	</script>
+	<!-- <script src="js/deuda-condominio.js"></script> -->
 	<?php require_once('comunes/foot.php'); ?>
 </body>
 

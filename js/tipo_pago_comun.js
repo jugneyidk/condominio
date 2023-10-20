@@ -1,5 +1,5 @@
-const Datos_divisa = {monto:35.27,fecha: "2000-12-03 10:30"}
-console.error("debo agregar la divisa");
+let Datos_divisa;
+//console.error("debo agregar la divisa");
 
 
 
@@ -9,9 +9,18 @@ let contador_cantidad_divisa = 0;
 
 
 function load_tipo_pago_comun(){
+	load_bcv(false);
+	Datos_divisa = variable_divisa_global || {monto:35.27,fecha: "2000-12-03 10:30"};
+	if(Datos_divisa.monto && Datos_divisa.fecha){
+		document.getElementById('tipo_cambio_divisa_monto_to_show').parentNode.parentNode.classList.remove("d-none");
+		console.log(document.getElementById('tipo_cambio_divisa_monto_to_show'));
+		document.getElementById('tipo_cambio_divisa_monto_to_show').innerHTML="$ "+sepMiles(Datos_divisa.monto);
+		document.getElementById('tipo_cambio_divisa_fecha_to_show').innerHTML=Datos_divisa.fecha;
+	}
 	// comunes -------------------------------------
 		// monto
-		eventoMonto("tipo_pago_comun-monto_total",29,"Ingrese un monto valido");
+		
+		eventoMonto("tipo_pago_comun-monto_total");
 		//tipo_pago
 		document.getElementById('tipo_pago_comun').onchange=function(){
 			if(this.value!= ''){

@@ -1,6 +1,18 @@
 <?php 
-require_once ("model/validaciones.php");
-require_once ("model/const.php");
+if(is_file("model/validaciones.php")){
+    require_once ("model/validaciones.php");
+}
+else if(is_file("validaciones.php")){
+    require_once("validaciones.php");
+}
+
+if(is_file("model/const.php")){
+    require_once ("model/const.php");
+}
+else if(is_file("const.php")){
+    require_once("const.php");
+}
+
 class datos{
     // DATOS DE LA DB
 	PRIVATE $ip = BD_IP;// constantes definidas en model/const.php

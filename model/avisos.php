@@ -18,7 +18,7 @@ class avisos extends datos
 
 	PUBLIC function chequearpermisos()
 	{
-		$id_rol = $_SESSION['rol'];
+		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->con;
 		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
@@ -27,6 +27,18 @@ class avisos extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
 	} 
+	PUBLIC function incluir_s(){
+		return $this->incluir();
+	}
+	PUBLIC function modificar_s(){
+		return $this->modificar();
+	}
+	PUBLIC function eliminar_s(){
+		return $this->eliminar();
+	}
+
+
+
 
 	PUBLIC function incluir()
 	{

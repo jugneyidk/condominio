@@ -9,7 +9,7 @@
             <div class="col-md-1">
                 <p class="text-light h5">Gestionar</p>
                 <ul class="list-unstyled text-small">
-                    <?php if ($_SESSION['rol'] == 2) : ?>
+                    <?php if ($_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol']== 2) : ?>
                         <li><a href="?p=usuarios-administracion" class="text-muted">Usuarios</a></li>
                     <?php endif; ?>
                     <li><a href="?p=habitantes" class="text-muted">Habitantes</a></li>

@@ -1,6 +1,6 @@
 <?php
-if (isset($_SESSION['rol'])) {
-	$rol = $_SESSION['rol'];
+if (isset($_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'])) {
+	$rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 } else {
 	$rol = "";
 }

@@ -8,6 +8,7 @@ require_once('model/datos.php');
 
 class generarreporte extends datos
 {
+    PRIVATE $datos, $id, $caso;
 
     PUBLIC function generarPDF($datos)
     {

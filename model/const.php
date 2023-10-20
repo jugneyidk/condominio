@@ -10,5 +10,9 @@ define("TIPO_INDENT_ARRAY", [
 	"G-" // 3
 ]);
 
+define("CONFIG_ARRAY", [
+	"BCV"=>["hora_dolar"]
+]);
+
 
  ?>

@@ -16,4 +16,5 @@
 	<script type="text/javascript" src="datatables/datatables.min.js"></script>
 	<link href="css/startmin.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<script src="js/bcv.js"></script>
 </head>

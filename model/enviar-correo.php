@@ -9,6 +9,7 @@ require 'PHPMailer/src/SMTP.php';
 require_once('model/datos.php');
 class enviarcorreo extends datos
 {
+	PRIVATE $id;
     PUBLIC function enviar_correo($id)
 	{
 		$co = $this->conecta();

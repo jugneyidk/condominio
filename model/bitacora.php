@@ -65,6 +65,15 @@ class Bitacora extends datos
 
 		}
 	}
+	PUBLIC function b_registro($string = ""){
+		try {
+			$consult = $this->c->prepare("INSERT INTO bitacora (user, descrip) values (?,?)");
+			$descrip = $string;
+			$consult->execute([$_SESSION['id_usuario'], $descrip]);
+		} finally{
+
+		}
+	}
 
 	PUBLIC function load_bitacora(){
 		try {

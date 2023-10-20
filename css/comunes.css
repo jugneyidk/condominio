@@ -22,7 +22,13 @@ table.rows-pointer tbody tr{
 	overflow-x: hidden;
 	text-overflow: ellipsis;
 }
+.cursor-pointer{
+  cursor: pointer !important;
+}
 
+table.row-vertical-middle tbody td{
+  vertical-align: middle!important;
+}
 
 /*
 
