@@ -14,7 +14,7 @@ function load_tipo_pago_comun(){
 	if(Datos_divisa.monto && Datos_divisa.fecha){
 		document.getElementById('tipo_cambio_divisa_monto_to_show').parentNode.parentNode.classList.remove("d-none");
 		console.log(document.getElementById('tipo_cambio_divisa_monto_to_show'));
-		document.getElementById('tipo_cambio_divisa_monto_to_show').innerHTML="$ "+sepMiles(Datos_divisa.monto);
+		document.getElementById('tipo_cambio_divisa_monto_to_show').innerHTML="BCV : $ "+sepMiles(Datos_divisa.monto);
 		document.getElementById('tipo_cambio_divisa_fecha_to_show').innerHTML=Datos_divisa.fecha;
 	}
 	// comunes -------------------------------------

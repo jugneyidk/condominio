@@ -79,7 +79,7 @@ class usuarios extends datos
 			    id_rol
 			FROM
 			    datos_usuarios
-			INNER JOIN usuarios_roles WHERE usuarios_roles.id_usuario = datos_usuarios.id
+			INNER JOIN usuarios_roles WHERE usuarios_roles.id_usuario = datos_usuarios.id AND rif_cedula <> '000000000'
 			ORDER BY
 			    id
 			DESC

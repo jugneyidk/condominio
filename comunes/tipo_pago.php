@@ -35,7 +35,7 @@
 			</div>
 		</div>
 		<div class="col-12 col-md">
-			<label for="tipo_pago_comun-monto_total">Monto (bs)</label>
+			<label for="tipo_pago_comun-monto_total">Monto (Bs)</label>
 			<input autocomplete="off" maxlength="29" type="text" class="form-control text-right" id="tipo_pago_comun-monto_total" data-span="invalid-span-tipo_pago_comun-monto_total">
 			<span id="invalid-span-tipo_pago_comun-monto_total" class="invalid-span text-danger"></span>
 		</div>

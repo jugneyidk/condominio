@@ -16,7 +16,14 @@ if (is_file("vista/" . $p . ".php")) {
           $respuesta = $o->historialpagos();
           echo json_encode($respuesta);
       } else if ($accion == 'registrarpago') {
-        $respuesta = $o->registrarpago($_POST['id_deuda'], $_POST['monto'], $_POST['referencia'], $_POST['tipo_pago']);
+
+        $o->set_obj_pagos($_POST["obj_pagos"]);
+        $o->set_id($_POST["id_deuda_tosend"]);
+
+
+
+
+        $respuesta = $o->registrarpago();
         echo json_encode($respuesta);
       }
       exit;
@@ -28,3 +35,4 @@ if (is_file("vista/" . $p . ".php")) {
 } else {
   require_once("vista/404.php");
 }
+?>

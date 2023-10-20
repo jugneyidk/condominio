@@ -24,7 +24,7 @@ function enviaAjax(datos) {
     beforeSend: function () {
       modalcarga(true);
     },
-    timeout: 10000,
+    timeout: 50000,
     success: function (respuesta) {
       try {
         var lee = JSON.parse(respuesta);

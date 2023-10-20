@@ -58,6 +58,20 @@ function cedulaKeypress(tag){
 	tag.maxLength = 12;
 }
 
+function eventoFecha(etiqueta,mensaje = "La fecha es invalida"){
+	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }
+	eventoKeyup(etiqueta, /^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$/, mensaje);
+	eventoKeypress(etiqueta, /^[0-9]$/);
+	document.getElementById(etiqueta).onchange = function(){eventoKeyup(this, /^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$/, mensaje);}
+	document.getElementById(etiqueta).validarme = function(){
+		return V.fecha(this.value);
+	}
+
+
+	
+
+}
+
 function eventoMonto(etiqueta,mensaje = "Ingrese un monto valido"){
 	var n = 26;
 	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }

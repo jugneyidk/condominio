@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-10-2023 a las 18:01:04
+-- Tiempo de generación: 19-10-2023 a las 23:44:07
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -103,7 +103,20 @@ CREATE TABLE `apartamentos_lista_cargos` (
 --
 
 INSERT INTO `apartamentos_lista_cargos` (`id_apartamento`, `id_lista_cargos`) VALUES
-(1, 14);
+(1, 14),
+(1, 16),
+(2, 14),
+(2, 16),
+(3, 14),
+(3, 16),
+(4, 14),
+(4, 16),
+(5, 16),
+(6, 16),
+(7, 16),
+(8, 16),
+(9, 16),
+(10, 16);
 
 -- --------------------------------------------------------
 
@@ -356,7 +369,14 @@ INSERT INTO `bitacora` (`id`, `user`, `descrip`, `fecha`) VALUES
 (210, 3, 'Registro nuevo monto BCV', '2023-10-19 14:44:02'),
 (211, 3, 'Inicio sesion login', '2023-10-19 14:48:56'),
 (212, 3, 'Inicio sesion login', '2023-10-19 14:54:17'),
-(213, 3, 'Inicio sesion login', '2023-10-19 15:05:24');
+(213, 3, 'Inicio sesion login', '2023-10-19 15:05:24'),
+(214, 3, 'Registro en foroAction ', '2023-10-19 18:10:48'),
+(215, 3, 'Eliminación en foroAction ', '2023-10-19 18:10:55'),
+(216, 3, 'Registro en usuarios-administracion ', '2023-10-19 18:22:45'),
+(217, 5, 'Inicio sesion login', '2023-10-19 18:28:02'),
+(218, 3, 'Inicio sesion login', '2023-10-19 18:28:44'),
+(219, 3, 'Registro en deuda-condominio lista cargos', '2023-10-19 21:07:33'),
+(220, 3, 'Registro en deuda-condominio lista cargos', '2023-10-19 21:13:40');
 
 -- --------------------------------------------------------
 
@@ -413,7 +433,8 @@ INSERT INTO `datos_usuarios` (`id`, `rif_cedula`, `tipo_identificacion`, `razon_
 (1, '28609560', 0, 'Jugney Vargas', 'Barrio Unión', '0424-5698188', 'jugneyv@gmail.com'),
 (2, '26846371', 0, 'Diego Salazar', 'Calle 28', '0424-4034515', 'diego14asf@gmail.com'),
 (3, '27250544', 0, 'Xavier Suarez', 'Calle 28', '0424-5798958', 'algo@gmail.com'),
-(4, '28406750', 0, 'Luis Colmenares', 'Calle 28', '0426-3525659', '@gmail.com');
+(4, '28406750', 0, 'Luis Colmenares', 'Calle 28', '0426-3525659', '@gmail.com'),
+(5, '000000000', 2, 'SUPER USUARIO', '_______________________', '0000-0000000', 'SUPER@USUARIO.SSS');
 
 -- --------------------------------------------------------
 
@@ -788,7 +809,8 @@ CREATE TABLE `lista_cargos_d` (
 INSERT INTO `lista_cargos_d` (`id_lista_cargos`, `concepto`, `monto`, `tipo_monto`, `tipo_cargo`, `mensual`, `aplicar_next_mes`) VALUES
 (11, 'cable para los puercos', '7777.78', 1, 1, 1, 1),
 (13, 'probando otros', '8888.88', 0, 1, 0, 0),
-(14, 'combinaciones', '99.99', 1, 0, 0, 1);
+(14, 'combinaciones', '99.99', 1, 0, 0, 1),
+(16, 'xxxxxxx', '111.11', 0, 0, 1, 1);
 
 --
 -- Disparadores `lista_cargos_d`
@@ -1069,7 +1091,7 @@ INSERT INTO `servicios_pagos` (`id_servicio`, `id_pago`) VALUES
 CREATE TABLE `tipo_apartamento` (
   `id_tipo_apartamento` int(11) NOT NULL,
   `descripcion` varchar(45) NOT NULL,
-  `alicuota` double NOT NULL,
+  `alicuota` decimal(20,2) NOT NULL,
   `cantidadHijos` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1078,10 +1100,10 @@ CREATE TABLE `tipo_apartamento` (
 --
 
 INSERT INTO `tipo_apartamento` (`id_tipo_apartamento`, `descripcion`, `alicuota`, `cantidadHijos`) VALUES
-(1, 'Penthouse', 25, 5),
-(2, 'Duplex', 20, 4),
-(3, 'Departamento Básico', 30, 8),
-(4, 'Mezzanina', 25, 8);
+(1, 'Penthouse', '25.00', 5),
+(2, 'Duplex', '20.00', 4),
+(3, 'Departamento Básico', '30.00', 8),
+(4, 'Mezzanina', '25.00', 8);
 
 -- --------------------------------------------------------
 
@@ -1160,7 +1182,8 @@ INSERT INTO `usuarios_roles` (`id_usuario`, `id_rol`, `clave`) VALUES
 (1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
 (2, 1, '$2y$10$xJrc2hrFMX8FgdvlFyJApOz8qdYXQpmll5FFy3VI7Gw5dAAq4ubD6'),
 (3, 2, '$2y$10$VAwQiX4aR3/60baTzh3ZQuafYmjSSx91sNX64JPBeOJobg5RtGIVW'),
-(1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm');
+(1, 1, '$2y$10$6yhH2jjE5YEPAILI9Uf8suyQn8IpPJP/z2uRmctI1xP/BrFGKWwXm'),
+(5, 2, '$2y$10$cPUwinUVv00F4k21KGs3Qe8oTo9K9Ln6L7cz8Peu5pCJVPQT3.wSy');
 
 -- --------------------------------------------------------
 
@@ -1445,13 +1468,13 @@ ALTER TABLE `avisos`
 -- AUTO_INCREMENT de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=221;
 
 --
 -- AUTO_INCREMENT de la tabla `datos_usuarios`
 --
 ALTER TABLE `datos_usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_pagos`
@@ -1493,7 +1516,7 @@ ALTER TABLE `empleado`
 -- AUTO_INCREMENT de la tabla `foro`
 --
 ALTER TABLE `foro`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `habitantes`
@@ -1505,7 +1528,7 @@ ALTER TABLE `habitantes`
 -- AUTO_INCREMENT de la tabla `lista_cargos_d`
 --
 ALTER TABLE `lista_cargos_d`
-  MODIFY `id_lista_cargos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_lista_cargos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `lista_servicios`
@@ -1584,7 +1607,7 @@ ALTER TABLE `bitacora`
 -- Filtros para la tabla `comentarios`
 --
 ALTER TABLE `comentarios`
-  ADD CONSTRAINT `comentarios_ibfk_1` FOREIGN KEY (`id_foro`) REFERENCES `foro` (`id`),
+  ADD CONSTRAINT `comentarios_ibfk_1` FOREIGN KEY (`id_foro`) REFERENCES `foro` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `comentarios_ibfk_2` FOREIGN KEY (`create_by`) REFERENCES `habitantes` (`id`);
 
 --
@@ -1638,6 +1661,12 @@ ALTER TABLE `divisa`
 --
 ALTER TABLE `estacionamiento`
   ADD CONSTRAINT `estacionamiento_ibfk_1` FOREIGN KEY (`id_apartamento`) REFERENCES `apartamento` (`id_apartamento`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `foro`
+--
+ALTER TABLE `foro`
+  ADD CONSTRAINT `foro_ibfk_1` FOREIGN KEY (`create_by`) REFERENCES `habitantes` (`id`);
 
 --
 -- Filtros para la tabla `nomina_pago`

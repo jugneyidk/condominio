@@ -14,7 +14,15 @@ class enviarcorreo extends datos
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$existe = $this->existe($id);
+		//$existe = $this->existe($id);
+
+
+
+
+
+
+
+
 		try {
 			if ($existe['resultado'] == 'existe') {
 				$resultado = $co->prepare("SELECT pago.id_pago, pago.referencia, pago.fecha_entrega, pago.tipo_pago, pago.total, apartamento.num_letra_apartamento, apartamento.piso, apartamento.torre, habitantes.nombres, habitantes.apellidos, habitantes.correo FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento INNER JOIN habitantes on apartamento.propietario=habitantes.id WHERE pago.id_pago = '$id';");
@@ -142,6 +150,118 @@ class enviarcorreo extends datos
 			return $e->getMessage();
 		}
 	}
+	PUBLIC function notificar_factura($distribucion){
+		try {
+			$this->con = $this->conecta();
+			$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+			$consulta = $this->con->prepare("SELECT * from distribuciones WHERE id_distribucion = ?");;
+			$consulta->execute([$distribucion]);
+			if($consulta->fetch()){
+				$consulta = $this->con->prepare("SELECT * FROM deudas as d LEFT JOIN distribuciones as dis on dis.id_distribucion = d.id_distribucion LEFT JOIN apartamento as a on a.id_apartamento = d.id_apartamento LEFT JOIN habitantes as h ON a.propietario = h.id WHERE d.id_distribucion = ? GROUP BY h.id ORDER BY d.id_apartamento ");
+				$consulta->execute([$distribucion]);
+				$control = $consulta->fetchall(PDO::FETCH_ASSOC);
+				foreach ($control as $elem) {
+
+$html=<<<END
+<html>
+<head>
+<style>
+*{ font-family: DejaVu Sans !important;}
+</style>
+</head>
+<body>
+<div style="width: 350px;margin: 20px,auto, padding 20px; border: 1px solid black;border-radius: 20px">
+<div><h3>Su Factura ha sido emitida</h3></div>
+<div style="margin-top: 30px;">
+Estimado ${elem['nombres']} ${elem['apellidos']}
+<br>
+<br>
+El conjunto residencial Jose Maria Vargas le informa que su factura ha sido emitida
+<br>
+Le invitamos a pagar a tiempo para evitar sobrecargos por morosidad
+<br>
+<br>
+Concepto: ${elem['concepto']}
+</div>
+</div>
+</body>
+</html>
+END; 
+
+					$mail = new PHPMailer;
+					$mail->isSMTP();
+					$mail->SMTPDebug = 0;
+					$mail->Debugoutput = 'html';
+					$mail->Host = 'smtp.gmail.com';
+					$mail->Port = 587;
+					$mail->SMTPSecure = 'tls';
+					$mail->SMTPAuth = true;
+					$mail->Username = "diego14asf@gmail.com";
+					$mail->Password = "okcycrqarqjqcnsk";
+					$mail->setFrom('diego14asf@gmail.com', 'Diego Salazar');
+					$mail->addAddress($elem['correo'], $elem['nombres']);
+					$mail->CharSet = 'UTF-8';
+					$mail->Subject = $elem['concepto'];
+					$mail->Body = $html;
+					$mail->AltBody = 'This is a plain-text message';
+					if (!$mail->send()) {
+						$mail->clearAllRecipients();
+						$mail->clearAttachments();
+						$mail->clearCustomHeaders();
+						//return false;
+					} else {
+						$mail->clearAllRecipients();
+						$mail->clearAttachments();
+						$mail->clearCustomHeaders();
+						//return true;
+					}
+
+
+
+					
+
+
+
+				}
+
+				$r['resultado'] = 'console';
+				$r['mensaje'] =  "if";
+			}
+			else{
+				$r['resultado'] = 'console';
+				$r['mensaje'] =  "else";
+			}
+			//$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+
+
+
+
+
+			
+	}
     PUBLIC function existe($id)
 	{
 		$co = $this->conecta();
@@ -164,3 +284,6 @@ class enviarcorreo extends datos
 		}
 	}
 }
+?>
+
+

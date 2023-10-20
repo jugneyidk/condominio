@@ -8,7 +8,7 @@ class Deudacondominio extends datos
 {
 	PRIVATE $con;
 	//cargos
-	PRIVATE $id, $concepto, $monto, $tipo_monto, $tipo_cargo, $mensual, $aplicar_next_mes, $apartamentos;
+	PRIVATE $id, $concepto, $monto, $tipo_monto, $tipo_cargo, $mensual, $aplicar_next_mes, $apartamentos, $fecha;
 
 	PUBLIC function __construct(){
 		$this->con = $this->conecta();
@@ -176,10 +176,9 @@ class Deudacondominio extends datos
 				
 				$consulta = $this->con->prepare("SELECT * FROM lista_cargos_d WHERE id_lista_cargos = ?;");
 				$consulta->execute([$this->id]);
-
 				if($consulta->fetch()){
 
-					$consulta = $this->con->prepare("UPDATE `lista_cargos_d` SET `concepto`= :concepto, `monto`= :monto, `tipo_monto`= :tipo_monto, `tipo_cargo`= :tipo_cargo, `mensual`= :mensual, `aplicar_next_mes`= :aplicar_next_mes] WHERE `id_lista_cargos` = :id_lista_cargos;");
+					$consulta = $this->con->prepare("UPDATE `lista_cargos_d` SET `concepto`= :concepto, `monto`= :monto, `tipo_monto`= :tipo_monto, `tipo_cargo`= :tipo_cargo, `mensual`= :mensual, `aplicar_next_mes`= :aplicar_next_mes WHERE `id_lista_cargos` = :id_lista_cargos;");
 
 
 					$consulta->bindValue(":id_lista_cargos", $this->id);
@@ -407,7 +406,7 @@ class Deudacondominio extends datos
 				$elem[2] = $elem[2]==0?"Bolívares":"Divisa";
 				$elem[3] = $elem[3]==0?"Dedicado ({$elem[7]})":"Global";
 				$elem[4] = $elem[4]==0?"Único":"Mensual";
-				$elem[5] = $elem[5]==0?"Si":"No";
+				$elem[5] = $elem[5]==1?"Si":"No";
 				//$elem[1]='x';
 			}
 			$r['resultado'] = 'lista_cargos';
@@ -436,7 +435,207 @@ class Deudacondominio extends datos
 
 	}
 
+	PUBLIC function lista_resumen_cargos(){
 
+		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+			$consulta = "SELECT
+			    CONCAT(
+			        'Puesto de Estacionamiento ',
+			        e.num_estacionamiento
+			    ) AS concepto,
+			    e.costo AS divisa,
+			     ROUND((SELECT (divisa*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2) AS bolivares
+				FROM
+				    estacionamiento AS e WHERE e.id_apartamento IS NOT NULL
+				UNION
+				SELECT
+					CONCAT('Apartamento ',ta.descripcion,' (',ta.cantidadHijos,')') AS concepto,
+				    ta.alicuota AS divisa,
+				    ROUND((SELECT (divisa*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2) as bolivares
+
+				FROM tipo_apartamento as ta
+				UNION 
+				SELECT
+				lcd.concepto,
+				IF(lcd.tipo_monto = 1,lcd.monto, ROUND((SELECT (lcd.monto/divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2)) AS divisa,
+				IF(lcd.tipo_monto = 0,lcd.monto, ROUND((SELECT (lcd.monto*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2)) AS bolivares
+				FROM lista_cargos_d as lcd WHERE lcd.tipo_cargo = 1 AND lcd.aplicar_next_mes = 1;";
+
+				$consulta = $this->con->prepare($consulta);
+				$consulta->execute();
+
+
+				$r['global'] =  $consulta->fetchall(PDO::FETCH_ASSOC);
+
+				$consulta = $this->con->prepare("SELECT 
+												CONCAT(lc.concepto,' (',COUNT(alc.id_lista_cargos),')') AS concepto,
+											IF(lc.tipo_monto = 1,lc.monto, (SELECT ROUND((lc.monto/divs.monto),2) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1)) AS divisa,
+											IF(lc.tipo_monto = 0,lc.monto, (SELECT ROUND((lc.monto*divs.monto),2) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1)) AS bolivares
+											FROM lista_cargos_d AS lc
+											JOIN apartamentos_lista_cargos AS alc ON alc.id_lista_cargos = lc.id_lista_cargos
+											WHERE lc.tipo_cargo = 0 GROUP BY lc.id_lista_cargos;");
+
+				$consulta->execute();
+				$r["dedicados"] = $consulta->fetchall(PDO::FETCH_ASSOC);
+
+
+
+
+
+
+
+
+
+
+
+				
+				$r['resultado'] = 'lista_resumen_cargos';
+				
+				$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+
+
+
+	}
+
+	PUBLIC function distribuir_deudas_s(){
+		return $this->distribuir_deudas();
+	}
+
+	PRIVATE function distribuir_deudas(){
+		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+
+			$consulta = $this->con->prepare("INSERT INTO distribuciones (fecha,concepto,usuario) VALUES (:fecha,:concepto,:usuario);");
+
+			$consulta->bindValue(":fecha", $this->fecha);
+			$consulta->bindValue(":concepto", $this->concepto);
+			$consulta->bindValue(":usuario", $_SESSION["id_usuario"]);
+
+			$consulta->execute();
+
+			$this->id = $this->con->lastInsertId(); // id de la distribucion se quedara hasta el final
+
+			$consulta = $this->con->prepare("INSERT INTO deudas (id_apartamento, id_distribucion, moroso) SELECT id_apartamento, :id_distribucion, 0 FROM apartamento WHERE 1;");
+
+			$consulta->bindValue(":id_distribucion",$this->id,PDO::PARAM_INT);
+			$consulta->execute();
+
+			
+
+			$consulta = $this->con->prepare("INSERT INTO detalles_deudas (id_deuda,concepto,monto,tipo_monto) SELECT deu.id_deuda, 'Estacionamiento' AS concepto, e.costo as monto, 1 as tipo_monto FROM estacionamiento AS e JOIN deudas AS deu ON deu.id_apartamento = e.id_apartamento AND deu.id_distribucion = :id_distribucion WHERE e.id_apartamento IS NOT NULL
+
+											UNION
+
+											SELECT deu.id_deuda, CONCAT('Apartamento tipo ',t.descripcion) AS concepto, t.alicuota, 1 AS tipo_monto from apartamento AS a JOIN deudas AS deu ON deu.id_apartamento = a.id_apartamento AND deu.id_distribucion = :id_distribucion JOIN tipo_apartamento AS t ON a.tipo_apartamento = t.id_tipo_apartamento
+
+											UNION
+
+											SELECT d.id_deuda, l.concepto,l.monto,l.tipo_monto FROM 
+											lista_cargos_d AS l 
+											CROSS JOIN 
+											apartamento as a 
+											LEFT JOIN deudas as d ON d.id_apartamento = a.id_apartamento AND d.id_distribucion = :id_distribucion
+											WHERE l.tipo_cargo = 1 AND L.aplicar_next_mes = 1
+
+											UNION 
+
+											SELECT d.id_deuda, l.concepto, l.tipo_monto,l.tipo_monto  FROM apartamento as a JOIN apartamentos_lista_cargos as alc ON alc.id_apartamento = a.id_apartamento JOIN lista_cargos_d AS l ON l.id_lista_cargos = alc.id_lista_cargos JOIN deudas AS d on d.id_apartamento = a.id_apartamento AND d.id_distribucion = :id_distribucion WHERE l.tipo_cargo = 0 AND l.aplicar_next_mes = 1 ;");
+			$consulta->bindValue(":id_distribucion",$this->id,PDO::PARAM_INT);
+			$consulta->execute();
+
+
+
+			require_once("model/enviar-correo.php");
+			$mailer = new enviarcorreo;
+
+			
+			$this->con->commit();
+			
+			$r['resultado'] = 'distribuir_deudas';
+			$r['mensaje2'] =  $consulta->rowCount();
+			$r['mensaje'] =  $mailer->notificar_factura($this->id);;
+
+
+
+
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		$this->con = null;
+		return $r;
+
+	}
+
+	PUBLIC function consultar_distribucion_deuda(){
+		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+			$consulta = $this->con->query("SELECT d.fecha,d.concepto,u.razon_social from distribuciones AS d JOIN datos_usuarios as u ON u.id = d.usuario;")->fetchAll(PDO::FETCH_NUM);
+
+			
+			$r['resultado'] = 'consultar_distribucion_deuda';
+			$r['mensaje'] =  $consulta;
+			$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+	}
 
 
 	PUBLIC function chequearpermisos()
@@ -451,6 +650,173 @@ class Deudacondominio extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
 	}
+
+
+
+//SELECT * from detalles_deudas as dd LEFT JOIN deudas as d on d.id_deuda = dd.id_deuda LEFT JOIN apartamento as a ON a.id_apartamento = d.id_apartamento WHERE a.num_letra_apartamento = 'A-01'
+
+
+
+
+
+	#id_deuda tabla deudas relacionada con el apartamento
+#concepto ,monto,tipo_monto tabla lista_cargos_d
+
+// SELECT deu.id_apartamento, deu.id_deuda, 'Estacionamiento' AS concepto, e.costo as monto, 1 as tipo_monto FROM estacionamiento AS e JOIN deudas AS deu ON deu.id_apartamento = e.id_apartamento AND deu.id_distribucion = 4 WHERE e.id_apartamento IS NOT NULL
+
+// UNION
+
+// SELECT a.id_apartamento, deu.id_deuda, CONCAT('Apartamento tipo ',t.descripcion) AS concepto, t.alicuota, 1 AS tipo_monto from apartamento AS a JOIN deudas AS deu ON deu.id_apartamento = a.id_apartamento AND deu.id_distribucion = 4 JOIN tipo_apartamento AS t ON a.tipo_apartamento = t.id_tipo_apartamento
+
+// UNION
+
+// SELECT a.id_apartamento,d.id_deuda, l.concepto,l.monto,l.tipo_monto FROM 
+// lista_cargos_d AS l 
+// CROSS JOIN 
+// apartamento as a 
+// LEFT JOIN deudas as d ON d.id_apartamento = a.id_apartamento AND d.id_distribucion = 4
+// WHERE l.tipo_cargo = 1 AND L.aplicar_next_mes = 1
+
+// UNION 
+
+// SELECT a.id_apartamento, d.id_deuda, l.concepto, l.tipo_monto,l.tipo_monto  FROM apartamento as a JOIN apartamentos_lista_cargos as alc ON alc.id_apartamento = a.id_apartamento JOIN lista_cargos_d AS l ON l.id_lista_cargos = alc.id_lista_cargos JOIN deudas AS d on d.id_apartamento = a.id_apartamento AND d.id_distribucion = 4 WHERE l.tipo_cargo = 0 AND l.aplicar_next_mes = 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//SELECT deu.id_apartamento, deu.id_deuda, "Estacionamiento" AS concepto, e.costo as monto, 1 as tipo_monto FROM estacionamiento AS e JOIN deudas AS deu ON deu.id_apartamento = e.id_apartamento AND deu.id_distribucion = 4 WHERE e.id_apartamento IS NOT NULL
+
+
+
+
+
+
+
+
+
+
+
+	// SELECT 
+	// CONCAT(lc.concepto,' (',COUNT(alc.id_lista_cargos),')') AS concepto,
+	// IF(lc.tipo_monto = 1,lc.monto, (SELECT ROUND((lc.monto/divs.monto),2) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1)) AS divisa,
+	// IF(lc.tipo_monto = 0,lc.monto, (SELECT ROUND((lc.monto*divs.monto),2) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1)) AS bolivar
+	// FROM lista_cargos_d AS lc
+	// JOIN apartamentos_lista_cargos AS alc ON alc.id_lista_cargos = lc.id_lista_cargos
+	// WHERE lc.tipo_cargo = 0 GROUP BY lc.id_lista_cargos;
+
+
+
+
+	// SELECT
+	//     CONCAT(
+	//         "Puesto de Estacionamiento ",
+	//         e.num_estacionamiento
+	//     ) AS concepto,
+	//     e.costo AS divisa,
+	//     (
+	//     SELECT
+	//         (divisa*divs.monto)
+	//     FROM
+	//         tipo_cambio_divisa AS divs
+	//     WHERE
+	//         1
+	//     ORDER BY divs.fecha DESC
+	//     LIMIT 1
+	// ) AS bolivares
+	// FROM
+	//     estacionamiento AS e
+	// WHERE
+	//     1
+
+
+	// SELECT
+	//     CONCAT(
+	//         "Puesto de Estacionamiento ",
+	//         e.num_estacionamiento
+	//     ) AS concepto,
+	//     e.costo AS divisa,
+	//      ROUND((SELECT (divisa*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2) AS bolivares
+	// FROM
+	//     estacionamiento AS e WHERE e.id_apartamento IS NOT NULL
+	// UNION
+	// SELECT
+	// 	CONCAT("Apartamento ",ta.descripcion," (",ta.cantidadHijos,")") AS concepto,
+	//     ta.alicuota AS divisa,
+	//     ROUND((SELECT (divisa*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2) as bolivares
+
+	// FROM tipo_apartamento as ta
+	// UNION 
+	// SELECT
+	// lcd.concepto,
+	// IF(lcd.tipo_monto = 1,lcd.monto, ROUND((SELECT (lcd.monto/divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2)) AS divisa,
+	// IF(lcd.tipo_monto = 0,lcd.monto, ROUND((SELECT (lcd.monto*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2)) AS bolivares
+	// FROM lista_cargos_d as lcd WHERE lcd.tipo_cargo = 1;
+
+
+
+
+
+
+
+
+
+// SELECT
+//     CONCAT(
+//         "Puesto de Estacionamiento ",
+//         e.num_estacionamiento
+//     ) AS concepto,
+//     e.costo AS divisa,
+//     (
+//     SELECT
+//         (divisa*divs.monto)
+//     FROM
+//         tipo_cambio_divisa AS divs
+//     WHERE
+//         1
+//     ORDER BY divs.fecha DESC
+//     LIMIT 1
+// ) AS bolivares
+// FROM
+//     estacionamiento AS e
+// UNION
+// SELECT
+// 	CONCAT("Apartamento ",ta.descripcion," (",ta.cantidadHijos,")") AS concepto,
+//     ta.alicuota AS divisa,
+//     (SELECT (divisa*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1) as bolivares
+
+// FROM tipo_apartamento as ta
+// UNION 
+// SELECT * FROM 
+
+
+
+
+
+
+
+
+
+
+
 	PUBLIC function incluir($monto, $concepto, $fecha)
 	{
 		$usuario = $_SESSION['id_usuario'];
@@ -769,6 +1135,14 @@ class Deudacondominio extends datos
 	PUBLIC function set_aplicar_next_mes($value){
 		$value = ($value == 'aplicar')?1:(($value == "no aplicar")?0:false);
 		$this->aplicar_next_mes = $value;
+	}
+
+
+	PUBLIC function get_fecha(){
+		return $this->fecha;
+	}
+	PUBLIC function set_fecha($value){
+		$this->fecha = $value;
 	}
 
 

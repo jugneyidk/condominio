@@ -16,7 +16,7 @@ function load_bcv(async_control = true){
 			success: function (respuesta) {
 				try {
 					var lee = JSON.parse(respuesta);
-					console.log(respuesta);
+					// console.log(respuesta);
 					if(lee.resultado == 'bcv'){
 						variable_divisa_global = lee.mensaje;
 					}

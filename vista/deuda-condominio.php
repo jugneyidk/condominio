@@ -22,28 +22,26 @@
 		<div class="tab-content" id="nav-tabContent">
 			<div class="tab-pane fade show active" id="nav-deudas" role="tabpanel" aria-labelledby="nav-pagos-servicios-tab">
 				<div class="container">
+					<div class="row">
+						<div class="col">
+							<h3>Distribución de deudas</h3>
+						</div>
+					</div>
 					<form id="f_deudas" action="" method="POST" onsubmit="return false">
-						<input type="hidden" id="cargo_id_hidden" class="d-none" name="id">
+						<input type="hidden" id="deuda_id_hidden" class="d-none" name="id">
 						<div class="row">
 							<div class="col-12 col-md">
 								<label for="deuda_fecha">Fecha</label>
-								<input type="date" class="form-control" id="deuda_fecha" name="deuda_fecha" data-span="invalid-span-deuda_fecha">
+								<input type="date" class="form-control" id="deuda_fecha" name="fecha" data-span="invalid-span-deuda_fecha">
 								<span id="invalid-span-deuda_fecha" class="invalid-span text-danger"></span>
 							</div>
 							<div class="col-12 col-md">
 								<label for="deuda_concepto">Concepto</label>
-								<input type="text" class="form-control" id="deuda_concepto" name="deuda_concepto" data-span="invalid-span-deuda_concepto">
+								<input type="text" class="form-control" id="deuda_concepto" name="concepto" data-span="invalid-span-deuda_concepto">
 								<span id="invalid-span-deuda_concepto" class="invalid-span text-danger"></span>
 							</div>
 						</div>
 					</form>
-					<div class="container my-5">
-						<div class="row">
-							<div class="col">
-								<h3 class="text-center">Resumen de la siguiente distribución</h3>
-							</div>
-						</div>
-					</div>
 
 					<div class="row justify-content-center mt-3">
 						<?php if ($permisos[2] == 1): ?>
@@ -205,9 +203,6 @@
 					<h1>Config</h1>
 				</div>
 			</div>
-
-
-
 		</div>
 
 		<!-- <form method="post" action="" id="f" class="d-none">
@@ -265,13 +260,249 @@
 	</div>
 
 
+	<script type="text/javascript">
+
+		function load_extra_stuff(){
+			eventoKeyup("deuda_fecha", /^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$/, "La fecha es invalida");
+			eventoAlfanumerico("deuda_concepto",100,"1,100","El concepto de la deuda tiene caracteres inválidos o esta vació");
+
+			placeholder_concepto();
+
+
+
+			$("#incluir_deuda").on("click",()=>{
+				if(validar_deudas()){
+
+
+
+
+
+					var datos = new FormData();
+					datos.append("accion","lista_resumen_cargos");
+					enviaAjax(datos,function(respuesta){
+					
+						var lee = JSON.parse(respuesta);
+						if(lee.resultado == "lista_resumen_cargos"){
+							document.getElementById('deuda_lista_resumen_global').innerHTML="";
+							document.getElementById('deuda_lista_resumen_dedicado').innerHTML="";
+							for(x of lee.global){
+								console.log(x);
+								var tr = crearElem("tr");
+								tr.appendChild(crearElem("td",undefined,x.concepto));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.divisa)));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.bolivares)));
+								document.getElementById('deuda_lista_resumen_global').appendChild(tr);
+
+							}
+							for (x of lee.dedicados){
+								console.log(x);
+								var tr = crearElem("tr");
+								tr.appendChild(crearElem("td",undefined,x.concepto));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.divisa)));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.bolivares)));
+								document.getElementById('deuda_lista_resumen_dedicado').appendChild(tr);
+							}
+
+
+							if(lee.global.length>0){
+								document.getElementById('btn_collapse_global').innerHTML=`Globales (${lee.global.length})`;
+							}else {
+								document.getElementById('btn_collapse_global').innerHTML=`Globales`;
+								document.getElementById('deuda_lista_resumen_global').innerHTML="<tr><td colspan='3'>No hay registros</td></tr>";
+							}
+							
+							if(lee.dedicados.length>0){
+								document.getElementById('btn_collapse_dedicado').innerHTML=`Dedicados (${lee.dedicados.length})`;
+							}
+							else{
+								document.getElementById('btn_collapse_dedicado').innerHTML=`Dedicados`;
+								document.getElementById('deuda_lista_resumen_dedicado').innerHTML="<tr><td colspan='3'>No hay registros</td></tr>";
+							}
+
+						}
+						else if (lee.resultado == 'is-invalid'){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+						else if(lee.resultado == "error"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							console.error(lee.mensaje);
+						}
+						else if(lee.resultado == "console"){
+							console.log(lee.mensaje);
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+					}).then(()=>{
+						$("#modal_resumen_cargos_deudas").modal("show");
+					});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				}
+			});
+
+			$("#deuda_btn_distribuir_modal").on("click",()=>{
+				Swal.fire({
+					title: "¿Estás Seguro?",
+					text: "Las deudas distribuidas no se pueden modificar ni eliminar si hay registros de pagos por parte de algún apartamento\n¿Desea continuar?",
+					showCancelButton: true,
+					confirmButtonText: "Distribuir",
+					confirmButtonColor: "#007bff",
+					cancelButtonText: `Cancelar`,
+					focusConfirm:true,
+					icon: "info",
+				}).then((result) => {
+					if (result.isConfirmed) {
+
+						if(validar_deudas()){
+							
+							var datos = new FormData($("#f_deudas")[0]);
+							datos.append("accion","distribuir_deudas");
+							enviaAjax(datos,function(respuesta){
+							
+								var lee = JSON.parse(respuesta);
+								if(lee.resultado == "distribuir_deudas"){
+									//console.log(lee.mensaje);
+									muestraMensaje("La deuda fue distribuida exitosamente", "", "success");
+									console.log(lee);
+									borrar();
+								}
+								else if (lee.resultado == 'is-invalid'){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+								else if(lee.resultado == "error"){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+									console.error(lee.mensaje);
+								}
+								else if(lee.resultado == "console"){
+									console.log(lee.mensaje);
+								}
+								else{
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+							}).then(()=>{
+								$("#modal_resumen_cargos_deudas").modal("hide");
+							});
+						}
+						else{
+							$("#modal_resumen_cargos_deudas").modal("hide");
+						}
+						
+					}
+				});
+
+			});
+
+			$("#consultar_deuda").on("click",()=>{
+				console.log("asdfasdf");
+				var datos = new FormData();
+				datos.append("accion","consultar_distribucion_deuda");
+				enviaAjax(datos,function(respuesta){
+				
+					var lee = JSON.parse(respuesta);
+					if(lee.resultado == "consultar_distribucion_deuda"){
+
+
+						if ($.fn.DataTable.isDataTable("#table_distribuciones_modal")) {
+							$("#table_distribuciones_modal").DataTable().destroy();
+						}
+						
+						$("#tbody_distribuciones_modal").html("");
+						
+						if (!$.fn.DataTable.isDataTable("#table_distribuciones_modal")) {
+							$("#table_distribuciones_modal").DataTable({
+								language: {
+									lengthMenu: "Mostrar _MENU_ por página",
+									zeroRecords: "No se encontraron registros de Distribuciones",
+									info: "Mostrando página _PAGE_ de _PAGES_",
+									infoEmpty: "No hay registros disponibles",
+									infoFiltered: "(filtrado de _MAX_ registros totales)",
+									search: "Buscar:",
+									paginate: {
+										first: "Primera",
+										last: "Última",
+										next: "Siguiente",
+										previous: "Anterior",
+									},
+								},
+								data:lee.mensaje,
+								//createdRow: function(row,data){},
+								autoWidth: false
+								//order: [[1, "asc"]],
+								
+							});
+						}
+
+
+
+
+						
+					}
+					else if (lee.resultado == 'is-invalid'){
+						muestraMensaje("ERROR", lee.mensaje,"error");
+					}
+					else if(lee.resultado == "error"){
+						muestraMensaje("ERROR", lee.mensaje,"error");
+						console.error(lee.mensaje);
+					}
+					else if(lee.resultado == "console"){
+						console.log(lee.mensaje);
+					}
+					else{
+						muestraMensaje("ERROR", lee.mensaje,"error");
+					}
+				}).then(()=>{
+					$("#modal_distribuciones").modal("show");
+				});
+			});
+
+
+			function validar_deudas(){
+				if(!document.getElementById('deuda_fecha').validarme()){
+					muestraMensaje("La fecha es invalida", "", "error");
+					return false;
+				}
+				if(!document.getElementById('deuda_concepto').validarme()){
+					muestraMensaje("El concepto de la deuda tiene caracteres inválidos o esta vació", "", "error");
+					return false;
+				}
+				return true;
+
+			}
+
+
+
+
+
+
+
+
+
+
+		}
+		
+	</script>
+
+
 
 
 	<div class="modal fade" tabindex="-1" role="dialog" id="modal_cargo_lista_apartamentos">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-light bg-info">
-					<h5 class="modal-title">Listado de Deudas</h5>
+					<h5 class="modal-title">Listado de Apartamentos</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -305,7 +536,7 @@
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-light bg-info">
-					<h5 class="modal-title">Listado de Deudas</h5>
+					<h5 class="modal-title">Listado de Cargos</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -325,6 +556,125 @@
 							</thead>
 							<tbody id="cargos_info">
 
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer bg-light">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="modal_resumen_cargos_deudas">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-light bg-primary">
+					<h5 class="modal-title">Resumen De Distribución</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				
+
+				<div class="container-fluid px-0">
+					<div class="accordion" id="accordionExample">
+						<div class="card border-0">
+							<div class="card-header text-light bg-primary py-0" id="headingOne">
+								<h5 class="mb-0">
+									<button id="btn_collapse_global" class="btn collapsed text-light w-100 text-left py-3" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+										Globales
+									</button>
+								</h5>
+							</div>
+							<div id="collapseOne" class="collapse multi_show" aria-labelledby="headingOne" data-parent="#accordionExample">
+								<div class="card-body">
+									<table class="table table-striped table-hover">
+										<thead>
+											<tr>
+												<th>Concepto</th>
+												<th>Divisa (u)</th>
+												<th>Bolívares (u)</th>
+											</tr>
+										</thead>
+										<tbody id="deuda_lista_resumen_global">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="card border-0">
+							<div class="card-header text-light bg-primary py-0" id="headingTwo">
+								<h5 class="mb-0">
+									<button id="btn_collapse_dedicado" class="btn collapsed text-light w-100 text-left py-3" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+										Dedicados
+									</button>
+								</h5>
+							</div>
+							<div id="collapseTwo" class="collapse multi_show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+								<div class="card-body">
+									<table class="table table-striped table-hover">
+										<thead>
+											<tr>
+												<th>Concepto</th>
+												<th>Divisa (u)</th>
+												<th>Bolívares (u)</th>
+											</tr>
+										</thead>
+										<tbody id="deuda_lista_resumen_dedicado">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="card border-0 d-none">
+							<div class="card-header text-light bg-primary py-0" id="headingThree">
+								<h5 class="mb-0">
+									<button class="btn collapsed text-light w-100 text-left py-3" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+										Collapsible Group Item #3
+									</button>
+								</h5>
+							</div>
+							<div id="collapseThree" class="collapse multi_show" aria-labelledby="headingThree" data-parent="#accordionExample">
+								<div class="card-body">
+									Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer bg-light justify-content-around">
+					<button type="button" id="deuda_btn_distribuir_modal" class="btn btn-primary">Distribuir deudas</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="modal_distribuciones">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-light bg-info">
+					<h5 class="modal-title">Distribuciones</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="container">
+					<div class="table-responsive">
+						<table class="table table-striped table-hover rows-pointer" id="table_distribuciones_modal">
+							<thead>
+								<tr>
+									<th>Fecha</th>
+									<th>Concepto</th>
+									<th>Usuario</th>
+								</tr>
+							</thead>
+							<tbody id="tbody_distribuciones_modal">
+	
 							</tbody>
 						</table>
 					</div>
@@ -382,7 +732,8 @@
 		var lista_apartamentos_seleccionados = {lista:[]};
 		document.addEventListener("DOMContentLoaded", function(){
 
-			// load_extra_stuff();
+
+			load_extra_stuff();
 
 
 
@@ -709,6 +1060,7 @@
 
 							if(validar_cargos()){
 								var datos = new FormData($("#f_cargos")[0]);
+								datos.append("id",document.getElementById('cargo_id_hidden').value);
 								datos.append("accion","modificar_cargo");
 								if(document.getElementById('cargo_tipo_cargo_dedicado').checked){
 									datos.append("lista", JSON.stringify(lista_apartamentos_seleccionados.lista));
@@ -935,7 +1287,17 @@
 			document.getElementById('cargo_tipo_cargo_info').innerHTML="";
 			document.getElementById('cargo_tipo_cargo_gd_info').innerHTML="";
 			document.getElementById('cargo_dedicado_to_show').classList.add("d-none");
+			placeholder_concepto();
 
+		}
+
+		function placeholder_concepto(){
+			var hoy = new Date();
+			var mensaje = "Factura del mes de "+hoy.toLocaleString('default',{month:'long',timeZone:"America/Caracas"});
+			var mensaje = mensaje+" "+hoy.getFullYear();
+			document.getElementById('deuda_concepto').value=mensaje;
+			document.getElementById('deuda_concepto').onkeyup();
+			document.getElementById('deuda_fecha').value = hoy.getFullYear()+"-"+(hoy.getMonth() + 1)+"-"+hoy.getDate();
 		}
 
 

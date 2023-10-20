@@ -21,11 +21,11 @@
                         
                         <form class="login-form" id="f" method="post">
                             <div class="form-group mb-3">
-                                <input type="text" class="form-control" placeholder="Correo" id="usuario" name="usuario">
+                                <input type="text" class="form-control" placeholder="Correo" id="usuario" name="usuario" value="jugneyv@gmail.com">
                                 <span id="susuario" class="text-danger espacio-vacio"></span>
                             </div>
                             <div class="form-group mb-3">
-                                <input type="Password" class="form-control" placeholder="Contraseña(Cedula)" id="clave" name="clave">
+                                <input type="Password" class="form-control" placeholder="Contraseña(Cedula)" id="clave" name="clave" value="28609560">
                                 <span id="sclave" class="text-danger espacio-vacio"></span>
                             </div>
                             <div class="form-group">

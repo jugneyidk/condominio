@@ -372,6 +372,7 @@ function enviaAjax(datos) {
     },
     timeout: 10000,
     success: function (respuesta) {
+      console.log(datos);
       try {
         var lee = JSON.parse(respuesta);
         if (lee.resultado == "listadoapartamentos") {
@@ -459,6 +460,7 @@ function enviaAjax(datos) {
         } else if (lee.resultado == "error") {
           muestraMensaje(lee.mensaje, "", "error");
         }
+
       } catch (e) {
         alert("Error en JSON " + e.name + " xxxx!!!");
         console.error(e);

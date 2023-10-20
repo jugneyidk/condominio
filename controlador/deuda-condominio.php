@@ -56,14 +56,32 @@ if (is_file("vista/" . $p . ".php")) {
       }
 
       echo json_encode($o->modificar_cargo_s());
-
-      
-
     }
     else if($accion== "eliminar_cargo" ){
       $o->set_id($_POST["id"]);
       echo json_encode($o->eliminar_cargo_s());
     }
+    else if($accion=="lista_resumen_cargos"){
+      echo json_encode($o->lista_resumen_cargos());
+    }
+    else if($accion == "distribuir_deudas"){
+      $o->set_fecha($_POST["fecha"]);
+      $o->set_concepto($_POST["concepto"]);
+      echo json_encode($o->distribuir_deudas_s());
+    }
+    else if($accion=="consultar_distribucion_deuda"){
+      echo json_encode($o->consultar_distribucion_deuda());
+    }
+
+
+
+
+
+
+
+
+
+
     elseif ($accion == 'incluir') {
       $respuesta = $o->incluir($_POST['monto'], $_POST['concepto'], $_POST['fecha']);
       echo json_encode($respuesta);
