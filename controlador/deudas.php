@@ -20,7 +20,7 @@ if (is_file("vista/" . $p . ".php")) {
       $respuesta = $o->listadomorosos();
       echo json_encode($respuesta);
     } else if($accion == 'registrarpago'){
-      $respuesta = $o->registrarpago($_POST['id_deuda'],$_POST['monto'], $_POST['referencia'],$_POST['fecha'],$_POST['tipo_pago']);
+      $respuesta = $o->registrarpago_s($_POST['id_deuda'],$_POST['monto'], $_POST['referencia'],$_POST['fecha'],$_POST['tipo_pago']);
       echo json_encode($respuesta);
     }
     exit;

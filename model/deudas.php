@@ -7,6 +7,7 @@ require_once("model/bitacora.php");
 
 class deuda extends datos
 {
+	private $id_deuda, $monto, $referencia, $fecha, $tipo_pago;
 	PUBLIC function chequearpermisos()
 	{
 		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
@@ -111,7 +112,10 @@ class deuda extends datos
 		}
 		return $r;
 	}
-	PUBLIC function registrarpago($id_deuda, $monto, $referencia, $fecha, $tipo_pago)
+	public function registrarpago_s(){
+		return $this->registrarpago();
+	}
+	private function registrarpago($id_deuda, $monto, $referencia, $fecha, $tipo_pago)
 	{
 		$usuario = $_SESSION['id_usuario'];
 		$co = $this->conecta();
@@ -136,5 +140,36 @@ class deuda extends datos
 			$r['mensaje'] =  $e->getMessage();
 		}
 		return $r;
+	}
+
+	PUBLIC function get_id_deuda(){
+		return $this->id_deuda;
+	}
+	PUBLIC function set_id_deuda($value){
+		$this->id_deuda = $value;
+	}
+	PUBLIC function get_monto(){
+		return $this->monto;
+	}
+	PUBLIC function set_monto($value){
+		$this->monto = $value;
+	}
+	PUBLIC function get_referencia(){
+		return $this->referencia;
+	}
+	PUBLIC function set_referencia($value){
+		$this->referencia = $value;
+	}
+	PUBLIC function get_fecha(){
+		return $this->fecha;
+	}
+	PUBLIC function set_fecha($value){
+		$this->fecha = $value;
+	}
+	PUBLIC function get_tipo_pago(){
+		return $this->tipo_pago;
+	}
+	PUBLIC function set_tipo_pago($value){
+		$this->tipo_pago = $value;
 	}
 }

@@ -43,9 +43,9 @@ function enviaAjax(datos) {
     error: function (request, status, err) {
       modalcarga(false);
       if (status == "timeout") {
-        muestraMensaje("Servidor ocupado, intente de nuevo");
+        //muestraMensaje("Servidor ocupado, intente de nuevo");
       } else {
-        muestraMensaje("ERROR: <br/>" + request + status + err);
+        //muestraMensaje("ERROR: <br/>" + request + status + err);
       }
     },
     complete: function () {

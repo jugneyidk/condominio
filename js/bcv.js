@@ -12,21 +12,21 @@ function load_bcv(async_control = true){
 			data: datos,
 			processData: false,
 			cache: false,
-			timeout: 10000,
-			success: function (respuesta) {
-				try {
-					var lee = JSON.parse(respuesta);
-					// console.log(respuesta);
-					if(lee.resultado == 'bcv'){
-						variable_divisa_global = lee.mensaje;
-					}
-				} catch (e) {
-					//alert("Error en " + e.name + " !!!");
-					console.error(e);
-					console.log(respuesta);
-					console.log("----- BCV -------");
-				}
-			},
+			// timeout: 10000,
+			// success: function (respuesta) {
+			// 	try {
+			// 		var lee = JSON.parse(respuesta);
+			// 		// console.log(respuesta);
+			// 		if(lee.resultado == 'bcv'){
+			// 			variable_divisa_global = lee.mensaje;
+			// 		}
+			// 	} catch (e) {
+			// 		//alert("Error en " + e.name + " !!!");
+			// 		console.error(e);
+			// 		console.log(respuesta);
+			// 		console.log("----- BCV -------");
+			// 	}
+			// },
 			// complete: function (xhr, status) {
 			// 	var respuesta = xhr.responseText;
 			// 	try{

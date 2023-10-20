@@ -568,15 +568,15 @@ class Deudacondominio extends datos
 
 
 
-			require_once("model/enviar-correo.php");
-			$mailer = new enviarcorreo;
+			// require_once("model/enviar-correo.php");
+			// $mailer = new enviarcorreo;
 
 			
 			$this->con->commit();
 			
 			$r['resultado'] = 'distribuir_deudas';
-			$r['mensaje2'] =  $consulta->rowCount();
-			$r['mensaje'] =  $mailer->notificar_factura($this->id);;
+			$r['mensaje'] =  $consulta->rowCount();
+			// $r['mensaje'] =  $mailer->notificar_factura($this->id);;
 
 
 

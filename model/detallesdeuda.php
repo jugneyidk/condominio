@@ -120,7 +120,10 @@ class detallesdeuda extends datos
 		}
 		return $r;
 	}
-    PUBLIC function registrarpago(){
+    public function registrarpago_s{
+        return $this->registrarpago();
+    }
+    PRIVATE function registrarpago(){
 
     	try {
     		$this->con = $this->conecta();
@@ -207,7 +210,9 @@ class detallesdeuda extends datos
     			}
 
 
-
+                // require_once("model/enviar-ws.php");
+                // $mensajeWS = new enviarws;
+                // $ws = $mensajeWS->enviarws2("Su pago ha sido recibido correctamente le informaremos cuando este alla sido verificado");
     		
     		$r['resultado'] = 'registrarpago';
     		$r['mensaje'] = "";

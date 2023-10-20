@@ -2,7 +2,7 @@
 require_once('model/datos.php');
 class enviarws extends Datos
 {
-    public function enviarws($mensaje)
+    public function enviarws2($mensaje)
     {
         include('model/api-ws.php');
         $url = 'https://api.green-api.com/waInstance' . $ID_INSTANCE . '/sendMessage/' . $API_TOKEN_INSTANCE;

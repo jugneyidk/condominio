@@ -23,7 +23,7 @@ if (is_file("vista/" . $p . ".php")) {
 
 
 
-        $respuesta = $o->registrarpago();
+        $respuesta = $o->registrarpago_s();
         echo json_encode($respuesta);
       }
       exit;

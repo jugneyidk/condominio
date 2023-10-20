@@ -62,6 +62,8 @@ session_start();
 			curl_setopt($cliente, CURLOPT_URL, 'https://www.bcv.org.ve/');
 			curl_setopt($cliente, CURLOPT_HEADER, 0);
 			curl_setopt($cliente, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($cliente, CURLOPT_TIMEOUT, 9);
+
 			$content=curl_exec($cliente);
 			curl_close($cliente);
 

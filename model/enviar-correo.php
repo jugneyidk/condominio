@@ -163,6 +163,11 @@ class enviarcorreo extends datos
 				$consulta = $this->con->prepare("SELECT * FROM deudas as d LEFT JOIN distribuciones as dis on dis.id_distribucion = d.id_distribucion LEFT JOIN apartamento as a on a.id_apartamento = d.id_apartamento LEFT JOIN habitantes as h ON a.propietario = h.id WHERE d.id_distribucion = ? GROUP BY h.id ORDER BY d.id_apartamento ");
 				$consulta->execute([$distribucion]);
 				$control = $consulta->fetchall(PDO::FETCH_ASSOC);
+				// require_once("model/enviar-ws.php");
+				// $mensajeWS = new enviarws();
+				// $ws = $mensajeWS->enviarws2("Estimado ".$control[0]['nombres']." ".$control[0]['apellidos']." \n\nEl conjunto residencial Jose Maria Vargas le informa que su factura ha sido emitida Le invitamos a pagar a tiempo para evitar sobrecargos por morosidad\n\nConcepto: ".$control[0]['concepto']."");
+
+
 				foreach ($control as $elem) {
 
 $html=<<<END
