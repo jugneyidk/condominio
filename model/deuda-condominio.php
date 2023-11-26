@@ -522,10 +522,21 @@ class Deudacondominio extends datos
 	PUBLIC function distribuir_deudas_s(){
 		return $this->distribuir_deudas();
 	}
+	PUBLIC function modificar_distribucion_s(){
+		return $this->modificar_distribucion();
+	}
+	PUBLIC function eliminar_distribucion_s(){
+		return $this->eliminar_distribucion();
+	}
+
+
 
 	PRIVATE function distribuir_deudas(){
 		try {
 			$this->validar_conexion($this->con);
+			$V = new Validaciones();
+			$V->fecha($this->fecha);
+			$V->alfanumerico($this->concepto);
 			$this->con->beginTransaction();
 
 			$consulta = $this->con->prepare("INSERT INTO distribuciones (fecha,concepto,usuario) VALUES (:fecha,:concepto,:usuario);");
@@ -609,7 +620,18 @@ class Deudacondominio extends datos
 		try {
 			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
-			$consulta = $this->con->query("SELECT d.fecha,d.concepto,u.razon_social from distribuciones AS d JOIN datos_usuarios as u ON u.id = d.usuario;")->fetchAll(PDO::FETCH_NUM);
+			if(!isset($this->id)){
+				$consulta = $this->con->query("SELECT d.fecha,d.concepto,u.razon_social,d.id_distribucion from distribuciones AS d JOIN datos_usuarios as u ON u.id = d.usuario;")->fetchAll(PDO::FETCH_NUM);
+			}
+			else{
+				$consulta = $this->con->prepare("SELECT d.fecha,d.concepto,u.razon_social,d.id_distribucion from distribuciones AS d JOIN datos_usuarios as u ON u.id = d.usuario WHERE id_distribucion = ?;");
+				$consulta->execute([$this->id]);
+
+				$consulta = $consulta->fetch(PDO::FETCH_ASSOC);
+				if(!$consulta){
+					throw new Validaciones("La distribución seleccionada no existe", 1);
+				}
+			}
 
 			
 			$r['resultado'] = 'consultar_distribucion_deuda';
@@ -623,7 +645,8 @@ class Deudacondominio extends datos
 				}
 			}
 			$r['resultado'] = 'is-invalid';
-			$r['mensaje'] =  $e->getMessage().": Code : ".$e->getLine();
+			$r['mensaje'] =  $e->getMessage();
+			$r['console'] =  $e->getMessage().": Code : ".$e->getLine();
 		} catch (Exception $e) {
 			if($this->con instanceof PDO){
 				if($this->con->inTransaction()){
@@ -636,6 +659,117 @@ class Deudacondominio extends datos
 		}
 		return $r;
 	}
+
+	PRIVATE function modificar_distribucion(){
+		try {
+			$this->validar_conexion($this->con);
+
+			$V = new Validaciones();
+			$V->fecha($this->fecha);
+			$V->alfanumerico($this->concepto);
+
+			$this->con->beginTransaction();
+
+			$consulta = $this->con->prepare("SELECT * FROM distribuciones WHERE id_distribucion = ?");
+			$consulta->execute([$this->id]);
+			if(!($consulta = $consulta->fetch(PDO::FETCH_ASSOC))){
+				throw new Validaciones("La distribución seleccionada no existe", 1);
+			}
+			$anterior = $consulta;
+
+			if($anterior["concepto"] != $this->concepto){
+				$consulta = $this->con->prepare("SELECT * FROM distribuciones WHERE concepto = ? AND id_distribucion <> ?");
+				$consulta->execute([$this->concepto,$this->id]);
+
+				if($consulta->fetch(PDO::FETCH_ASSOC)){
+					throw new Validaciones("El concepto ya existe", 1);
+				}
+			}
+
+			$consulta = $this->con->prepare("UPDATE distribuciones SET concepto = ?, fecha = ? WHERE id_distribucion = ?;");
+			$consulta->execute([$this->concepto, $this->fecha, $this->id]);
+
+			$b = new Bitacora();
+			if($anterior["concepto"] != $this->concepto){
+				$b->b_accion("Modifico el concepto de \"{$anterior['concepto']}\" a \"$this->concepto\" del a distribucion de deuda {$anterior['id_distribucion']}");
+			}
+			if($anterior["fecha"] != $this->fecha){
+				$b->b_accion("Modifico la fecha de \"{$anterior['fecha']}\" a \"$this->fecha\" del a distribucion de deuda {$anterior['id_distribucion']}");
+			}
+
+
+
+
+
+
+
+			
+			$r['resultado'] = 'modificar_deuda';
+			$r['mensaje'] =  "Distribución de deuda modificada exitosamente";
+			$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage();
+			$r['console'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+	}
+
+	PRIVATE function eliminar_distribucion(){
+		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
+			$consulta = $this->con->prepare("SELECT * FROM distribuciones WHERE id_distribucion = ?");
+			$consulta->execute([$this->id]);
+
+			if(!$consulta->fetch(PDO::FETCH_ASSOC)){
+				throw new Validaciones("La distribución seleccionada no existe", 1);
+			}
+
+			
+			
+			$r['resultado'] = 'console';
+			$r['mensaje'] =  "";
+			//$this->con->commit();
+		
+		} catch (Validaciones $e){
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage();
+			$r['console'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		return $r;
+	}
+
+
 
 
 	PUBLIC function chequearpermisos()
@@ -806,6 +940,30 @@ class Deudacondominio extends datos
 // FROM tipo_apartamento as ta
 // UNION 
 // SELECT * FROM 
+
+
+
+
+
+// PARA MOSTRAR EL RESUMEN DE UNA DISTRIBUCION YA ECHA
+
+
+
+
+// 	SELECT
+// 	IF (concepto = "Estacionamiento",CONCAT(concepto," (",a.num_letra_apartamento,")"),concepto) as concepto,
+//     monto,
+//     tipo_monto
+//     ,COUNT(concepto) AS numero, d.id_distribucion
+// FROM
+//     `detalles_deudas` AS dd
+// JOIN deudas AS d
+// ON
+//     d.id_distribucion = 7 AND dd.id_deuda = d.id_deuda
+//     LEFT JOIN apartamento as a on a.id_apartamento = d.id_apartamento
+// WHERE
+//     1
+//     GROUP BY concepto, d.id_distribucion, monto,tipo_monto
 
 
 

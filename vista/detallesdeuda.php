@@ -67,12 +67,10 @@
 			<thead>
 			  <tr>
 				<th scope="col" class="text-info">Nº Pago</th>
-				<th scope="col" class="d-none d-lg-table-cell text-info">Apto</th>
-				<th scope="col" class="d-none d-lg-table-cell text-info">Torre</th>
-				<th scope="col" class="text-info">Piso</th>
+				<th scope="col" class="text-info">Apto</th>
 				<th scope="col" class="text-info">Fecha</th>
-				<th scope="col" class="text-info">Referencia</th>
 				<th scope="col" class="text-info">Tipo de pago</th>
+				<th scope="col" class="text-info">Concepto</th>
 				<th scope="col" class="text-info">Monto</th>
 				<th scope="col" class="text-info">Estado</th>
 			  </tr>

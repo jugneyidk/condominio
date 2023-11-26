@@ -43,7 +43,7 @@ if (is_file("vista/" . $p . ".php")) {
 
       echo json_encode($o->incluir_cargo_s());
     }
-    else if($accion == "modificar_cargo"){
+    else if ($accion == "modificar_cargo"){
       $o->set_id($_POST["id"]);
       $o->set_concepto($_POST["cargo_concepto"]);
       $o->set_monto($_POST["cargo_monto"]);
@@ -57,30 +57,41 @@ if (is_file("vista/" . $p . ".php")) {
 
       echo json_encode($o->modificar_cargo_s());
     }
-    else if($accion== "eliminar_cargo" ){
+    else if ($accion == "eliminar_cargo" ){
       $o->set_id($_POST["id"]);
       echo json_encode($o->eliminar_cargo_s());
     }
-    else if($accion=="lista_resumen_cargos"){
+    else if ($accion == "lista_resumen_cargos"){
       echo json_encode($o->lista_resumen_cargos());
     }
-    else if($accion == "distribuir_deudas"){
+    else if ($accion == "distribuir_deudas"){//incluir deudas
       $o->set_fecha($_POST["fecha"]);
       $o->set_concepto($_POST["concepto"]);
       echo json_encode($o->distribuir_deudas_s());
     }
-    else if($accion=="consultar_distribucion_deuda"){
-      echo json_encode($o->consultar_distribucion_deuda());
+    else if ($accion == "consultar_distribucion_deuda"){
+      if(isset($_POST["id_seleccionado"])){
+
+        $o->set_id($_POST["id_seleccionado"]);
+        echo json_encode($o->consultar_distribucion_deuda());
+
+      }
+      else{
+
+        echo json_encode($o->consultar_distribucion_deuda());
+
+      }
     }
-
-
-
-
-
-
-
-
-
+    else if ($accion == "modificar_deuda"){     
+      $o->set_id($_POST["id"]);
+      $o->set_fecha($_POST["fecha"]);
+      $o->set_concepto($_POST["concepto"]);
+      echo json_encode($o->modificar_distribucion_s());
+    }
+    else if ($accion == "eliminar_deuda"){   
+      $o->set_id($_POST["id"]);
+      echo json_encode($o->eliminar_distribucion_s());
+    }
 
     elseif ($accion == 'incluir') {
       $respuesta = $o->incluir($_POST['monto'], $_POST['concepto'], $_POST['fecha']);

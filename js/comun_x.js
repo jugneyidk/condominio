@@ -449,18 +449,20 @@ function rowsEvent(tbody,func,control=true){//solo permite un evento del rowsEve
 	}
 }
 
-function crearElem(type,attr='',content='')
+function crearElem(type,attr='',content='',separador = ',')
 {
 	var elem=document.createElement(type);
 	if(elem)
 	{
 		if(attr!='')
 		{
-			attr=attr.split(',');
+			attr=attr.split(separador);
 			if(attr.length%2==0)
 			{
 				for(var i=0;i<attr.length;i++)
 				{
+					attr[i].replace(/(?:^\s*)|(?:\s*$)/g, "");
+					attr[(i+1)].replace(/(?:^\s*)|(?:\s*$)/g, "");
 					elem.setAttribute(attr[i],attr[(i+1)]);
 					i++;
 				}
@@ -470,7 +472,7 @@ function crearElem(type,attr='',content='')
 			}
 			else
 			{
-				console.error('Los attr debent tener un valor separado por "," ej. id,value')
+				console.error('Los attr debent tener un valor separado por "'+separador+'" ej. id'+separador+'value')
 				return undefined;
 			}
 		}

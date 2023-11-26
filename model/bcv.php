@@ -1,6 +1,7 @@
 <?php 
 session_start();
 //echo "http://".$_SERVER["HTTP_HOST"].preg_replace('/index\.php/', '', $_SERVER['PHP_SELF']);
+$console_global= "";
 	if(isset($_SESSION['id_usuario']) || isset($_SESSION['id_habitante'])){
 		date_default_timezone_set("America/Caracas");
 
@@ -20,16 +21,16 @@ session_start();
 				$c->validar_conexion($con);
 				$con->beginTransaction();
 				// code
-				$consulta = $con->query("SELECT * FROM config WHERE titulo = ".CONFIG_ARRAY["BCV"][0]." LIMIT 1;")->fetch(PDO::FETCH_ASSOC);
+				$consulta = $con->query("SELECT * FROM config WHERE titulo = \"".CONFIG_ARRAY["BCV"][0]."\" LIMIT 1;")->fetch(PDO::FETCH_ASSOC);
 				if($consulta){
-					return $consulta["valor"];
+					return [$consulta["valor"],"optengo el valor de consulta"];
 				}else{
 					$to_return;
 					if($hora_guardada_para_bcv_2[0] < date("H:i")){ $to_return =0 ; }
 					if($hora_guardada_para_bcv_2[1] < date("H:i")){ $to_return =1 ; }
 					if($hora_guardada_para_bcv_2[2] < date("H:i")){ $to_return =2 ; }
 					if($hora_guardada_para_bcv_2[3] < date("H:i")){ $to_return =3 ; }
-					return $hora_guardada_para_bcv_2[$to_return];
+					return [$hora_guardada_para_bcv_2[$to_return],"optengo el valor de else"];
 				}
 
 				
@@ -47,14 +48,17 @@ session_start();
 				if($hora_guardada_para_bcv_2[1] < date("H:i")){ $to_return =1 ; }
 				if($hora_guardada_para_bcv_2[2] < date("H:i")){ $to_return =2 ; }
 				if($hora_guardada_para_bcv_2[3] < date("H:i")){ $to_return =3 ; }
-				return $hora_guardada_para_bcv_2[$to_return];
+				return [$hora_guardada_para_bcv_2[$to_return],"optengo el valor de catch",$e->getMessage()." (".CONFIG_ARRAY["BCV"][0].") LINE :: ".$e->getLine()];
 			
 			}
 			
 		}
 
 		if(!isset($_SESSION["Siguiente_hora_para_revisar"])){
-			$_SESSION["Siguiente_hora_para_revisar"] = control_hora_bcv($hora_guardada_para_bcv);
+			$console_global = control_hora_bcv($hora_guardada_para_bcv)[1];
+			$_SESSION["Siguiente_hora_para_revisar"] = control_hora_bcv($hora_guardada_para_bcv)[0];
+			//$console_global = $_SESSION["Siguiente_hora_para_revisar"];
+
 		}
 		if(date("H:i") > $_SESSION["Siguiente_hora_para_revisar"]){
 			$cliente=curl_init();
@@ -149,14 +153,14 @@ session_start();
 				$con = $c->conecta();
 				$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				$consulta = $con->query("SELECT * FROM tipo_cambio_divisa WHERE 1 ORDER by fecha DESC;")->fetch(PDO::FETCH_ASSOC);
-				echo json_encode(["resultado"=>"bcv","mensaje"=>$consulta, "extra" => "from bd 1 sesion: {$_SESSION['Siguiente_hora_para_revisar']} actual: ".date('H:i')]);
+				echo json_encode(["resultado"=>"bcv","mensaje"=>$consulta, "extra" => "($console_global)from bd 1 sesion: {$_SESSION['Siguiente_hora_para_revisar']} actual: ".date('H:i')]);
 			}
 		}
 		else {
 			$con = $c->conecta();
 			$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$consulta = $con->query("SELECT * FROM tipo_cambio_divisa WHERE 1 ORDER by fecha DESC;")->fetch(PDO::FETCH_ASSOC);
-			echo json_encode(["resultado"=>"bcv","mensaje"=>$consulta, "extra" => "from bd 2 sesion: {$_SESSION['Siguiente_hora_para_revisar']} actual: ".date('H:i')]);
+			echo json_encode(["resultado"=>"bcv","mensaje"=>$consulta, "extra" => "($console_global) from bd 2 sesion: {$_SESSION['Siguiente_hora_para_revisar']} actual: ".date('H:i')]);
 		}
 	}
 	else{echo json_encode(["resultado"=>'vacio']);}

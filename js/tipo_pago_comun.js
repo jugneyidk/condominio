@@ -9,7 +9,7 @@ let contador_cantidad_divisa = 0;
 
 
 function load_tipo_pago_comun(){
-	load_bcv(false);
+	load_bcv(true,false);
 	Datos_divisa = variable_divisa_global || {monto:35.27,fecha: "2000-12-03 10:30"};
 	if(Datos_divisa.monto && Datos_divisa.fecha){
 		document.getElementById('tipo_cambio_divisa_monto_to_show').parentNode.parentNode.classList.remove("d-none");
@@ -122,6 +122,10 @@ function load_tipo_pago_comun(){
 	});
 	
 
+}
+
+function reload_bcv(){
+	load_bcv(true,true);// carga la variable global variable_divisa_global declarada en bcv.js
 }
 
 

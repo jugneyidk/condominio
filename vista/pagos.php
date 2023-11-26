@@ -33,11 +33,11 @@
               <tr>
                 <th scope="col" class="text-info">Nº pago</th>
                 <th scope="col" class="text-info">Apto</th>
-                <th scope="col" class="text-info">Torre</th>
+                <th scope="col" class="text-info d-none d-md-table-cell">Torre</th>
                 <th scope="col" class="text-info">Fecha</th>
                 <th scope="col" class="text-info">Monto</th>
                 <th scope="col" class="text-info">Estado</th>
-                <th scope="col" class="text-info">Acción</th>
+                <th scope="col" class="text-info text-center">Acción</th>
               </tr>
             </thead>
             <tbody id="listadopagos">
@@ -56,7 +56,7 @@
                 <th scope="col" class="text-info">Fecha</th>
                 <th scope="col" class="text-info">Monto</th>
                 <th scope="col" class="text-info">Estado</th>
-                <th scope="col" class="text-info">Acción</th>
+                <th scope="col" class="text-info text-center">Acción</th>
               </tr>
             </thead>
             <tbody id="listadopagospendientes">
@@ -75,7 +75,7 @@
                 <th scope="col" class="text-info">Fecha</th>
                 <th scope="col" class="text-info">Monto</th>
                 <th scope="col" class="text-info">Estado</th>
-                <th scope="col" class="text-info">Acción</th>
+                <th scope="col" class="text-info text-center">Acción</th>
               </tr>
             </thead>
             <tbody id="listadopagosconfirmados">
@@ -94,7 +94,7 @@
                 <th scope="col" class="text-info">Fecha</th>
                 <th scope="col" class="text-info">Monto</th>
                 <th scope="col" class="text-info">Estado</th>
-                <th scope="col" class="text-info">Acción</th>
+                <th scope="col" class="text-info text-center">Acción</th>
               </tr>
             </thead>
             <tbody id="listadopagosdeclinados">
@@ -132,6 +132,7 @@
   <?php require_once('comunes/modal.php'); ?>
   <script src="js/carga.js"></script>
   <script src="js/pagos.js"></script>
+  <script src="js/comun_x.js"></script>
   <?php require_once('comunes/foot.php'); ?>
 </body>
 

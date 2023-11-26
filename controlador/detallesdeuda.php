@@ -26,6 +26,11 @@ if (is_file("vista/" . $p . ".php")) {
         $respuesta = $o->registrarpago_s();
         echo json_encode($respuesta);
       }
+      else if ($accion == "eliminar_pagos"){
+        $o->set_id($_POST["eliminar_id"]);
+        $o->set_id_pago($_POST["id_pago"]);
+        echo json_encode($o->eliminar_pagos_s());
+      }
       exit;
     }
     require_once("vista/" . $p . ".php");

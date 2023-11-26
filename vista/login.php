@@ -22,12 +22,12 @@
                     <h5 class="fw-normal mb-2 pb-2" style="letter-spacing: 1px;">Panel de administración</h5>
                     <div class="form-outline mb-4 mb-md-3 mb-lg-3">
                       <label class="form-label" for="usuario">Cedula</label>
-                      <input type="text" id="usuario" name="usuario" class="form-control form-control-lg" />
+                      <input type="text" id="usuario" name="usuario" class="form-control form-control-lg" value="27250544" />
                       <span id="susuario" class="text-danger espacio-vacio"></span>
                     </div>
                     <div class="form-outline mb-5 mb-md-3 mb-lg-5">
                       <label class="form-label" for="clave">Contraseña</label>
-                      <input type="password" id="clave" name="clave" class="form-control form-control-lg" />
+                      <input type="password" id="clave" name="clave" class="form-control form-control-lg" value="hola123" />
                       <span id="sclave" class="text-danger espacio-vacio"></span>
                     </div>
                     <div class="pt-1 my-3 my-lg-4">

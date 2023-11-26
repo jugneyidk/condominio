@@ -28,7 +28,7 @@
 						</div>
 					</div>
 					<form id="f_deudas" action="" method="POST" onsubmit="return false">
-						<input type="hidden" id="deuda_id_hidden" class="d-none" name="id">
+						<input type="hidden" id="id_hidden" class="d-none" name="id">
 						<div class="row">
 							<div class="col-12 col-md">
 								<label for="deuda_fecha">Fecha</label>
@@ -406,12 +406,12 @@
 			});
 
 			$("#consultar_deuda").on("click",()=>{
-				console.log("asdfasdf");
 				var datos = new FormData();
 				datos.append("accion","consultar_distribucion_deuda");
 				enviaAjax(datos,function(respuesta){
 				
 					var lee = JSON.parse(respuesta);
+					console.log(lee);
 					if(lee.resultado == "consultar_distribucion_deuda"){
 
 
@@ -438,7 +438,9 @@
 									},
 								},
 								data:lee.mensaje,
-								//createdRow: function(row,data){},
+								createdRow: function(row,data){
+									row.id = "distrib-"+data[3];
+								},
 								autoWidth: false
 								//order: [[1, "asc"]],
 								
@@ -467,6 +469,134 @@
 					$("#modal_distribuciones").modal("show");
 				});
 			});
+
+			rowsEvent("tbody_distribuciones_modal",(a,b)=>{
+				if(/^distrib-/.test(a.id)){
+					var id_f = a.id.replace(/distrib-/, "");
+
+					var datos = new FormData();
+					datos.append("accion","consultar_distribucion_deuda");
+					datos.append("id_seleccionado",id_f);
+					enviaAjax(datos,function(respuesta){
+					
+						var lee = JSON.parse(respuesta);
+						if(lee.resultado == "consultar_distribucion_deuda"){
+								document.getElementById('deuda_fecha').value = lee.mensaje.fecha;
+								document.getElementById('deuda_concepto').value = lee.mensaje.concepto;
+								document.getElementById('id_hidden').value = lee.mensaje.id_distribucion;
+								cambiarbotones_deuda(false);
+								
+						}
+						else if (lee.resultado == 'is-invalid'){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+						else if(lee.resultado == "error"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							console.error(lee.mensaje);
+						}
+						else if(lee.resultado == "console"){
+							console.log(lee.mensaje);
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+					}).then(()=>{
+						$("#modal_distribuciones").modal("hide");
+					});
+					
+				}
+			})
+
+
+			$("#modificar_deuda").on("click",()=>{
+
+				Swal.fire({
+					title: "¿Estás Seguro?",
+					text: "¿Está seguro que desea modificar la distribución?",
+					showCancelButton: true,
+					confirmButtonText: "Modificar",
+					confirmButtonColor: "#ffc107",
+					cancelButtonText: `Cancelar`,
+					icon: "warning",
+				}).then((result) => {
+					if (result.isConfirmed) {
+
+						if(validar_deudas()){
+							var datos = new FormData($("#f_deudas")[0]);
+							datos.append("accion","modificar_deuda");
+							enviaAjax(datos,function(respuesta){
+							
+								var lee = JSON.parse(respuesta);
+								if(lee.resultado == "modificar_deuda"){
+									muestraMensaje(lee.mensaje, "", "success");
+									borrar();
+								}
+								else if (lee.resultado == 'is-invalid'){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+								else if(lee.resultado == "error"){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+									console.error(lee.mensaje);
+								}
+								else if(lee.resultado == "console"){
+									console.log(lee.mensaje);
+								}
+								else{
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+							});
+						}
+
+
+
+					}
+				});
+			});
+
+			$("#eliminar_deuda").on("click",()=>{
+
+				Swal.fire({
+					title: "¿Estás Seguro?",
+					text: "¿Está seguro que desea eliminar la distribución?",
+					showCancelButton: true,
+					confirmButtonText: "eliminar",
+					confirmButtonColor: "#c82333",
+					cancelButtonText: `Cancelar`,
+					icon: "warning",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						var datos = new FormData();
+						datos.append("accion","eliminar_deuda");
+						datos.append("id",document.getElementById('id_hidden').value);
+						enviaAjax(datos,function(respuesta){
+						
+							var lee = JSON.parse(respuesta);
+							if(lee.resultado == "eliminar_deuda"){
+								muestraMensaje(lee.mensaje, '', "success");
+								borrar();
+							}
+							else if (lee.resultado == 'is-invalid'){
+								muestraMensaje("ERROR", lee.mensaje,"error");
+							}
+							else if(lee.resultado == "error"){
+								muestraMensaje("ERROR", lee.mensaje,"error");
+								console.error(lee.mensaje);
+							}
+							else if(lee.resultado == "console"){
+								console.log(lee.mensaje);
+							}
+							else{
+								muestraMensaje("ERROR", lee.mensaje,"error");
+							}
+						});
+					}
+				});
+			});
+
+
+
+
+
 
 
 			function validar_deudas(){
@@ -1277,6 +1407,7 @@
 			
 			limpiarvalidacion();
 			cambiarbotones_cargos();
+			cambiarbotones_deuda();
 			//cambiarbotones_2();
 			lista_apartamentos_seleccionados = {lista:[]};
 			document.getElementById('cargo_apartamentos_seleccionados').innerHTML='';
@@ -1297,7 +1428,10 @@
 			var mensaje = mensaje+" "+hoy.getFullYear();
 			document.getElementById('deuda_concepto').value=mensaje;
 			document.getElementById('deuda_concepto').onkeyup();
-			document.getElementById('deuda_fecha').value = hoy.getFullYear()+"-"+(hoy.getMonth() + 1)+"-"+hoy.getDate();
+			//var hoy_format = hoy.getFullYear()+"-"+(hoy.getMonth() + 1)+"-"+(hoy.getDate())<10?"0"+hoy.getDate():hoy.getDate();
+			var hoy_format = hoy.getFullYear()+"-"+(hoy.getMonth() + 1)+"-";
+			hoy_format += (parseInt(hoy.getDate())<10)?"0"+hoy.getDate():hoy.getDate();
+			document.getElementById('deuda_fecha').value = hoy_format;
 		}
 
 
@@ -1305,6 +1439,11 @@
 			$("#modificar_cargo").prop("disabled", parametro);
 			$("#eliminar_cargo").prop("disabled", parametro);
 			$("#incluir_cargo").prop("disabled", !parametro);
+		}
+		function cambiarbotones_deuda(parametro = true) {
+			$("#modificar_deuda").prop("disabled", parametro);
+			$("#eliminar_deuda").prop("disabled", parametro);
+			$("#incluir_deuda").prop("disabled", !parametro);
 		}
 		function limpiarvalidacion() {
 			$("form input").removeClass("is-valid");

@@ -1,6 +1,6 @@
 $(document).ready(function () {
   carga_deudas();
-  carga_historial();
+  //carga_historial();
   load_tipo_pago_comun();
   $("#registrarpago").on("hide.bs.modal", function () {
     setTimeout(limpiar_modal, 300);
@@ -44,7 +44,7 @@ $(document).ready(function () {
     }
   });
   $("#btn-historial").on("click", function () {
-    $("#historialpagos").modal("show");
+    carga_historial();
   });
 });
 function carga_deudas() {
@@ -93,7 +93,7 @@ if(validar_tipo_pago_comunes()){
 
     Swal.fire({
       title: "¿Estás Seguro?",
-      text: "¿Está seguro que desea registrar el pago?, esta acción no se puede deshacer",
+      text: "¿Está seguro que desea registrar el pago?",
       showCancelButton: true,
       confirmButtonText: "Registrar",
       confirmButtonColor: "#007bff", // amarillo #ffc107 rojo #dc3545 azul #007bff
@@ -127,6 +127,7 @@ if(validar_tipo_pago_comunes()){
           }
         }).then(()=>{
           $("#registrarpago").modal("hide");
+          carga_deudas();
         });
 
       }
@@ -155,6 +156,55 @@ if(validar_tipo_pago_comunes()){
   //   enviaAjax(datos);
   // }
 }
+
+function eliminar_pagos(elem){
+  var deuda_id = elem.parentNode.parentNode.dataset.id;
+  var id_pago = elem.parentNode.parentNode.dataset.id_pago;
+  if(deuda_id){
+    Swal.fire({
+      title: "¿Estás Seguro?",
+      text: "¿Está seguro que desea Eliminar el pago?",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      confirmButtonColor: "#dc3545", // amarillo #ffc107 rojo #dc3545 azul #007bff
+      cancelButtonText: `Cancelar`,
+      icon: "warning",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        var datos = new FormData();
+        datos.append("accion","eliminar_pagos");
+        datos.append("eliminar_id", deuda_id);
+        datos.append("id_pago", id_pago);
+
+        enviaAjax2(datos,function(respuesta){
+        
+          var lee = JSON.parse(respuesta);
+          if(lee.resultado == "eliminar_pagos"){
+            muestraMensaje("", lee.mensaje, "success");
+          }
+          else if (lee.resultado == 'is-invalid'){
+            muestraMensaje("ERROR", lee.mensaje,"error");
+          }
+          else if(lee.resultado == "error"){
+            muestraMensaje("ERROR", lee.mensaje,"error");
+            console.error(lee.mensaje);
+          }
+          else if(lee.resultado == "console"){
+            console.log(lee.mensaje);
+          }
+          else{
+            muestraMensaje("ERROR", lee.mensaje,"error");
+          }
+        }).then(()=>{
+          carga_deudas();
+        });
+    
+      }
+    });
+  }
+}
+
+
 function validarEnvio() {
   if (
     validarKeyUp(
@@ -276,18 +326,39 @@ function enviaAjax(datos) {
                   previous: "Anterior",
                 },
               },
+              "ordering": false,
+              columns: [
+                  { data: "num_letra_apartamento" },
+                  { data: "torre" },
+                  { data: "concepto" },
+                  { data: "fecha" },
+                  { data: "monto" },
+                  { data: "extra" }
+                      ],
               createdRow: function(row,data){
+                //console.table(data);
                 
-                row.dataset.id=data[6];
+                
+                row.dataset.id=data.id_deuda;
+                if(data.id_pago){
+                  row.dataset.id_pago = data.id_pago;
+                }
                 row.querySelector("td:nth-child(2)").classList.add("d-none","d-md-table-cell");
                 row.querySelector("td:nth-child(3)").classList.add("d-none","d-md-table-cell");
                 row.querySelector("td:nth-child(4)").classList.add("text-nowrap");
-                row.querySelector("td:last-child").innerHTML="<button class='btn btn-success' style='font-size: 13px;' onclick='mostrar_registrar_pago(this)'>Pagar</button>";
+                row.querySelector("td:last-child").classList.add("text-center");
+                if(data.estado != '0'){
+                  row.querySelector("td:last-child").innerHTML="<button class='btn btn-success' style='font-size: 13px;' onclick='mostrar_registrar_pago(this)'>Pagar</button>";
+                }
+                else{
+                  row.querySelector("td:last-child").innerHTML="<u class=\"no-select\" style=\"font-size: .6rem;\">por confirmar</u><br><button class='btn btn-danger' style='font-size: 13px;' onclick='eliminar_pagos(this)'>eliminar</button>";
+
+                }
                 
               },
 
               autoWidth: false,
-              order: [[1, "desc"]],
+              //order: [[1, "desc"]],
               // paging: false,
               searching: false,
               info: false,
@@ -297,9 +368,10 @@ function enviaAjax(datos) {
           if ($.fn.DataTable.isDataTable("#tablahistorial")) {
             $("#tablahistorial").DataTable().destroy();
           }
-          $("#listahistorial").html(lee.mensaje);
+          $("#listahistorial").html("");
           if (!$.fn.DataTable.isDataTable("#tablahistorial")) {
             $("#tablahistorial").DataTable({
+              data:lee.mensaje,
               language: {
                 lengthMenu: "Mostrar _MENU_ por página",
                 zeroRecords: "No se encontraron pagos",
@@ -315,8 +387,19 @@ function enviaAjax(datos) {
                 },
               },
               autoWidth: false,
-              order: [[0, "desc"]],
+              createdRow: function(row,data){
+                row.querySelector("td:nth-child(2)").classList.add("text-nowrap");
+                row.querySelector("td:nth-child(3)").classList.add("text-nowrap");
+                row.querySelector("td:nth-child(4)").classList.add("text-nowrap");
+                row.querySelector("td:nth-child(5)").classList.add("text-nowrap");
+                row.querySelector("td:nth-child(6)").classList.add("text-nowrap");
+                row.querySelector("td:nth-child(6)").innerText = sepMiles(row.querySelector("td:nth-child(6)").innerText) + " Bs";
+
+
+                console.log(data);
+              }
             });
+            $("#historialpagos").modal("show");
           }
         } else if (lee.resultado == "registrado") {
           carga_deudas();
