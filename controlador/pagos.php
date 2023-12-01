@@ -35,8 +35,9 @@ if (is_file("vista/" . $p . ".php")) {
 
 
     }elseif ($accion == 'detallespago') {
+      $o->set_id($_POST["id"]);
 
-      $respuesta = $o->detallespago($_POST['id']);
+      $respuesta = $o->detallespago();
       echo json_encode($respuesta);
 
 

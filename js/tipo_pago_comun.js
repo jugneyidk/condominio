@@ -1,4 +1,9 @@
-let Datos_divisa;
+let Datos_divisa; 
+let tipo_pago_array_global = Array();
+tipo_pago_array_global['1'] = "efectivo";
+tipo_pago_array_global['2'] = "transferencia";
+tipo_pago_array_global['3'] = "pago_movil";
+tipo_pago_array_global['4'] = "divisa";
 //console.error("debo agregar la divisa");
 
 
@@ -24,12 +29,7 @@ function load_tipo_pago_comun(){
 		//tipo_pago
 		document.getElementById('tipo_pago_comun').onchange=function(){
 			if(this.value!= ''){
-				var tipo_pago = Array();
-				tipo_pago['1'] = "efectivo";
-				tipo_pago['2'] = "transferencia";
-				tipo_pago['3'] = "pago_movil";
-				tipo_pago['4'] = "divisa";
-				document.getElementById('nav-tab_tipo_pago_comun_'+tipo_pago[this.value]).click();
+				document.getElementById('nav-tab_tipo_pago_comun_'+tipo_pago_array_global[this.value]).click();
 				document.getElementById('tipo_pago_comun-monto_total').readOnly=(this.value=="4")?true:false;
 			}
 		};
@@ -121,6 +121,20 @@ function load_tipo_pago_comun(){
 		calcular_total_divisa();
 	});
 	
+
+}
+function delete_tipo_pago_comun(x){
+	options = document.getElementById('tipo_pago_comun').getElementsByTagName('option');
+	for(i = 0;i<options.length;i++){
+		for(a=0;a<arguments.length;a++){
+			if(options[i].value == arguments[a]){
+				options[i].parentNode.removeChild(options[i]);
+			}
+		}
+	}
+	document.getElementById('tipo_pago_comun').value = document.getElementById('tipo_pago_comun').getElementsByTagName('option')[0].value;
+	document.getElementById('tipo_pago_comun').onchange();
+
 
 }
 
@@ -221,6 +235,12 @@ function validar_tipo_pago_comunes(){
 	return true;
 }
 
+function limpiar_tipo_pago_comun(){
+	document.getElementById('tipo_pago_comun-hora').value = "00:00";
+	options = document.getElementById('tipo_pago_comun').getElementsByTagName('option');
+	document.getElementById('tipo_pago_comun').value = options[0].value;
+	document.getElementById('tipo_pago_comun').onchange();
+}
 
 function objeto_tipo_pago_comun(){
 	tipo_pago_comun = document.getElementById('tipo_pago_comun');

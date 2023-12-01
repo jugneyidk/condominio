@@ -38,11 +38,15 @@ function load_bcv(control = false,async_control = true){// control false para qu
 						console.log("----- BCV -------");
 					}
 				}
-			},
-			complete: function(xhr){
-				//console.log(variable_divisa_global);
-				//console.log(xhr.responseText);
+				else{
+					console.log(variable_divisa_global);
+					console.log(xhr.responseText);
+				}
 			}
+			// ,complete: function(xhr){
+			// 	console.log(variable_divisa_global);
+			// 	console.log(xhr.responseText);
+			// }
 
 			//,
 			// complete: function (xhr, status) {

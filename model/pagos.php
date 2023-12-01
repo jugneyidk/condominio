@@ -21,7 +21,7 @@ class pagos extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado = $co->query("SELECT pago.id_pago, pago.fecha_entrega, pago.total, pago.estado, apartamento.num_letra_apartamento, apartamento.piso, apartamento.torre FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento ORDER BY pago.id_pago DESC;");
+			$resultado2 = $co->query("SELECT pago.id_pago, NULL as extra, pago.fecha_entrega as fecha, pago.total as total_pago, IF(pago.estado = 'pendiente', 0,IF(pago.estado = 'declinado',1,IF(pago.estado = 'confirmado',2,NULL) ) ) AS estado, apartamento.num_letra_apartamento, apartamento.piso, apartamento.torre FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento ORDER BY pago.id_pago DESC;")->fetchall(PDO::FETCH_ASSOC);
 			$resultado = $co->query("SELECT 
 									p.id_pago,
 									a.num_letra_apartamento,
@@ -99,7 +99,7 @@ class pagos extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado = $co->query("SELECT pago.id_pago, pago.fecha_entrega, pago.total, pago.estado, apartamento.num_letra_apartamento, apartamento.piso, apartamento.torre FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento ORDER BY pago.id_pago DESC;");
+			//$resultado = $co->query("SELECT pago.id_pago, pago.fecha_entrega as fecha, pago.total as total_pago, IF(pago.estado = 'pendiente', 0,IF(pago.estado = 'declinado',1,IF(pago.estado = 'confirmado',2,NULL) ) ) AS estado, apartamento.num_letra_apartamento, apartamento.piso, apartamento.torre FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento ORDER BY pago.id_pago DESC;")->fetchall(PDO::FETCH_ASSOC);
 			$resultado = $co->query("SELECT 
 									p.id_pago,
 									a.num_letra_apartamento,
@@ -312,13 +312,105 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	public function detallespago($id)
+	public function detallespago()
 	{
+		$id = $this->id;
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
 			$resultado = $co->query("SELECT pago.id_pago, pago.referencia, pago.fecha_entrega, pago.tipo_pago, pago.total, pago.id_usuario, pago.estado, datos_usuarios.razon_social, apartamento.num_letra_apartamento, deuda_pendiente.id_apartamento, apartamento.piso, apartamento.torre FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento LEFT JOIN datos_usuarios on id_usuario=datos_usuarios.id WHERE pago.id_pago = '$id';");
+
+			$consulta = $co->prepare("SELECT 
+									d.id_deuda,
+									a.num_letra_apartamento AS apartamento,
+									a.torre,
+									a.piso,
+									CONCAT(h.nombres,' ',h.apellidos) as propietario,
+									dis.fecha as fecha_generada,
+									dis.concepto,
+									'xxxx' as total_divisa,
+									'yyyy' as total_bs
+									FROM deudas AS d
+									JOIN deuda_pagos AS dp ON dp.id_deuda = d.id_deuda
+									JOIN distribuciones AS dis ON dis.id_distribucion = d.id_distribucion
+									JOIN apartamento AS a on d.id_apartamento = a.id_apartamento
+									JOIN habitantes as h on h.id = a.propietario
+									LEFT JOIN detalles_deudas as dd on dd.id_deuda = d.id_deuda
+									WHERE dp.id_pago = ?
+									LIMIT 1");
+
+		
+			$consulta->execute([$id]);
+			$respuesta = $consulta->fetch(PDO::FETCH_ASSOC);
+
+			$consulta = $co->prepare("SELECT 
+									*,
+									@divisa_monto := divs.monto
+									FROM (SELECT MAX(dp.fecha_generada) AS fecha_generada_2 FROM detalles_pagos as dp WHERE dp.id_pago = ?) AS dp
+									JOIN tipo_cambio_divisa as divs ON dp.fecha_generada_2 WHERE divs.fecha < dp.fecha_generada_2 ORDER BY divs.fecha DESC LIMIT 1;");
+			$consulta->execute([$id]);
+
+			$consulta = $co->prepare("SELECT
+									dd.concepto,
+									if(dd.tipo_monto = 0,dd.monto,ROUND((dd.monto * @divisa_monto),2)) as monto_bs,
+									if(dd.tipo_monto = 1,dd.monto,ROUND((dd.monto / @divisa_monto),2)) as monto_divisa
+									FROM detalles_deudas as dd
+									LEFT JOIN deudas as d on d.id_deuda = dd.id_deuda
+									LEFT JOIN deuda_pagos AS dp ON dp.id_deuda = d.id_deuda
+									WHERE dp.id_pago = ?");
+			$consulta->execute([$this->id]);
+			$respuesta["resumen_d"] = $consulta->fetchall(PDO::FETCH_ASSOC);
+			$respuesta["total_divisa"] = 0;
+			$respuesta["total_bs"] = 0;
+			for($i=0;$i<count($respuesta["resumen_d"]);$i++){
+				$respuesta["total_bs"] += $respuesta["resumen_d"][$i]["monto_bs"];
+				$respuesta["total_divisa"] += $respuesta["resumen_d"][$i]["monto_divisa"];
+			}
+			$respuesta["total_bs"] = number_format($respuesta["total_bs"],2,",",".");
+			$respuesta["total_divisa"] = number_format($respuesta["total_divisa"],2,",",".");
+
+			$consulta = $co->prepare("SELECT
+									dp.fecha,
+									tp.tipo_pago,
+									IF(dp.tipo_monto = 1 ,dp.monto,ROUND((dp.monto / @divisa_monto),2)) AS monto_divisa,
+									IF(dp.tipo_monto = 0 ,dp.monto,ROUND((dp.monto * @divisa_monto),2)) AS monto_bs
+									FROM pagos as p
+									LEFT JOIN detalles_pagos as dp ON dp.id_pago = p.id_pago
+									LEFT JOIN tipo_pago as tp on tp.id_tipo_pago = dp.tipo_pago
+									WHERE p.id_pago = ?;");
+
+			$consulta->execute([$this->id]);
+
+			$consulta = $consulta->fetchall(PDO::FETCH_ASSOC);
+			$respuesta["total_pago_bs"] = 0;
+			$respuesta["total_pago_divisa"] = 0;
+			for($i=0;$i<count($consulta);$i++){
+				$respuesta["total_pago_divisa"] = $consulta[$i]["monto_divisa"];
+				$respuesta["total_pago_bs"] = $consulta[$i]["monto_bs"];
+			}
+
+			$respuesta["total_pago_divisa"] = number_format($respuesta["total_pago_divisa"],2,",",".");
+			$respuesta["total_pago_bs"] = number_format($respuesta["total_pago_bs"],2,",",".");
+
+			$respuesta["resumen_p"] = $consulta;
+
+
+
+
+
+
+
+			$r['resultado'] = 'detallespago';
+			$r['mensaje'] =  $respuesta;
+			return $r;
+
+
+
+
+			/// codigo viejo
+		
+
 			$respuesta = '';
 			if ($resultado) {
 				foreach ($resultado as $r) {
@@ -399,7 +491,10 @@ class pagos extends datos
 			$r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
+			$r['mensaje'] =  $e->getMessage()." :: LINE ".$e->getLine()." ::";
+		}
+		finally{
+			$co = null;
 		}
 		return $r;
 	}
@@ -615,27 +710,6 @@ class pagos extends datos
 			return $r;
 		}
 		return $r;
-	}
-	private function existe($id)
-	{
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		try {
-			$resultado = $co->prepare("SELECT id_pago from pago WHERE id_pago = '$id'");
-			$resultado->execute();
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-			if ($fila) {
-				$r['resultado'] = 'existe';
-				return $r;
-			}
-			$r['resultado'] = 'noexiste';
-			$r['mensaje'] =  "El pago no existe";
-			return $r;
-		} catch (Exception $e) {
-			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
-			return $r;
-		}
 	}
 
 	PUBLIC function get_id(){

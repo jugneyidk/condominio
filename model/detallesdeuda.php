@@ -13,7 +13,7 @@ class detallesdeuda extends datos
 	{
 		$this->con = $this->conecta();
 		if($this->con instanceof PDO) $this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->id_habitante = $_SESSION["id_habitante"];
+		$this->id_habitante = $_SESSION['id_habitante'];
 	}
 
 
@@ -21,7 +21,7 @@ class detallesdeuda extends datos
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$usuario = $_SESSION['id_habitante'];
+		$usuario = $this->id_habitante;
 		try {
 	 //        $resultado = $co->query("SELECT DISTINCT dp.*, a.num_letra_apartamento, a.torre, a.piso FROM deuda_pendiente dp JOIN apartamento a ON dp.id_apartamento = a.id_apartamento JOIN habitantes h ON a.propietario = h.id LEFT JOIN pago p ON dp.id = p.deuda WHERE a.propietario = '$usuario' AND (dp.id NOT IN (SELECT deuda from pago WHERE estado = 'confirmado' OR estado = 'pendiente')) ORDER BY dp.id DESC;");
 	 //        $respuesta = '';
@@ -69,7 +69,8 @@ class detallesdeuda extends datos
 						a.num_letra_apartamento,
 						a.torre,
 						dis.concepto,
-						dis.fecha, (SUM(DISTINCT IF(dd.tipo_monto = 1, dd.monto, (ROUND(dd.monto / @divisa_monto, 2)) ) ) ) AS monto,
+						dis.fecha, 
+						(SUM(DISTINCT IF(dd.tipo_monto = 1, dd.monto, (ROUND(dd.monto / @divisa_monto, 2)) ) ) ) AS monto,
 						NULL AS extra,
 						d.id_deuda,
 						p.estado,
@@ -103,7 +104,7 @@ class detallesdeuda extends datos
 	PUBLIC function historialpagos()
 	{
 		
-		$usuario = $_SESSION['id_habitante'];
+		$usuario = $this->id_habitante;
 
 		try {
 			$this->validar_conexion($this->con);

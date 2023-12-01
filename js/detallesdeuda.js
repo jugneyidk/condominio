@@ -2,6 +2,8 @@ $(document).ready(function () {
   carga_deudas();
   //carga_historial();
   load_tipo_pago_comun();
+
+  console.log("descomentar esta linea");//delete_tipo_pago_comun(1,4);
   $("#registrarpago").on("hide.bs.modal", function () {
     setTimeout(limpiar_modal, 300);
   });
@@ -505,4 +507,5 @@ function borrar() {
  // $("form input").val("");
  $("form select").val("");
  limpiarvalidacion();
+ limpiar_tipo_pago_comun();
 }

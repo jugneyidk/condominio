@@ -22,14 +22,14 @@
 	<div class="row">
 		<div class="col-12 col-md-5">
 			<div class="row">
-				<div class="col">
+				<div class="col col-6">
 					<label for="tipo_pago_comun-fecha">Fecha:</label>
 					<input type="date" class="form-control" id="tipo_pago_comun-fecha" data-span="invalid-span-tipo_pago_comun-fecha">
 					<span id="invalid-span-tipo_pago_comun-fecha" class="invalid-span text-danger"></span>
 				</div>
-				<div class="col">
+				<div class="col d-none">
 					<label for="tipo_pago_comun-hora" style="opacity: 0" class="no-select">l</label>
-					<input type="time" class="form-control" id="tipo_pago_comun-hora" data-span="invalid-span-tipo_pago_comun-hora">
+					<input value="00:00" type="time" class="form-control" id="tipo_pago_comun-hora" data-span="invalid-span-tipo_pago_comun-hora">
 					<span id="invalid-span-tipo_pago_comun-hora" class="invalid-span text-danger"></span>
 				</div>
 			</div>

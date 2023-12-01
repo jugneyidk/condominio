@@ -42,6 +42,7 @@ if(isset($_POST["control"])){
 			$dolar = preg_replace("/,/", ".", $dolar);
 			$dolar = number_format(($dolar),2);
 		}
+
 		
 		if(isset($dolar) and ($con instanceof PDO) and preg_match("/^[0-9]+[.][0-9]{2}$/", $dolar)){
 			try {
@@ -68,15 +69,18 @@ if(isset($_POST["control"])){
 					    	$consulta->execute([$dolar]);  	
 
 					    	echo json_encode(["resultado" => "actualizar" ,"mensaje" => ["fecha" => $fecha_actual->format("Y-m-d H:i:s"), "monto" => $dolar]]);
-
 					    }
+					    else {echo "no actualizado. 001";}//cuando el dolar es de el mismo dia y no ha cambiado
 					} else if ($fecha_old < $fecha_actual) {
 
 					    $consulta = $con->prepare("INSERT INTO tipo_cambio_divisa (monto) VALUES (?);");
 					    $consulta->execute([$dolar]);
 
-					    echo json_encode(["resultado" => "actualizar" ,"mensaje" => ["fecha" => $fecha_actual->format("Y-m-d H:i:s"), "monto" => $dolar]]);
+					    echo json_encode(["resultado" => "actualizar (de fechas diferentes)" ,"mensaje" => ["fecha" => $fecha_actual->format("Y-m-d H:i:s"), "monto" => $dolar]]);
 
+					}
+					else{
+						echo "no actualizado. 002";//XD
 					}
 					
 					$con->commit();
@@ -92,6 +96,9 @@ if(isset($_POST["control"])){
 				echo $r["mensaje"];
 			}
 			
+		}
+		else{
+			echo "No se pudo optener el monto del bcv";
 		}
 
 }
