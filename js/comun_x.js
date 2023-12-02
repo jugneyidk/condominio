@@ -461,8 +461,9 @@ function crearElem(type,attr='',content='',separador = ',')
 			{
 				for(var i=0;i<attr.length;i++)
 				{
-					attr[i].replace(/(?:^\s*)|(?:\s*$)/g, "");
-					attr[(i+1)].replace(/(?:^\s*)|(?:\s*$)/g, "");
+					attr[i] = attr[i].replace(/(?:^\s*)|(?:\s*$)/g, "");
+
+					attr[(i+1)] = attr[(i+1)].replace(/(?:^\s*)|(?:\s*$)/g, "");
 					elem.setAttribute(attr[i],attr[(i+1)]);
 					i++;
 				}

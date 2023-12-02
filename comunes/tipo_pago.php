@@ -1,4 +1,30 @@
-<style>.uppercase{text-transform: uppercase;}</style>
+<style>
+	.uppercase{text-transform: uppercase;}
+	#tipo_pago_comun_resumen_table th:nth-child(2),
+	#tipo_pago_comun_resumen_table td:nth-child(2){
+		padding-right: 7%;
+	}
+</style>
+<div id="tipo_pago_comun_extra_superior" class="d-none">
+	<div class="table-responsive">
+	  <table class="table table-sm table-striped" id="tipo_pago_comun_resumen_table">
+		<thead>
+		  <tr>
+		  	<th scope="col" class="text-info text-center">Concepto</th>
+		  	<th scope="col" class="text-info text-right text-nowrap">Monto</th>
+		  </tr>
+		</thead>
+		<tbody id="tipo_pago_comun_resumen_tbody">
+			<!-- <tr>
+				<td>hola como estas posadofajsdflas al skdjña lsdkfj añsld kjañsld kfjañsdlk fjasdl kjasldk fjañsldk jañsldk jñlkdjf</td>
+				<td class="text-right text-nowrap align-middle">250.00 $</td>
+				<td class="text-right text-nowrap align-middle">250.00 Bs</td>
+			</tr> -->
+		</tbody>
+	  </table>
+	</div>
+	<hr>
+</div>
 <div id="formulario_tipo_pago_comun">
 	<input type="hidden" id="id_tipo_pago_comun">
 	<input type="hidden" id="id_pago_comun">
@@ -130,6 +156,8 @@
 	</div>
 	<!-- <button type="button" onclick="objeto_tipo_pago_comun()">get pago</button> -->
 </div>
+<div id="tipo_pago_comun_extra_inferior" class="d-none"></div>
+
 
 
 

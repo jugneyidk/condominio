@@ -24,13 +24,12 @@
             <table class="table table-striped table-hover" id="tabladeudas">
               <thead>
                 <tr>
-                  <th class="d-none"></th>
                   <th scope="col" class="text-info">Apto</th>
-                  <th scope="col" class="text-info">Torre</th>
-                  <th scope="col" class="text-info">Piso</th>
-                  <th scope="col" class="text-info">Fecha Tope</th>
-                  <th scope="col" class="text-info">Total</th>
-                  <th scope="col" class="text-info">Acción</th>
+                  <th scope="col" class="text-info d-none d-md-table-cell">Torre</th>
+                  <th scope="col" class="text-info d-none d-md-table-cell">Concepto</th>
+                  <th scope="col" class="text-info">Fecha</th>
+                  <th scope="col" class="text-info">Deuda</th>
+                  <th scope="col" class="text-info"></th>
                 </tr>
               </thead>
               <tbody id="listadodeudas">
@@ -45,13 +44,12 @@
             <table class="table table-striped table-hover" id="tablamorosos">
               <thead>
                 <tr>
-                  <th class="d-none"></th>
                   <th scope="col" class="text-info">Apto</th>
-                  <th scope="col" class="text-info">Torre</th>
-                  <th scope="col" class="text-info">Piso</th>
-                  <th scope="col" class="text-info">Fecha Tope</th>
-                  <th scope="col" class="text-info">Total</th>
-                  <th scope="col" class="text-info">Acción</th>
+                  <th scope="col" class="text-info d-none d-md-table-cell">Torre</th>
+                  <th scope="col" class="text-info d-none d-md-table-cell">Concepto</th>
+                  <th scope="col" class="text-info">Fecha</th>
+                  <th scope="col" class="text-info">Deuda</th>
+                  <th scope="col" class="text-info"></th>
                 </tr>
               </thead>
               <tbody id="listadomorosos">
@@ -62,62 +60,41 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" tabindex="-100" role="dialog" id="registrarpago">
-    <div class="modal-dialog modal-lg" role="document">
+
+  <div class="modal fade" tabindex="-1" role="dialog" id="registrarpago">
+    <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header text-light bg-info">
-          <h5 class="modal-title">Registrar pago</h5>
+          <h5 class="modal-title">Registrar Pago</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <br>
-        <form id="f" method="post" autocomplete="off">
-          <input type="text" name="id_deuda" id="id_deuda" class="d-none">
-          <div class="container">
-            <div class="row mb-3">
-              <div class="col">
-                <label for="referencia">Referencia:</label>
-                <input type="text" name="referencia" id="referencia" class="form-control">
-                <span id="sreferencia" class="text-danger"></span>
-              </div>
-              <div class="col">
-                <label for="fecha">Fecha:</label>
-                <input type="date" name="fecha" id="fecha" class="form-control" style="-webkit-appearance: none;-moz-appearance: none;">
-                <span id="sfecha" class="text-danger"></span>
-              </div>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <strong id="monto_para_calcular"></strong>
             </div>
-            <div class="row mb-3">
-              <div class="col-md-5">
-                <label for="monto">Monto:</label>
-                <input type="text" name="monto" id="monto" class="form-control" readonly>
-                <span id="smonto" class="text-danger"></span>
-              </div>
-              <div class="col mt-3 mt-md-0">
-                <label for="tipo_pago">Tipo de pago:</label>
-                <select name="tipo_pago" class="form-control" id="tipo_pago">
-                  <option value="-" selected disabled>-</option>
-                  <option value="Efectivo">Efectivo</option>
-                  <option value="Pago Movil">Pago Movil</option>
-                  <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                  <option value="Zelle">Zelle</option>
-                </select>
-                <span id="stipo_pago" class="text-danger"></span>
-              </div>
-
-            </div>
-
           </div>
-        </form>
+          <form id="f" method="POST" autocomplete="off" onsubmit="return false;">
+            <input type="hidden" id="id_deuda_tosend" name="id_deuda_tosend" class="d-none">
+              <?php require_once("comunes/tipo_pago.php"); ?>
+          </form>
+        </div>
         <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-success" id="registrar" onclick="registrar_pago()">Registrar
-            Pago</button>
+            <button type="button" class="btn btn-success" id="registrar" onclick="registrar_pago()">Registrar Pago</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
   </div>
+
+
+
+
+  <script src="js/tipo_pago_comun.js"></script>
   <script src="js/carga.js"></script>
+  <script src="js/comun_x.js"></script>
   <script src="js/deudas.js"></script>
   <?php require_once('comunes/carga.php'); ?>
   <?php require_once('comunes/modal.php'); ?>

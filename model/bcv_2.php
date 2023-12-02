@@ -66,7 +66,11 @@ if(isset($_POST["control"])){
 					    // mismo día diferente monto
 					    if($dolar != $consulta["monto"]){
 					    	$consulta = $this->con->prepare("INSERT INTO tipo_cambio_divisa (monto) VALUES (?);");
-					    	$consulta->execute([$dolar]);  	
+					    	$consulta->execute([$dolar]);
+
+					    	$bitacora = new Bitacora();
+					    	$bitacora->b_accion_text("Registro nuevo monto BCV ($dolar)1");
+					    	$bitacora->set_c(null);
 
 					    	echo json_encode(["resultado" => "actualizar" ,"mensaje" => ["fecha" => $fecha_actual->format("Y-m-d H:i:s"), "monto" => $dolar]]);
 					    }
@@ -75,6 +79,9 @@ if(isset($_POST["control"])){
 
 					    $consulta = $con->prepare("INSERT INTO tipo_cambio_divisa (monto) VALUES (?);");
 					    $consulta->execute([$dolar]);
+					    $bitacora = new Bitacora();
+					    $bitacora->b_accion_text("Registro nuevo monto BCV ($dolar)2");
+					    $bitacora->set_c(null);
 
 					    echo json_encode(["resultado" => "actualizar (de fechas diferentes)" ,"mensaje" => ["fecha" => $fecha_actual->format("Y-m-d H:i:s"), "monto" => $dolar]]);
 

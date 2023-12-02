@@ -11,17 +11,81 @@ tipo_pago_array_global['4'] = "divisa";
 
 let contador_cantidad_divisa = 0;
 
-
-
-function load_tipo_pago_comun(){
+function tipo_pago_comun_update_divisa(){
 	load_bcv(true,false);
 	Datos_divisa = variable_divisa_global || {monto:35.27,fecha: "2000-12-03 10:30"};
 	if(Datos_divisa.monto && Datos_divisa.fecha){
-		document.getElementById('tipo_cambio_divisa_monto_to_show').parentNode.parentNode.classList.remove("d-none");
-		console.log(document.getElementById('tipo_cambio_divisa_monto_to_show'));
-		document.getElementById('tipo_cambio_divisa_monto_to_show').innerHTML="BCV : $ "+sepMiles(Datos_divisa.monto);
-		document.getElementById('tipo_cambio_divisa_fecha_to_show').innerHTML=Datos_divisa.fecha;
+		// document.getElementById('tipo_cambio_divisa_monto_to_show').parentNode.parentNode.classList.remove("d-none");
+		// document.getElementById('tipo_cambio_divisa_monto_to_show').innerHTML="BCV : $ "+sepMiles(Datos_divisa.monto);
+		// document.getElementById('tipo_cambio_divisa_fecha_to_show').innerHTML=Datos_divisa.fecha;
+		document.getElementById('monto_para_calcular').classList.add("text-info");
+		document.getElementById('monto_para_calcular').innerHTML="BCV : "+sepMiles(Datos_divisa.monto)+" Bs ( "+Datos_divisa.fecha.replace(/ [0-9][0-9].[0-9][0-9].[0-9][0-9]$/, "")+" )";
+
+
 	}
+}
+
+function tipo_pago_comun_resumen_load(list){
+	if(list !== false){
+		document.getElementById('tipo_pago_comun_extra_superior').classList.remove("d-none");
+		if ($.fn.DataTable.isDataTable("#tipo_pago_comun_resumen_table")) {
+			$("#tipo_pago_comun_resumen_table").DataTable().destroy();
+		}
+		
+		$("#tipo_pago_comun_resumen_tbody").html("");
+		
+		if (!$.fn.DataTable.isDataTable("#tipo_pago_comun_resumen_table")) {
+			$("#tipo_pago_comun_resumen_table").DataTable({
+				language: {
+					lengthMenu: "Mostrar _MENU_ por página",
+					zeroRecords: "No se encontraron registros",
+					info: "Mostrando página _PAGE_ de _PAGES_",
+					infoEmpty: "No hay registros disponibles",
+					infoFiltered: "(filtrado de _MAX_ registros totales)",
+					search: "Buscar:",
+					paginate: {
+						first: "Primera",
+						last: "Última",
+						next: "Siguiente",
+						previous: "Anterior",
+					},
+				},
+				data:list,
+				columns:[
+					{data:"concepto", "width": "60%"},
+					{data:"monto", "width": "40%"},
+					],
+				createdRow: function(row,data){
+					row.querySelector("td:nth-child(2)").className = "text-right text-nowrap align-middle";
+					row.querySelector("td:nth-child(2)").innerText = sepMiles(data.monto.toString())+((data.tipo_monto == 0)?" Bs":" $");
+					if(data.concepto == "Total"){
+						row.querySelector("td:nth-child(1)").className = "text-info font-weight-bold text-right text-nowrap align-middle";
+						row.querySelector("td:nth-child(2)").className = "font-weight-bold text-right text-nowrap align-middle";
+					}
+				},
+				autoWidth: false,
+				searching:false,
+				info: false,
+				ordering: false,
+				paging: false
+				//order: [[1, "asc"]],
+				
+			});
+		}
+
+
+	}
+	else{
+		document.getElementById('tipo_pago_comun_extra_superior').classList.add("d-none");
+		document.getElementById('tipo_pago_comun_resumen_tbody').innerHTML = "";
+	}
+}
+
+
+
+function load_tipo_pago_comun(){
+	tipo_pago_comun_update_divisa();
+
 	// comunes -------------------------------------
 		// monto
 		

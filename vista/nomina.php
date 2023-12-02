@@ -44,7 +44,13 @@
 										<hr><hr>
 										<div class="container">
 											<h3>Datos de pago</h3>
+
 											<div class="container">
+												<div class="row">
+													<div class="col">
+														<strong id="monto_para_calcular"></strong>
+													</div>
+												</div>
 												<div class="row mb-3">
 													<div class="col-12 col-md-6">
 														<label for="descripcion">Descripción:</label>
@@ -217,6 +223,7 @@
 		</div>
 
 	</div>
+
 
 	<!-- modal-->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalEmpleados">

@@ -40,7 +40,7 @@ function load_bcv(control = false,async_control = true){// control false para qu
 				}
 				else{
 					console.log(variable_divisa_global);
-					console.log(xhr.responseText);
+					console.log(respuesta);
 				}
 			}
 			// ,complete: function(xhr){
