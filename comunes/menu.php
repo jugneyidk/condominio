@@ -68,8 +68,8 @@ if (isset($_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'])) {
 								<a class="dropdown-item" href="?p=avisos" id="" data-toggle="">Avisos</a>
 								<a class="dropdown-item" href="?p=bitacora" >Bitácora</a>
 								<a class="dropdown-item" href="?p=estadistica">Estadística</a>
-								<a class="dropdown-item" href="?p=foro" id="" data-toggle="">Foro</a>
-								<a class="dropdown-item" href="?p=movimiento">Movimientos/Balance</a>
+								<a class="dropdown-item" href="?p=foro-index" id="" data-toggle="">Foro</a>
+								<!-- <a class="dropdown-item" href="?p=movimiento">Movimientos/Balance</a> -->
 							</div>
 						</li>
 					

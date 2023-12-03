@@ -54,6 +54,7 @@ class principal extends datos
 			$datos['resultado'] = 'error';
 			$datos['mensaje'] =  $e->getMessage();
 		}
+		finally{$co = null;}
 		return $datos;
 	}
 	PUBLIC function ultimos_pagos()
@@ -64,23 +65,23 @@ class principal extends datos
 		try {
 			//$resultado = $co->query("SELECT p.id_pago, a.num_letra_apartamento, a.torre, p.fecha_entrega, p.total, p.estado, p.tipo_pago FROM pago p INNER JOIN deuda_pendiente dp ON p.deuda = dp.id INNER JOIN apartamento a ON dp.id_apartamento = a.id_apartamento ORDER BY p.id_pago DESC LIMIT 5;");
 			$resultado = $co->query("SELECT
-p.id_pago,
-a.num_letra_apartamento,
-a.torre,
-ddp.fecha,
-p.total_pago as total,
+								p.id_pago,
+								a.num_letra_apartamento,
+								a.torre,
+								ddp.fecha,
+								p.total_pago as total,
 
-IF(p.estado = 0,'Pendiente',IF(p.estado = 1,'Declinado',IF(p.estado = 2,'Confirmado',NULL))) AS estado,
-tp.tipo_pago
+								IF(p.estado = 0,'Pendiente',IF(p.estado = 1,'Declinado',IF(p.estado = 2,'Confirmado',NULL))) AS estado,
+								tp.tipo_pago
 
 
-FROM deudas as d
-JOIN apartamento as a on a.id_apartamento = d.id_apartamento
-JOIN deuda_pagos as dp on dp.id_deuda = d.id_deuda
-JOIN pagos as p on p.id_pago = dp.id_pago
-LEFT JOIN (SELECT MAX(ddp.fecha_generada) as fecha,ddp.id_pago,ddp.tipo_pago FROM detalles_pagos as ddp WHERE 1 GROUP BY ddp.id_pago) AS ddp on ddp.id_pago = p.id_pago
-LEFT JOIN tipo_pago as tp on tp.id_tipo_pago = ddp.tipo_pago
-WHERE 1 ORDER BY ddp.fecha DESC LIMIT 10");
+								FROM deudas as d
+								JOIN apartamento as a on a.id_apartamento = d.id_apartamento
+								JOIN deuda_pagos as dp on dp.id_deuda = d.id_deuda
+								JOIN pagos as p on p.id_pago = dp.id_pago
+								LEFT JOIN (SELECT MAX(ddp.fecha_generada) as fecha,ddp.id_pago,ddp.tipo_pago FROM detalles_pagos as ddp WHERE 1 GROUP BY ddp.id_pago) AS ddp on ddp.id_pago = p.id_pago
+								LEFT JOIN tipo_pago as tp on tp.id_tipo_pago = ddp.tipo_pago
+								WHERE 1 ORDER BY ddp.fecha DESC LIMIT 10");
 			$respuesta = '';
 			if ($resultado) {
 				foreach ($resultado as $r) {
@@ -117,6 +118,47 @@ WHERE 1 ORDER BY ddp.fecha DESC LIMIT 10");
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
+		}
+		finally{$co = null;}
+
+		return $r;
+	}
+	PUBLIC function mostrar_avisos(){
+
+		try {
+			$co = $this->conecta();
+
+			$this->validar_conexion($co);
+			$co->beginTransaction();
+			$consulta = $co->query("SELECT * FROM `avisos`
+			WHERE DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(desde, '%Y-%m-%d') AND DATE_FORMAT(hasta, '%Y-%m-%d');")->fetchall(PDO::FETCH_ASSOC);
+			
+			
+			$r['resultado'] = 'avisos';
+			$r['mensaje'] =  $consulta;
+			//$co->commit();
+		
+		} catch (Validaciones $e){
+			if($co instanceof PDO){
+				if($co->inTransaction()){
+					$co->rollBack();
+				}
+			}
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage();
+			$r['console'] =  $e->getMessage().": Code : ".$e->getLine();
+		} catch (Exception $e) {
+			if($co instanceof PDO){
+				if($co->inTransaction()){
+					$co->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		finally{
+			$co = null;
 		}
 		return $r;
 	}

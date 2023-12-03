@@ -33,6 +33,63 @@
         </div>
       </div>
       <hr class="my-3">
+
+      <?php if(isset($avisos) and $avisos["resultado"] == "avisos"){ ?>
+
+      <style type="text/css">
+        .aviso-titulo{
+          text-decoration: underline;
+        }
+      </style>
+      <p class="h3 mb-2 text-center">Avisos</p>
+      <div class="container-fluid my-3" id="avisos-container">
+        <?php foreach ($avisos["mensaje"] as $elem) {?>
+        <div class="row justify-content-center">
+          <div class="col col-md-8">
+            <div class="row">
+              <div class="col">
+                <div class="h4 text-info text-capitalize aviso-titulo"><strong><?= $elem["titulo"]; ?></strong></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col text-justify aviso-content">
+                <?= $elem["descripcion"]; ?>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <?php } ?>
+        <div class="row justify-content-center d-none">
+          <div class="col col-md-8">
+            <div class="row">
+              <div class="col">
+                <div class="h4 text-info text-capitalize aviso-titulo"><strong>titulo</strong></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col text-justify">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <?php }else if(isset($avisos)){
+        $avisos = json_encode($avisos);
+        echo "<script>
+          console.error({$avisos})
+        </script>";
+      } ?>
+
+      
+
       <div class="row mb-3 justify-content-center">
         <div class="col col-md-8">
           <div class="accordion" id="accordionFaq">

@@ -17,6 +17,10 @@ if (is_file("vista/" . $p . ".php")) {
     }
     exit;
   }
+  if (!isset($_SESSION['id_usuario']) and !isset($_SESSION["id_habitante"])) {
+    $avisos = $o->mostrar_avisos();
+  }
+
   require_once("vista/" . $p . ".php");
 } else {
   require_once("vista/404.php");
