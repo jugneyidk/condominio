@@ -223,7 +223,7 @@ function enviaAjax2(datos) {
 				  row.querySelector("td:last-child").innerHTML="<button class='btn btn-success' style='font-size: 13px;' onclick='mostrar_registrar_pago(this)'>Pagar</button>";
 				}
 				else{
-				  row.querySelector("td:last-child").innerHTML="<u class=\"no-select\" style=\"font-size: .6rem;\">por confirmar</u><br><button class='btn btn-danger' style='font-size: 13px;' onclick='eliminar_pagos(this)'>eliminar</button>";
+				  row.querySelector("td:last-child").innerHTML="<u class=\"no-select\" style=\"font-size: .6rem;\">Pendiente</u><br><button class='btn btn-danger' style='font-size: 13px;' onclick='eliminar_pagos(this)'>eliminar</button>";
 
 				}
 				

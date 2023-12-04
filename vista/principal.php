@@ -145,8 +145,10 @@
   <?php else :
     require_once('vista/dashboard.php');
   endif; ?>
-  <?php require_once('comunes/carga.php'); ?>
+<?php require_once('comunes/carga.php'); ?>
+  <?php if(!isset($_SESSION["id_usuario"])) : ?>
   <script src="js/unslider.js"></script>
+<?php endif; ?>
   <?php require_once('comunes/foot.php'); ?>
 </body>
 

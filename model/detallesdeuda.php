@@ -63,7 +63,7 @@ class detallesdeuda extends datos
 							(
 							SELECT p.*,dp.id_deuda from pagos as p JOIN deuda_pagos as dp on dp.id_pago = p.id_pago WHERE 1
 							)AS p on p.id_deuda = d.id_deuda
-							WHERE (a.propietario = 1 OR a.inquilino = 1) AND 
+							WHERE (a.propietario = :habitante OR a.inquilino = :habitante) AND 
 							(p.estado = 0 OR p.estado IS NULL OR p.estado = 1) 
 							GROUP BY 
 							a.num_letra_apartamento,
@@ -127,8 +127,14 @@ class detallesdeuda extends datos
 			$r['mensaje'] = $respuesta;
 			
 		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine()." el habitante (".$this->id_habitante.")";
 		}
 		finally{$co=null;}
 		return $r;
@@ -423,12 +429,21 @@ class detallesdeuda extends datos
 		try {
 			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
-			$consulta = $this->con->prepare("SELECT * FROM deuda_pagos WHERE id_deuda = ? AND id_pago = ?");
+			$consulta = $this->con->prepare("SELECT dp.*,p.estado FROM deuda_pagos as dp JOIN pagos as p on p.id_pago = dp.id_pago WHERE dp.id_deuda = ? AND dp.id_pago = ?");
 			$consulta->execute([$this->id, $this->id_pago]);
 
 			if(!($consulta = $consulta->fetch(PDO::FETCH_ASSOC))){
-				throw new Validaciones("El pago seleccionado no existe.\n Intente mas tarde", 1);
+				throw new Validaciones("El pago seleccionado no existe.", 1);
 			}
+
+			if($consulta["estado"] == '1' OR $consulta["estado"] == '2' ){
+				$error = ($consulta["estado"] == '1')?"declinado":"confirmado";
+				throw new Validaciones("El pago ya ha sido $error y no puede eliminarse", 1);
+			}
+
+
+
+
 			$id_pago = $consulta["id_pago"];
 
 			$consulta = $this->con->prepare("DELETE FROM deuda_pagos WHERE id_deuda = ? AND id_pago = ?");
