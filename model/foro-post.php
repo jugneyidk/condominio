@@ -37,11 +37,11 @@ class ForoPost extends datos
 		try {
 			$postId = $this->post_id;
 			$aptoId = $this->apto_id;
-			$respuesta = $this->con->query("SELECT id,titulo,descripcion,fecha,create_by,voto FROM `foro` LEFT JOIN votos ON id_foro = '$postId' AND id_apartamento = '$aptoId' WHERE id = '$postId';")->fetch(PDO::FETCH_ASSOC);
-			$numero_votos = $this->con->query("SELECT voto FROM `foro` LEFT JOIN votos ON id_foro = '$postId' WHERE id = '$postId';")->fetchColumn();
+			$respuesta = $this->con->query("SELECT foro.id,titulo,descripcion,fecha,create_by,h.nombres,h.apellidos,voto FROM `foro` LEFT JOIN votos ON id_foro = '$postId' AND id_apartamento = '$aptoId' INNER JOIN habitantes as h ON h.id = create_by WHERE foro.id = '$postId';")->fetch(PDO::FETCH_ASSOC);
+			$numero_votos = $this->con->query("SELECT voto FROM `foro` INNER JOIN votos ON id_foro = '$postId' WHERE id = '$postId';")->fetchAll(PDO::FETCH_ASSOC);
 			$r['resultado'] = 'listaPost';
 			$r['mensaje'] =  $respuesta;
-			$r['numero_votos'] =  $numero_votos;
+			$r['numero_votos'] =  count($numero_votos);
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
@@ -68,7 +68,7 @@ class ForoPost extends datos
 	{
 		try {
 			$postId = $this->post_id;
-			$respuesta = $this->con->query("SELECT * FROM `comentarios` WHERE id_post = '$postId' ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+			$respuesta = $this->con->query("SELECT *,h.nombres,h.apellidos FROM `comentarios` INNER JOIN `habitantes` as h ON create_by = h.id WHERE id_post = '$postId' ORDER BY comentarios.id DESC")->fetchAll(PDO::FETCH_ASSOC);
 			$r['resultado'] = 'listaComentarios';
 			$r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
@@ -83,7 +83,7 @@ class ForoPost extends datos
 		try {
 			if (!$this->existeVoto()) {
 				$consulta = $this->con->prepare("INSERT INTO votos (id_foro, id_apartamento, voto) VALUES(?,?,?)");
-				$consulta->execute([$this->post_id, $this->apto_id, "1"]);
+				$consulta->execute([$this->post_id, $this->apto_id, $this->voto]);
 			} else {
 				$consulta = $this->con->prepare("UPDATE `votos` SET `voto`= ?  WHERE `id_foro` = ? AND `id_apartamento` = ?");
 				$consulta->execute([$this->voto, $this->post_id, $this->apto_id]);

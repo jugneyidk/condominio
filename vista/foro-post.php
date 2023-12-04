@@ -17,7 +17,7 @@
         <div class="container py-3">
             <div class="row mb-3">
                 <div class="col">
-                    <p id="fecha-post"></p>
+                    <p id="fecha-post" class="text-muted"></p>
                     <p id="contenido-post"></p>
                 </div>
             </div>
@@ -116,9 +116,9 @@
                         $("#titulo-post").html(lee.mensaje.titulo);
                         $("#contenido-post").html(lee.mensaje.descripcion);
                         $("#fecha-post").html(lee.mensaje.fecha);
-                        $("#creador-post").html(lee.mensaje.create_by);
+                        $("#creador-post").html(lee.mensaje.nombres+" "+lee.mensaje.apellidos);
                         if (lee.numero_votos) {
-                            $("#numero-votos").html(lee.numero_votos.length);                            
+                            $("#numero-votos").html(lee.numero_votos);                            
                         } else{
                             $("#numero-votos").html("0");
                         }
@@ -157,7 +157,7 @@
                             comentarios += '<div class="card">';
                             comentarios += '<div class="card-body">';
                             const fecha = new Date(comentario.fecha);
-                            comentarios += '<p class="card-title h5">' + comentario.create_by + '<small class="ml-2 mb-2 text-muted">' + fecha.toLocaleDateString("es-VE") + '</small></p>';
+                            comentarios += '<p class="card-title h5">' + comentario.nombres + " " + comentario.apellidos + '<small class="ml-2 mb-2 text-muted">' + fecha.toLocaleDateString("es-VE") + '</small></p>';
                             comentarios += comentario.comentario;
                             comentarios += '<a class="float-right" href="#">Responder↲</a>';
                             comentarios += '</div>';
