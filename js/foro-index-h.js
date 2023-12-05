@@ -28,7 +28,7 @@ function loadForos() {
 					forosPosts += '<p class="card-text">' + post.descripcion + '</p>';
 				}
 				forosPosts += '<div class="mt-auto">';
-				forosPosts += '<a class="btn btn-light float-right" href="?p=foro-post&postId=' + post.id + '" role="button">Ver más &raquo;</a>';
+				forosPosts += '<a class="btn btn-light float-right" href="?p=foro-post-h&postId=' + post.id + '" role="button">Ver más &raquo;</a>';
 				forosPosts += '</div>';
 				forosPosts += '</div>';
 				forosPosts += '</div>';
@@ -41,4 +41,8 @@ function loadForos() {
 			muestraMensaje("ERROR", lee.mensaje, "error");
 		}
 	});
+}
+
+function select_foro(id){
+
 }

@@ -1,6 +1,7 @@
 <?php require_once('comunes/head.php'); ?>
 <link rel="stylesheet" type="text/css" href="css/consulta.css">
 <body class="d-flex flex-column justify-content-center">
+	<?php require_once("comunes/menu-habitante.php"); ?>
   <?php require_once('comunes/carga.php'); ?>
   <section class="body">
 	<div class="container">

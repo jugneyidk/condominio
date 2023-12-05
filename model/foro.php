@@ -104,41 +104,52 @@ class Foro extends datos
 		}
 		return $r;
 	}
-
 	PUBLIC function listaForo(){
 		try {
-			$respuesta = $this->con->query("SELECT * FROM `foro` ORDER BY fecha")->fetchall();
-
-			
-
-			$dom = new DOMDocument();
-			$cont = 1;
-			foreach ($respuesta as $elem) {
-
-
-				$tr = $dom->createElement("tr");
-				$tr->appendChild($dom->createElement("td",str_pad($cont, 2, "0", STR_PAD_LEFT)));
-
-				$td = $dom->createElement("td",$elem["id"]);
-				$td->setAttribute("class","d-none");
-				$tr->appendChild($td);
-				
-				$tr->appendChild($dom->createElement("td",$elem["titulo"]));
-				$tr->appendChild($dom->createElement("td",$elem["descripcion"]));
-				$tr->appendChild($dom->createElement("td",$elem["fecha"]));
-
-				$dom->appendChild($tr);
-				$cont++;
-			}
+			$respuesta = $this->con->query("SELECT * FROM `foro` ORDER BY fecha DESC")->fetchall(PDO::FETCH_ASSOC);
 			$r['resultado'] = 'listaForo';
-			$r['mensaje'] =  $dom->saveHTML();
-			// $r['mensaje'] =  "hola";
+			$r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
 		}
 		return $r;
 	}
+
+	// PUBLIC function listaForo(){
+	// 	try {
+	// 		$respuesta = $this->con->query("SELECT * FROM `foro` ORDER BY fecha")->fetchall();
+
+			
+
+	// 		$dom = new DOMDocument();
+	// 		$cont = 1;
+	// 		foreach ($respuesta as $elem) {
+
+
+	// 			$tr = $dom->createElement("tr");
+	// 			$tr->appendChild($dom->createElement("td",str_pad($cont, 2, "0", STR_PAD_LEFT)));
+
+	// 			$td = $dom->createElement("td",$elem["id"]);
+	// 			$td->setAttribute("class","d-none");
+	// 			$tr->appendChild($td);
+				
+	// 			$tr->appendChild($dom->createElement("td",$elem["titulo"]));
+	// 			$tr->appendChild($dom->createElement("td",$elem["descripcion"]));
+	// 			$tr->appendChild($dom->createElement("td",$elem["fecha"]));
+
+	// 			$dom->appendChild($tr);
+	// 			$cont++;
+	// 		}
+	// 		$r['resultado'] = 'listaForo';
+	// 		$r['mensaje'] =  $dom->saveHTML();
+	// 		// $r['mensaje'] =  "hola";
+	// 	} catch (Exception $e) {
+	// 		$r['resultado'] = 'error';
+	// 		$r['mensaje'] =  $e->getMessage();
+	// 	}
+	// 	return $r;
+	// }
 
 
 

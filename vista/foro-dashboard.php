@@ -7,8 +7,8 @@
         </div>
     </div>
     <?php if(isset($_SESSION["id_habitante"])){?>
-    <div class="container text-right">
-        <a class="btn btn-secondary text-light" href="?p=foroAction">Crear Foro</a>
+    <div class="container text-right mb-4">
+        <a class="btn btn-secondary text-light" onclick="alert('cambiar direccion');return false;" href="?p=foroAction">Nuevo Foro</a>
     </div>
 <?php } ?>
     <div class="container">

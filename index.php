@@ -19,7 +19,9 @@ session_start();
     "principal",
     "login",
     "consulta",
-    "detallesdeuda"
+    "detallesdeuda",
+    "foro-index-h",
+    "foro-post-h"
   ];
   if(!isset($_SESSION['id_usuario']) and !in_array($p, $excepciones_p)){
     $p="login";

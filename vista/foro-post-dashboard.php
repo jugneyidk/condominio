@@ -1,16 +1,5 @@
-<?php require_once('comunes/head.php'); ?>
-
-<body class="bg-light">
-    <?php require_once("comunes/carga.php"); ?>
-    <?php require_once("comunes/modal.php"); ?>
-    <?php require_once('comunes/menu.php'); ?>
-    <?php require_once("vista/foro-post-dashboard.php"); ?>
-
-    <!-- PARA USUARIOS NORMALES -->
-
-
-    <!-- <main role="main" class="container-lg bg-white p-2 p-sm-4 p-md-5">
-        <a href="?p=foro-index" class="btn btn-secondary regresar_btn mb-4">
+<main role="main" class="container-lg bg-white p-2 p-sm-4 p-md-5">
+        <a href="?p=<?=($_GET["p"] == "foro-post-h")?"foro-index-h":"foro-index" ?>" class="btn btn-secondary regresar_btn mb-4">
             <span class="fa fa-chevron-left"></span><span class="ml-2">Regresar</span>
         </a>
         <div class="jumbotron">
@@ -55,10 +44,4 @@
             <div id="comentarios">
             </div>
         </div>
-    </main> -->
-    
-    <?php require_once('comunes/foot.php'); ?>
-    <script src="js/carga.js"></script>
-    <script src="js/comun_x.js"></script>
-    <script src="js/foro-post.js"></script>
-</body>
+    </main>
