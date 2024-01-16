@@ -9,7 +9,8 @@ if (is_file("vista/" . $p . ".php")) {
 		$accion = $_POST['accion'];
 		if ($accion == 'listaPost') {	
 			$o->set_post_id($postId);
-			$o->set_apto_id("2");
+			$o->set_habitante_id($_SESSION['id_habitante']);
+			//$o->set_habitante_id("2");
 			$respuesta = $o->listaPost();
 			echo json_encode($respuesta);
 		} else if ($accion == 'incluirComentario') {
@@ -25,9 +26,10 @@ if (is_file("vista/" . $p . ".php")) {
 			echo json_encode($respuesta);
 		} else if ($accion == 'cambiarVoto') {
 			$o->set_post_id($postId);
-			//$o->set_create_by($_SESSION["id_habitante"]);
-			$o->set_apto_id("2"); // //por ahora el creador es diego falta las sesiones de los habitantes
-			$o->set_voto($_POST['voto']);			
+			$o->set_habitante_id($_SESSION['id_habitante']);
+
+			//$o->set_apto_id("2"); // //por ahora el creador es diego falta las sesiones de los habitantes
+			$o->set_voto($_POST['voto']);		
 			$respuesta = $o->cambiar_voto_s();
 			echo json_encode($respuesta);
 		}

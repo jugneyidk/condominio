@@ -16,17 +16,17 @@ class Foro extends datos
 		$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
-	PUBLIC function chequearpermisos()
-	{
-		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
-		$modulo = $_GET['p'];
-		$co = $this->con;
-		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-		$guarda->execute();
-		$fila = array();
-		$fila = $guarda->fetch(PDO::FETCH_NUM);
-		return $fila;
-	} 
+	// PUBLIC function chequearpermisos()
+	// {
+	// 	$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
+	// 	$modulo = $_GET['p'];
+	// 	$co = $this->con;
+	// 	$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
+	// 	$guarda->execute();
+	// 	$fila = array();
+	// 	$fila = $guarda->fetch(PDO::FETCH_NUM);
+	// 	return $fila;
+	// } 
 
 
 	PUBLIC function incluir_s(){
@@ -48,8 +48,8 @@ class Foro extends datos
 			$consulta->execute([$this->titulo, $this->descripcion , $this->create_by]);
 			$r['resultado'] = 'incluir';
 			$r['mensaje'] =  'Registro Incluido';
-			$bitacora = new Bitacora();
-			$bitacora->b_incluir();
+			// $bitacora = new Bitacora();
+			//$bitacora->b_incluir();
 
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
@@ -70,8 +70,8 @@ class Foro extends datos
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] =  'Registro Modificado';
 
-			$bitacora = new Bitacora();
-			$bitacora->b_modificar();
+			// $bitacora = new Bitacora();
+			// $bitacora->b_modificar();
 
 
 		} catch (Exception $e) {
@@ -92,8 +92,8 @@ class Foro extends datos
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  'Registro Eliminado';
 				
-				$bitacora = new Bitacora();
-				$bitacora->b_eliminar();
+				// $bitacora = new Bitacora();
+				// $bitacora->b_eliminar();
 			} else {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El Registro no existe";
@@ -106,14 +106,23 @@ class Foro extends datos
 	}
 	PUBLIC function listaForo(){
 		try {
-			$respuesta = $this->con->query("SELECT * FROM `foro` ORDER BY fecha DESC")->fetchall(PDO::FETCH_ASSOC);
+			if(isset($this->create_by)){
+				$respuesta = $this->con->prepare("SELECT * FROM `foro` where create_by = ? ORDER BY fecha DESC;");
+				$respuesta->execute([$this->create_by]);
+			}
+			else{
+				$respuesta = $this->con->prepare("SELECT * FROM `foro` ORDER BY fecha DESC;");
+				$respuesta->execute();
+
+			}
 			$r['resultado'] = 'listaForo';
-			$r['mensaje'] =  $respuesta;
+			$r['mensaje'] =  $respuesta->fetchall(PDO::FETCH_ASSOC);
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
+			$r['mensaje'] =  $e->getMessage()." xxxx  ".$this->create_by;
 		}
 		return $r;
+
 	}
 
 	// PUBLIC function listaForo(){

@@ -2,10 +2,11 @@
 require_once("model/foro.php");
 if (is_file("vista/" . $p . ".php")) {
 	$o = new Foro();
-	$permisos = $o->chequearpermisos();
+	//$permisos = $o->chequearpermisos();
 	if (!empty($_POST)) {
 		$accion = $_POST['accion'];
 		if ($accion == 'listaForo') {
+			$o->set_create_by($_SESSION['id_habitante']);
 			$respuesta = $o->listaForo();
 			echo json_encode($respuesta);
 
@@ -14,7 +15,7 @@ if (is_file("vista/" . $p . ".php")) {
 			$o->set_descripcion($_POST["descripcion"]);
 
 
-			$o->set_create_by("2"); // //por ahora el creador es diego falta las sesiones de los habitantes
+			$o->set_create_by($_SESSION['id_habitante']);
 
 
 			$respuesta = $o->incluir_s();

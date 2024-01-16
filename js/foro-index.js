@@ -13,9 +13,15 @@ function loadForos() {
 			var forosPosts = '';
 			console.log(lee.mensaje);
 			lee.mensaje.forEach(post => {
-				forosPosts += '<div class="col-md-4 d-flex align-self-stretch mb-3">';
+				console.log(post);
+				forosPosts += '<div class="post-card col-md-4 d-flex align-self-stretch mb-3">';
 				forosPosts += '<div class="card text-white bg-primary w-100">';
-				forosPosts += '<div class="card-body d-flex flex-column">';
+				if(post.aprobado == 1 && post.visto == 0){
+					forosPosts += '<div class="aprobado position-relative card-body d-flex flex-column">';
+				}
+				else{
+					forosPosts += '<div class="position-relative card-body d-flex flex-column">';
+				}
 				forosPosts += '<small class="text-light">' + post.fecha + '</small>';
 				if (post.titulo.length > 75) {
 					forosPosts += '<h4 class="card-title">' + post.titulo.substring(0, 75) + '...</h4>';

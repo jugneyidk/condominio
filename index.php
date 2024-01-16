@@ -22,6 +22,7 @@ session_start();
     "detallesdeuda",
     "foro-index-h",
     "foro-post-h",
+    "foroAction",
     "ventana-pruevas",
     "reset-pass"
   ];

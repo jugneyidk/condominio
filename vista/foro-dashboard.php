@@ -8,9 +8,42 @@
     </div>
     <?php if(isset($_SESSION["id_habitante"])){?>
     <div class="container text-right mb-4">
-        <a class="btn btn-secondary text-light" onclick="alert('cambiar direccion');return false;" href="?p=foroAction">Nuevo Foro</a>
+        <a class="btn btn-secondary text-light"  href="?p=foroAction">Nuevo Foro</a>
     </div>
-<?php } ?>
+<?php }?>
+
+<style type="text/css">
+    .post-card .aprobado::before{
+        font: 1.5rem FontAwesome;
+        content: "\f12a";
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background-color: red;
+        height: 3rem;
+        width: 3rem;
+        border-radius: 100%;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1; 
+        animation-name: aprob;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-duration: .5s;   
+    }
+
+    @keyframes aprob{
+        from{
+            box-shadow: 0 0 0 0 red;
+        }
+        to{
+            box-shadow: 0 0 5px 5px red;
+        }
+    }
+</style>
     <div class="container">
         <div class="row d-flex align-items-stretch mb-4" id="postsContainer">
         </div>

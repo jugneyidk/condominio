@@ -13,7 +13,7 @@ function loadForos() {
 			var forosPosts = '';
 			console.log(lee.mensaje);
 			lee.mensaje.forEach(post => {
-				forosPosts += '<div class="col-md-4 d-flex align-self-stretch mb-3">';
+				forosPosts += '<div class="col-md-4 d-flex align-self-stretch mb-3" data-id="'+post.id+'">';
 				forosPosts += '<div class="card text-white bg-primary w-100">';
 				forosPosts += '<div class="card-body d-flex flex-column">';
 				forosPosts += '<small class="text-light">' + post.fecha + '</small>';

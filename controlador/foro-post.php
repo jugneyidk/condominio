@@ -12,28 +12,20 @@ if (is_file("vista/" . $p . ".php")) {
 		$accion = $_POST['accion'];
 		if ($accion == 'listaPost') {	
 			$o->set_post_id($postId);
-			$o->set_apto_id("2");
 			$respuesta = $o->listaPost();
-			echo json_encode($respuesta);
-		} else if ($accion == 'incluirComentario') {
-			$o->set_post_id($_GET['postId']);
-			$o->set_comentario($_POST["comentario"]);
-			$o->set_create_by("2"); // //por ahora el creador es diego falta las sesiones de los habitantes
-			$respuesta = $o->incluir_s();
 			echo json_encode($respuesta);
 		} else if ($accion == 'listaComentarios') {
 			$o->set_post_id($postId);
 			$respuesta = $o->listaComentarios();
 			echo json_encode($respuesta);
-		} else if ($accion == 'cambiarVoto') {
+		}
+		else if($accion = "cambiar_estado"){
 			$o->set_post_id($postId);
-			$o->set_apto_id("2"); // //por ahora el creador es diego falta las sesiones de los habitantes
-			$o->set_voto($_POST['voto']);			
-			$respuesta = $o->cambiar_voto_s();
-			echo json_encode($respuesta);
+			echo json_encode($o->cambiar_estados($_POST["control"], $_POST["value"]));
 		}
 		exit;
 	}
+	$usuario_normal_no_habitante = 1;
 	require_once("vista/" . $p . ".php");
 } else {
 	require_once("vista/404.php");

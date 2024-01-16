@@ -4,11 +4,26 @@
 <body class="bg-light">
 	<?php require_once("comunes/carga.php"); ?>
 	<?php require_once("comunes/modal.php"); ?>
-	<?php require_once('comunes/menu.php'); ?>
+    <?php require_once('comunes/menu-habitante.php'); ?>
+	<?//php require_once('comunes/menu.php'); ?>
 	<div class="container-lg bg-white p-2 p-sm-4 p-md-5 mb-5">
-		<?php require_once('comunes/cabecera_modulos.php'); ?>
+		<div class="h5 mb-4 mt-4 mt-md-0 row justify-content-around">
+		    <div class="col">
+		        <a href="?p=foro-index-h" class="btn btn-secondary regresar_btn">
+		            <span class="fa fa-chevron-left"></span><span class="ml-2">Regresar</span>
+		        </a>
+		    </div>
 
-		<?php require_once('comunes/cabecera_modulos.php'); ?>
+		    <div class="col d-flex justify-content-end">
+		        <button class="btn btn-warning" id="limpiar">
+		            <span class="ml-2">Limpiar</span><span class="fa fa-eraser ml-1"></span>
+		        </button>
+		    </div>
+		</div>
+
+
+
+
 		<div>
 			<h2 class="text-center h2 text-primary">Crear Foro</h2>
 			<hr />
@@ -61,7 +76,6 @@
 				</div>
 			</div>
 		</form>
-		
 	</div>
 
 
@@ -82,7 +96,6 @@
 								<th>Titulo</th>
 								<th>Descripción</th>
 								<th>Fecha</th>
-
 							</tr>
 						</thead>
 						<tbody id="listaForo">
@@ -103,7 +116,6 @@
 	<script src="js/comun_x.js"></script>
 	<script>
 		$(document).ready(function(){
-			document.getElementsByClassName('regresar_btn')[0].href="?p=foro";
 			borrar();
 			loadForos();
 
@@ -114,8 +126,8 @@
 			$("#titulo").on("change",function(e){
 				validarKeyUp(/^[0-9a-zA-Z\s:-?¿!¡/,.+\-()]{1,80}$/,$(this),"Solo se permiten letras, números y los caracteres (:-?¿!¡/,.+-), no puede estar el campo vació");
 			});
-			document.getElementById('titulo').maxLenth = 80;
-			document.getElementById('descripcion').maxLenth = 30000;
+			document.getElementById('titulo').maxLength = 80;
+			document.getElementById('descripcion').maxLength = 30000;
 			$("#incluir").on("click", function () {
 				if (validarForo()) {
 					$("#accion").val("incluir");
@@ -224,9 +236,10 @@
 			});
 
 			rowsEvent("listaForo",function(e){
-				$("#id").val($(e).find("td").eq(1).text());
-				$("#titulo").val($(e).find("td").eq(2).text());
-				$("#descripcion").val($(e).find("td").eq(3).text());
+
+				$("#id").val($(e).data("id"));
+				$("#titulo").val($(e).find("td").eq(1).text());
+				$("#descripcion").val($(e).find("td").eq(2).text());
 				$("#modalForo").modal("hide");
 				cambiarbotones(false);
 			});
@@ -242,10 +255,18 @@
 			enviaAjax(datos,function(respuesta){
 				var lee = JSON.parse(respuesta);
 				if (lee.resultado == "listaForo") {
+
 					if ($.fn.DataTable.isDataTable("#tablaForo")) {
 						$("#tablaForo").DataTable().destroy();
 					}
-					$("#listaForo").html(lee.mensaje);
+					console.log(lee.mensaje);
+					for(var i = 0;i<lee.mensaje.length;i++){
+						lee.mensaje[i].i=(i+1);
+						lee.mensaje[i].fecha = lee.mensaje[i].fecha.replace(/\d\d:\d\d:\d\d$/, '');
+					}
+						
+
+					$("#listaForo").html("");
 					if (!$.fn.DataTable.isDataTable("#tablaForo")) {
 						$("#tablaForo").DataTable({
 							language: {
@@ -262,17 +283,35 @@
 									previous: "Anterior",
 								},
 							},
-							autoWidth: false,
-							order: [[0, "asc"]],
-							columns: [
-							{ data: "col1" },
-							{ data: "col2" },
-							{ data: "col3" },
-							{ data: "col4" },
-							{ data: "col5" }
-							]
+							columns:[
+								{data:"i"},
+								{data:"titulo"},
+								{data:"descripcion"},
+								{data:"fecha"}
+							],
+							data:lee.mensaje,
+							createdRow: function(row,data){
+								row.dataset.id = data.id;
+								row.querySelector("td:nth-child(4)").classList.add("text-nowrap");
+							},
+							autoWidth: false
+							//searching:false,
+							//info: false,
+							//ordering: false,
+							//paging: false
+							//order: [[1, "asc"]],
+							
 						});
 					}
+
+
+
+
+
+
+
+
+
 				}
 				else{
 					muestraMensaje("ERROR", lee.mensaje,"error");
