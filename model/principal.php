@@ -130,12 +130,15 @@ class principal extends datos
 
 			$this->validar_conexion($co);
 			$co->beginTransaction();
-			$consulta = $co->query("SELECT * FROM `avisos`
-			WHERE DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(desde, '%Y-%m-%d') AND DATE_FORMAT(hasta, '%Y-%m-%d');")->fetchall(PDO::FETCH_ASSOC);
-			
-			
-			$r['resultado'] = 'avisos';
-			$r['mensaje'] =  $consulta;
+			$consulta = $co->query("SELECT * FROM `avisos` WHERE DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(desde, '%Y-%m-%d') AND DATE_FORMAT(hasta, '%Y-%m-%d');");
+
+			if($consulta = $consulta->fetchall(PDO::FETCH_ASSOC)){
+				$r['resultado'] = 'avisos';
+				$r['mensaje'] =  $consulta;
+			}
+			else{
+				$r = null;
+			}
 			//$co->commit();
 		
 		} catch (Validaciones $e){

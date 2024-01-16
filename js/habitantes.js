@@ -16,6 +16,13 @@ $(document).ready(function () {
       $("#srifcedula").text("");
     }
   });
+  $("#clave").on("keyup",function(){
+    validarKeyUp(/^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/,
+    $(this), 
+    $("#sclave"), 
+    "Solo letras y/o numeros entre 6 y 20 caracteres"
+    )
+  });
   $("#cedula_rif").on("keyup", function () {
     validarKeyUp(
       /^[0-9]{7,9}$/,
@@ -303,6 +310,17 @@ function validarEnvio() {
   ) {
     muestraMensaje("Error", "El correo debe ser alguien@dominio.com", "error");
     return false;
+  } else if($("#id").val() != '' && $("#clave").val() != ''){
+    if(validarKeyUp(/^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/, $("#clave"), $("#sclave"), "Solo letras y/o numeros entre 6 y 20 caracteres") == 0){
+      muestraMensaje("Error", "Solo letras y/o numeros entre 6 y 20 caracteresxxxxx", "error");
+      return false;
+    }
+  }
+  else if($("#id").val() == ''){
+    if(validarKeyUp(/^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/, $("#clave"), $("#sclave"), "Solo letras y/o numeros entre 6 y 20 caracteres") == 0){
+      muestraMensaje("Error", "Solo letras y/o numeros entre 6 y 20 caractereszzzzz", "error");
+      return false;
+    }
   }
   return true;
 }
@@ -330,6 +348,7 @@ function coloca(linea) {
     $("#tipo_identificacion").val(2);
     tipo = "2";
   }
+  document.getElementById('clave').placeholder="(Sin modificar)";
   cambiarTipoIdent(tipo);
   $("#nombres").val($(linea).find("td:eq(2)").text());
   $("#apellidos").val($(linea).find("td:eq(3)").text());
@@ -415,6 +434,7 @@ function enviaAjax(datos) {
         }
       } catch (e) {
         alert("Error en JSON " + e.name);
+        console.error(respuesta);
       }
     },
     error: function (request, status, err) {
@@ -445,6 +465,8 @@ function limpia() {
   $("#correo").val("");
   $("#id").val("");
   $("#accion").val("");
+  $("#clave").val("");
+  document.getElementById('clave').placeholder="";
   limpiarvalidacion();
 }
 function limpiasincedula() {

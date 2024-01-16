@@ -66,6 +66,13 @@
 						<span id="scorreo" class="text-danger"></span>
 					</div>
 				</div>
+				<div class="row mb-3">
+					<div class="col-12 col-md-6">
+						<label for="clave">Contraseña</label>
+						<input autocomplete="off" class="form-control" type="password" id="clave" name="clave" />
+						<span id="sclave" class="text-danger"></span>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col">
 						<hr />

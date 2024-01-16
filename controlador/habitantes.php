@@ -13,15 +13,41 @@ if (is_file("vista/" . $p . ".php")) {
       $respuesta = $o->listadohabitantes();
       echo json_encode($respuesta);
     }  elseif ($accion == 'incluir') {
-      $respuesta = $o->incluir($_POST['cedula_rif'], $_POST['tipo_identificacion'],$_POST['nombres'],$_POST['apellidos'],$_POST['telefono'],$_POST['correo'],$_POST['domicilio_fiscal']);
+
+//      $o->set_id();
+      $o->set_clave($_POST["clave"]);
+      $o->set_cedula_rif($_POST['cedula_rif']);
+      $o->set_tipo_identificacion($_POST['tipo_identificacion']);
+      $o->set_nombres($_POST['nombres']);
+      $o->set_apellidos($_POST['apellidos']);
+      $o->set_telefono($_POST['telefono']);
+      $o->set_correo($_POST['correo']);
+      $o->set_domicilio_fiscal($_POST['domicilio_fiscal']);
+
+
+      $respuesta = $o->incluir();
       echo json_encode($respuesta);
     }
     elseif ($accion == 'modificar') {
-      $respuesta = $o->modificar($_POST['id'], $_POST['cedula_rif'], $_POST['tipo_identificacion'],$_POST['nombres'],$_POST['apellidos'],$_POST['telefono'],$_POST['correo'],$_POST['domicilio_fiscal']);
+
+      $o->set_id($_POST['id']);
+      $o->set_clave($_POST["clave"]);
+      $o->set_cedula_rif($_POST['cedula_rif']);
+      $o->set_tipo_identificacion($_POST['tipo_identificacion']);
+      $o->set_nombres($_POST['nombres']);
+      $o->set_apellidos($_POST['apellidos']);
+      $o->set_telefono($_POST['telefono']);
+      $o->set_correo($_POST['correo']);
+      $o->set_domicilio_fiscal($_POST['domicilio_fiscal']);
+
+
+
+      $respuesta = $o->modificar();
       echo json_encode($respuesta);
     }
     elseif ($accion == 'eliminar') {
-      $respuesta = $o->eliminar($_POST['id']);
+      $o->set_id($_POST['id']);
+      $respuesta = $o->eliminar();
       echo json_encode($respuesta);
     }
     exit;

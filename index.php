@@ -21,7 +21,9 @@ session_start();
     "consulta",
     "detallesdeuda",
     "foro-index-h",
-    "foro-post-h"
+    "foro-post-h",
+    "ventana-pruevas",
+    "reset-pass"
   ];
   if(!isset($_SESSION['id_usuario']) and !in_array($p, $excepciones_p)){
     $p="login";

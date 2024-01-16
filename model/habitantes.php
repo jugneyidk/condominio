@@ -5,15 +5,15 @@ require_once("model/bitacora.php");
 
 class habitantes extends datos
 {
-	PRIVATE $id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal;
+	PRIVATE $id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal, $clave;
 
-	PUBLIC function incluir_s($cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal){
-		return $this->incluir($cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal);
+	PUBLIC function incluir_s(){
+		return $this->incluir();
 	}
-	PUBLIC function modificar_s($id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal){
-		return $this->modificar($id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal);
+	PUBLIC function modificar_s(){
+		return $this->modificar();
 	}
-	PUBLIC function eliminar_s($id){
+	PUBLIC function eliminar_s(){
 		return $this->eliminar($id);
 	}
 
@@ -30,30 +30,56 @@ class habitantes extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	PUBLIC function incluir($cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal)
+	PUBLIC function incluir()
 	{
+
+		$cedula_rif = $this->cedula_rif;
+		$tipo_identificacion = $this->tipo_identificacion;
+		$nombres = $this->nombres;
+		$apellidos = $this->apellidos;
+		$telefono = $this->telefono;
+		$correo = $this->correo;
+		$domicilio_fiscal = $this->domicilio_fiscal;
+
+
 		if (!$this->existe($cedula_rif, $tipo_identificacion, 1)) {
 			$co = $this->conecta();
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
-				$co->query("Insert into habitantes(
+				$consulta = $co->prepare("INSERT INTO habitantes(
 						cedula_rif,
 						tipo_identificacion,
 						nombres,
 						apellidos,
 						telefono,
 						correo,
-						domicilio_fiscal
+						domicilio_fiscal,
+						clave
 						)
-						Values(
-						'$cedula_rif',
-						'$tipo_identificacion',
-						'$nombres',
-						'$apellidos',
-						'$telefono',
-						'$correo',
-						'$domicilio_fiscal'
+						VALUES(
+						:cedula_rif,
+						:tipo_identificacion,
+						:nombres,
+						:apellidos,
+						:telefono,
+						:correo,
+						:domicilio_fiscal,
+						:clave
 						)");
+
+				$consulta->bindValue(':cedula_rif',$cedula_rif);
+				$consulta->bindValue(':tipo_identificacion',$tipo_identificacion);
+				$consulta->bindValue(':nombres',$nombres);
+				$consulta->bindValue(':apellidos',$apellidos);
+				$consulta->bindValue(':telefono',$telefono);
+				$consulta->bindValue(':correo',$correo);
+				$consulta->bindValue(':domicilio_fiscal',$domicilio_fiscal);
+				$consulta->bindValue(':clave',$this->clave);
+
+				$consulta->execute();
+
+
+
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Registro Incluido";
 				$bitacora = new Bitacora();
@@ -69,23 +95,48 @@ class habitantes extends datos
 		}
 		return $r;
 	}
-	PUBLIC function modificar($id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal)
+	PUBLIC function modificar()
 	{
+		$id = $this->id;
+		$cedula_rif = $this->cedula_rif;
+		$tipo_identificacion = $this->tipo_identificacion;
+		$nombres = $this->nombres;
+		$apellidos = $this->apellidos;
+		$telefono = $this->telefono;
+		$correo = $this->correo;
+		$domicilio_fiscal = $this->domicilio_fiscal;
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id,0,2)) {
 			try {
-				$co->query("Update habitantes set 
-						cedula_rif = '$cedula_rif',
-						tipo_identificacion = '$tipo_identificacion',
-						nombres = '$nombres',
-						apellidos = '$apellidos',
-						telefono = '$telefono',
-						correo = '$correo',
-						domicilio_fiscal = '$domicilio_fiscal'						
-						where
-						id = '$id'
-						");
+				$consulta = "UPDATE habitantes SET 
+						cedula_rif = :cedula_rif,
+						tipo_identificacion = :tipo_identificacion,
+						nombres = :nombres,
+						apellidos = :apellidos,
+						telefono = :telefono,
+						correo = :correo,
+						domicilio_fiscal = :domicilio_fiscal";
+				if($this->clave != ''){
+					$consulta.= ", clave = :clave";
+				}
+
+				$consulta.=" WHERE id = :id;";
+				$consulta = $co->prepare($consulta);
+
+				$consulta->bindValue(":cedula_rif",$cedula_rif);
+				$consulta->bindValue(":tipo_identificacion",$tipo_identificacion);
+				$consulta->bindValue(":nombres",$nombres);
+				$consulta->bindValue(":apellidos",$apellidos);
+				$consulta->bindValue(":telefono",$telefono);
+				$consulta->bindValue(":correo",$correo);
+				$consulta->bindValue(":domicilio_fiscal",$domicilio_fiscal);
+				$consulta->bindValue(":id",$id);
+
+				if($this->clave != ''){
+					$consulta->bindValue(":clave",$this->clave);
+				}
+				$consulta->execute();
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  "Registro modificado correctamente";
 				$bitacora = new Bitacora();
@@ -93,7 +144,7 @@ class habitantes extends datos
 
 				
 			} catch (Exception $e) {
-				return $e->getMessage();
+				return $e->getMessage().":".$e->getLine();
 			}
 		} else {
 			$r['resultado'] = 'error';
@@ -101,16 +152,18 @@ class habitantes extends datos
 		}
 		return $r;
 	}
-	PUBLIC function eliminar($id)
+	PUBLIC function eliminar()
 	{
+		$id = $this->id;
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id,0,2)) {
 			try {
-				$co->query("delete from habitantes 
-						where
-						id = '$id'
-						");
+				$co->prepare("DELETE FROM habitantes WHERE id = :id ");
+
+				$consulta->bindValue(":id",$id);
+				$consulta->execute();
+
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Registro Eliminado";
 				$bitacora = new Bitacora();
@@ -268,6 +321,18 @@ class habitantes extends datos
 	}
 	PUBLIC function set_domicilio_fiscal($value){
 		$this->domicilio_fiscal = $value;
+	}
+	PUBLIC function get_clave(){
+		return $this->clave;
+	}
+	PUBLIC function set_clave($value){
+		if($value !=''){
+			$this->clave = password_hash($value, PASSWORD_DEFAULT);
+		}
+		else
+		{
+			$this->clave = '';
+		}
 	}
 	
 

@@ -25,10 +25,13 @@
                       <input type="text" id="usuario" name="usuario" class="form-control form-control-lg" value="27250544" />
                       <span id="susuario" class="text-danger espacio-vacio"></span>
                     </div>
-                    <div class="form-outline mb-5 mb-md-3 mb-lg-5">
+                    <div class="form-outline mb-3">
                       <label class="form-label" for="clave">Contraseña</label>
                       <input type="password" id="clave" name="clave" class="form-control form-control-lg" value="hola123" />
                       <span id="sclave" class="text-danger espacio-vacio"></span>
+                    </div>
+                    <div class="from-group text-center mb-3">
+                        <a href="?p=reset-pass">Has olvidado tu contraseña?</a>
                     </div>
                     <div class="pt-1 my-3 my-lg-4">
                       <button id="entrar" name="entrar" class="btn btn-info btn-lg btn-block" type="button">Ingresar</button>

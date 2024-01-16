@@ -25,20 +25,20 @@ $(document).ready(function () {
     );
   });
   $("#password").on("keypress", function (e) {
-    validarKeyPress(/^[A-Za-z0-9\b]*$/, e);
+    validarKeyPress(/^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]*$/, e);
   });
 
   $("#password").on("keyup", function () {
     if ($("#id").val().length > 0) {
       validarKeyUp(
-        /^[A-Za-z0-9\b]{6,20}$/,
+        /^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/,
         $(this),
         $("#spassword"),
         "Solo letras y/o numeros entre 6 y 20 caracteres (Dejar en blanco si no desea modificar)"
       );
     } else {
       validarKeyUp(
-        /^[A-Za-z0-9\b]{6,20}$/,
+        /^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/,
         $(this),
         $("#spassword"),
         "Solo letras y/o numeros entre 6 y 20 caracteres"

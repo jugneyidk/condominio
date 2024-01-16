@@ -9,7 +9,14 @@ require 'PHPMailer/src/SMTP.php';
 require_once('model/datos.php');
 class enviarcorreo extends datos
 {
-	PRIVATE $id;
+	PRIVATE $id,$username,$password,$name;
+	function __construct()
+	{
+		$this->username = "diego14asf@gmail.com";
+		$this->password = "okcycrqarqjqcnsk";
+		$this->name = 'Diego Salazar';
+	}
+
     PUBLIC function enviar_correo($id)
 	{
 		$co = $this->conecta();
@@ -115,6 +122,8 @@ class enviarcorreo extends datos
 				$pdfpago = $pdf->output();
 				$temp_pdf = tempnam(sys_get_temp_dir(), 'pdf_');
 				file_put_contents($temp_pdf, $pdfpago);
+
+
 				$mail = new PHPMailer;
 				$mail->isSMTP();
 				$mail->SMTPDebug = 0;
@@ -123,9 +132,9 @@ class enviarcorreo extends datos
 				$mail->Port = 587;
 				$mail->SMTPSecure = 'tls';
 				$mail->SMTPAuth = true;
-				$mail->Username = "diego14asf@gmail.com";
-				$mail->Password = "okcycrqarqjqcnsk";
-				$mail->setFrom('diego14asf@gmail.com', 'Diego Salazar');
+				$mail->Username = $this->username;
+				$mail->Password = $this->password;
+				$mail->setFrom($this->username, $this->name);
 				$mail->addAddress($correo, $nombre);
 				$mail->CharSet = 'UTF-8';
 				$mail->Subject = 'Pago Nº' . $id . ' confirmado';
@@ -170,31 +179,31 @@ class enviarcorreo extends datos
 
 				foreach ($control as $elem) {
 
-$html=<<<END
-<html>
-<head>
-<style>
-*{ font-family: DejaVu Sans !important;}
-</style>
-</head>
-<body>
-<div style="width: 350px;margin: 20px,auto, padding 20px; border: 1px solid black;border-radius: 20px">
-<div><h3>Su Factura ha sido emitida</h3></div>
-<div style="margin-top: 30px;">
-Estimado ${elem['nombres']} ${elem['apellidos']}
-<br>
-<br>
-El conjunto residencial Jose Maria Vargas le informa que su factura ha sido emitida
-<br>
-Le invitamos a pagar a tiempo para evitar sobrecargos por morosidad
-<br>
-<br>
-Concepto: ${elem['concepto']}
-</div>
-</div>
-</body>
-</html>
-END; 
+					$html=<<<END
+					<html>
+					<head>
+					<style>
+					*{ font-family: DejaVu Sans !important;}
+					</style>
+					</head>
+					<body>
+					<div style="width: 350px;margin: 20px,auto, padding 20px; border: 1px solid black;border-radius: 20px">
+					<div><h3>Su Factura ha sido emitida</h3></div>
+					<div style="margin-top: 30px;">
+					Estimado ${elem['nombres']} ${elem['apellidos']}
+					<br>
+					<br>
+					El conjunto residencial Jose Maria Vargas le informa que su factura ha sido emitida
+					<br>
+					Le invitamos a pagar a tiempo para evitar sobrecargos por morosidad
+					<br>
+					<br>
+					Concepto: ${elem['concepto']}
+					</div>
+					</div>
+					</body>
+					</html>
+					END; 
 
 					$mail = new PHPMailer;
 					$mail->isSMTP();
@@ -204,9 +213,9 @@ END;
 					$mail->Port = 587;
 					$mail->SMTPSecure = 'tls';
 					$mail->SMTPAuth = true;
-					$mail->Username = "diego14asf@gmail.com";
-					$mail->Password = "okcycrqarqjqcnsk";
-					$mail->setFrom('diego14asf@gmail.com', 'Diego Salazar');
+					$mail->Username = $this->username;
+					$mail->Password = $this->password;
+					$mail->setFrom( $this->username, $this->name );
 					$mail->addAddress($elem['correo'], $elem['nombres']);
 					$mail->CharSet = 'UTF-8';
 					$mail->Subject = $elem['concepto'];
@@ -266,6 +275,39 @@ END;
 
 
 			
+	}
+
+	PUBLIC function custom_email($body,$subject,$correo,$nombre){
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->SMTPDebug = 0;
+		$mail->Debugoutput = 'html';
+		$mail->Host = 'smtp.gmail.com';
+		$mail->Port = 587;
+		$mail->SMTPSecure = 'tls';
+		$mail->SMTPAuth = true;
+		$mail->Username = $this->username;
+		$mail->Password = $this->password;
+		$mail->setFrom( $this->username, $this->name );
+		
+		$mail->addAddress($correo, $nombre);
+		$mail->CharSet = 'UTF-8';
+
+		$mail->Subject = $subject;
+		$mail->Body = $body;
+
+		$mail->AltBody = 'This is a plain-text message';
+		if (!$mail->send()) {
+			$mail->clearAllRecipients();
+			$mail->clearAttachments();
+			$mail->clearCustomHeaders();
+			return false;
+		} else {
+			$mail->clearAllRecipients();
+			$mail->clearAttachments();
+			$mail->clearCustomHeaders();
+			return true;
+		}
 	}
     PUBLIC function existe($id)
 	{

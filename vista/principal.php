@@ -60,7 +60,7 @@
         </div>
         <hr>
         <?php } ?>
-        <div class="row justify-content-center d-none">
+        <!-- <div class="row justify-content-center d-none">
           <div class="col col-md-8">
             <div class="row">
               <div class="col">
@@ -78,7 +78,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <?php }else if(isset($avisos)){
@@ -119,7 +119,7 @@
               </div>
               <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionFaq">
                 <div class="card-body">
-                  Puedes contactar al soporte, o directamente en la administración del condominio para que resuelvan su caso.
+                    Puedes contactar al soporte, o haga click <a href="?p=reset-pass">Aqui</a> y siga los pasos
                 </div>
               </div>
             </div>

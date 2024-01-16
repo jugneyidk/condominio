@@ -363,6 +363,9 @@ function lista_pagos_servicios(show = false){
 							previous: "Anterior",
 						},
 					},
+					createdRow: function(row,data){
+						row.querySelector("td:nth-child(6)").innerText = row.querySelector("td:nth-child(6)").innerText.replace(/\s*[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/, "");
+					},
 					autoWidth: false,
 					order: [[4, "desc"]],
 					columns: [
@@ -456,6 +459,7 @@ function lista_servicios(){
 
 
 
+
 function validarPagoServicios(){
 
 	if(!validarKeyUp(/^[0-9a-zA-Z\s]{0,100}$/,$("#descripcion"),"ingrese una descripción valida solo se permiten letras y números")){
@@ -473,7 +477,7 @@ function validarPagoServicios(){
 
 
 function borrar() {
-	$('input:not(:checkbox):not(:radio)').val("");
+	$('input:not(:checkbox):not(:radio):not(.no-delete)').val("");
 	// $("form input").val("");
 	$("form select:not(#tipo_pago_comun)").val("");
 	limpiarvalidacion();

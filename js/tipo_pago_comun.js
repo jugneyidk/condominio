@@ -18,8 +18,10 @@ function tipo_pago_comun_update_divisa(){
 		// document.getElementById('tipo_cambio_divisa_monto_to_show').parentNode.parentNode.classList.remove("d-none");
 		// document.getElementById('tipo_cambio_divisa_monto_to_show').innerHTML="BCV : $ "+sepMiles(Datos_divisa.monto);
 		// document.getElementById('tipo_cambio_divisa_fecha_to_show').innerHTML=Datos_divisa.fecha;
-		document.getElementById('monto_para_calcular').classList.add("text-info");
-		document.getElementById('monto_para_calcular').innerHTML="BCV : "+sepMiles(Datos_divisa.monto)+" Bs ( "+Datos_divisa.fecha.replace(/ [0-9][0-9].[0-9][0-9].[0-9][0-9]$/, "")+" )";
+		if(document.getElementById('monto_para_calcular')){
+			document.getElementById('monto_para_calcular').classList.add("text-info");
+			document.getElementById('monto_para_calcular').innerHTML="BCV : "+sepMiles(Datos_divisa.monto)+" Bs ( "+Datos_divisa.fecha.replace(/ [0-9][0-9].[0-9][0-9].[0-9][0-9]$/, "")+" )";
+		}
 
 
 	}
@@ -218,6 +220,7 @@ function validar_tipo_pago_comunes(){
 		muestraMensaje("ERROR","Ingrese una fecha valida","error");
 		return false;
 	}
+	document.getElementById('tipo_pago_comun-hora').value="00:00";
 	if(!validarKeyUp(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/,$("#tipo_pago_comun-hora"),"Ingrese una hora valida")){
 		muestraMensaje("ERROR","Ingrese una hora valida","error");
 		return false;
@@ -228,6 +231,10 @@ function validar_tipo_pago_comunes(){
 	}
 	if($("#tipo_pago_comun-monto_total").val().length>29){
 		muestraMensaje("ERROR","El monto es demasiado grande","error");
+		return false;
+	}
+	if(!(parseFloat( sepMiles( document.getElementById('tipo_pago_comun-monto_total').value,true ) ) > 0 )){
+		muestraMensaje("ERROR", "El monto debe ser mayor a 0", "error");
 		return false;
 	}
 

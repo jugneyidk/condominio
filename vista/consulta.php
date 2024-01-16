@@ -21,12 +21,15 @@
                         
                         <form class="login-form" id="f" method="post">
                             <div class="form-group mb-3">
-                                <input type="text" class="form-control" placeholder="Correo" id="usuario" name="usuario" value="jugneyv@gmail.com">
+                                <input type="text" class="form-control" placeholder="Correo" id="usuario" name="usuario" value="E-28609560">
                                 <span id="susuario" class="text-danger espacio-vacio"></span>
                             </div>
                             <div class="form-group mb-3">
-                                <input type="Password" class="form-control" placeholder="Contraseña(Cedula)" id="clave" name="clave" value="28609560">
+                                <input type="Password" class="form-control" placeholder="Contraseña" id="clave" name="clave" value="hola123">
                                 <span id="sclave" class="text-danger espacio-vacio"></span>
+                            </div>
+                            <div class="from-group text-center mb-3">
+                                <a href="?p=reset-pass">Has olvidado tu contraseña?</a>
                             </div>
                             <div class="form-group">
                                 <button type="button" id="entrar" class="btn btn-primary btn-block">CONSULTAR</button>
