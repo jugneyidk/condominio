@@ -35,7 +35,7 @@
                 </div>
                 <div class="collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#faqAccordion">
                   <div class="card-body">
-                    <p>Puedes contactar al soporte, o directamente en la administración del conjunto para que resuelvan tu caso, o solo comunicarte al correo proporcionado en <b>ayuda</b>.</p>
+                    Puedes contactar al soporte, o haga click <a href="?p=reset-pass">Aqui</a> y siga los pasos
                     
                   </div>
                 </div>
@@ -55,7 +55,7 @@
             <!-- Support Button-->
             <div class="support-button text-center d-flex align-items-center justify-content-center mt-4 wow fadeInUp pb-4" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
               <i class="lni-emoji-sad"></i>
-              <a href="#">
+              <a href="#" class="d-none">
                 <p class="mb-0 px-2">¿No ha respondido su interrogante?</p>
               </a>
 

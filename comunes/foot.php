@@ -51,4 +51,5 @@
 		<?php endif; ?>
 	</div>
 </footer>
-<?php require_once("comunes/bcv_button.php"); ?>
+<?php //require_once("comunes/bcv_button.php"); ?>
+
