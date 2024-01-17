@@ -1,7 +1,6 @@
 <?php require_once('comunes/head.php'); 
 $morososData = getMorososData();
 ?>
-
 <body class="bg-light">
 	<?php require_once("comunes/carga.php"); ?>
 	<?php require_once("comunes/modal.php"); ?> 
@@ -48,6 +47,8 @@ $morososData = getMorososData();
             scales: {
                 y: {
                     beginAtZero: true,
+                    max: 50,
+            stepSize: 1,
                 },
             },
         },
