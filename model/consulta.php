@@ -1,6 +1,7 @@
 <?php  
 
 require_once('model/datos.php');
+require_once('model/bitacora.php');
 class consulta extends datos
 {
     PUBLIC function iniciarSesion($usuario,$clave)
@@ -40,6 +41,10 @@ class consulta extends datos
                     //session_start();
 			        $_SESSION['id_habitante'] = $resultado['id'];
                     $_SESSION['CONDOMINIO_TOKEN'] = password_hash($resultado["cedula_rif"]."-".$resultado["tipo_identificacion"], PASSWORD_DEFAULT);
+
+                    $bitacora = new Bitacora();
+                    $bitacora->b_registro("Inicio sesion");
+
                     $r["resultado"]="correcto";
                     return $r;
                 }else{

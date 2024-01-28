@@ -119,7 +119,7 @@
 						</div>
 						<div class="row border-top pt-1">
 							<div class="col-12">
-								<label class="w-100">Aplicar el cargo el siguiente mes?</label>
+								<label class="w-100">Aplicar el cargo la siguiente vez?</label>
 								<div class="text-nowrap">
 									<label class="cursor-pointer no-select" for="cargo_tipo_cargo_aplicar_next">Si</label>
 									<input type="radio" class="dont-erase" id="cargo_tipo_cargo_aplicar_next" name="cargo_aplicar_next" data-span="invalid-span-cargo_tipo_cargo_aplicar_si_no" value="aplicar">

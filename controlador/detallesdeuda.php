@@ -5,7 +5,7 @@ if (!is_file("model/" . $p . ".php")) {
 }
 require_once("model/" . $p . ".php");
 if (is_file("vista/" . $p . ".php")) {
-	if (isset($_SESSION['id_habitante'])) {
+	//if (isset($_SESSION['id_habitante'])) {
 		$o = new detallesdeuda();
 		if (!empty($_POST)) {
 			$accion = $_POST['accion'];
@@ -34,9 +34,9 @@ if (is_file("vista/" . $p . ".php")) {
 			exit;
 		}
 		require_once("vista/" . $p . ".php");
-	} else {
-		header("Location: ?p=consulta");
-	}
+	//} else {
+	//	header("Location: ?p=consulta");
+	//}
 } else {
 	require_once("vista/404.php");
 }

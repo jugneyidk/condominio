@@ -26,8 +26,17 @@ session_start();
     "ventana-pruevas",
     "reset-pass"
   ];
+  $habitante = [
+    "detallesdeuda",
+    "foro-index-h",
+    "foro-post-h",
+    "foroAction"
+  ];
   if(!isset($_SESSION['id_usuario']) and !in_array($p, $excepciones_p)){
     $p="login";
+  }
+  if(in_array($p, $habitante) and !isset($_SESSION["id_habitante"])){
+    $p="consulta";
   }
  if(is_file("controlador/".$p.".php")){
     

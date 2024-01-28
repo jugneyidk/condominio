@@ -39,7 +39,9 @@ class login extends datos
 			
 			} catch (Exception $e) {
 				session_unset();
-				return $e->getMessage();
+				$r['resultado'] = "error";
+				$r['mensaje'] = $e->getMessage().' -LINE- '.$e->getLine()." file: ".$e->getFile();
+				return $r;
 			}
 			finally{
 				$co = null;

@@ -1,5 +1,7 @@
 <?php require_once('comunes/head.php'); ?>
 
+<style>.money_icon::after{content: "$"}</style>
+
 <body class="bg-light">
   <?php require_once('comunes/menu.php'); ?>
   <div class="container-lg bg-white p-2 p-sm-4 p-md-5 mb-5">

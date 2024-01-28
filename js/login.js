@@ -53,11 +53,17 @@ function enviaAjax(datos) {
     },
     success: function (respuesta) {
       try {
+        console.log(respuesta);
         var lee = JSON.parse(respuesta);
+        console.log(lee);
+
         if (lee.resultado == "correcto") {
           location = ".";
         } else if (lee.resultado == "incorrecto") {
           muestraMensaje(lee.mensaje,"","error");
+        } else if (lee.resultado == "error"){
+          muestraMensaje("Error del sistema","","error");
+          console.error(lee.mensaje);
         }
       } catch (e) {
         alert("Error en JSON " + e.name);

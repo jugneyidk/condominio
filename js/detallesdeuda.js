@@ -208,7 +208,8 @@ function enviaAjax2(datos) {
 				  { data: "extra" }
 					  ],
 			  createdRow: function(row,data){
-				//console.table(data);
+				console.table(data);
+
 				
 				
 				row.dataset.id=data.id_deuda;
@@ -218,8 +219,9 @@ function enviaAjax2(datos) {
 				row.querySelector("td:nth-child(2)").classList.add("d-none","d-md-table-cell");
 				row.querySelector("td:nth-child(3)").classList.add("d-none","d-md-table-cell");
 				row.querySelector("td:nth-child(4)").classList.add("text-nowrap");
+				row.querySelector("td:nth-child(5)").innerText = sepMiles(data.monto);
 				row.querySelector("td:last-child").classList.add("text-center");
-				if(data.estado != '0'){
+				if(data.id_pago == null || data.estado == 1){
 				  row.querySelector("td:last-child").innerHTML="<button class='btn btn-success' style='font-size: 13px;' onclick='mostrar_registrar_pago(this)'>Pagar</button>";
 				}
 				else{
