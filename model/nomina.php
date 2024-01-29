@@ -41,8 +41,8 @@ class nomina extends datos
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id WHERE modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-		$guarda->execute();
+		$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
+		$guarda->execute([$modulo, $id_rol]);
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
@@ -73,14 +73,14 @@ class nomina extends datos
 					$consulta = $this->con->prepare("INSERT INTO pagos (concepto_pago,estado,usuario_id) VALUES (?,?,?)");
 					$usuario_id = $_SESSION["id_usuario"];
 					$consulta->execute([$this->descripcion, 2, $usuario_id]);
-					$bitacora = new Bitacora();
+					$bitacora = new Bitacora($this->con);
 
 					$this->obj_pagos->id_pago = $this->con->lastInsertId();
 
 					$consulta = $this->con->prepare("INSERT INTO nomina_pago (id_empleado, id_pago) VALUES (?, ?);");
 					$consulta->execute([$this->id , $this->obj_pagos->id_pago ]);
 
-					$bitacora->b_incluir("nomina_pago");
+					// $bitacora->b_incluir("nomina_pago");
 
 
 					$consulta = $this->con->prepare("INSERT INTO `detalles_pagos`(
@@ -129,7 +129,7 @@ class nomina extends datos
 						}
 
 						$consulta->execute();
-						$bitacora->b_incluir("detalles_pagos");
+						// $bitacora->b_incluir("detalles_pagos");
 
 
 						if($this->obj_pagos->tipo_pago == 4){//divisa
@@ -152,7 +152,7 @@ class nomina extends datos
 								$cont++;
 							}
 							$consulta->execute();
-							$bitacora->b_incluir("divisa");
+							//$bitacora->b_incluir("divisa");
 
 						}
 
@@ -166,27 +166,15 @@ class nomina extends datos
 
 					// $respuesta = $this->con->query("SELECT * from nomina_pago WHERE 1")->fetchall(PDO::FETCH_ASSOC);
 
+					
 
-
-
+					$bitacora->b_registro("Registro de pago Nº {$this->obj_pagos->id_pago} a ".TIPO_INDENT_ARRAY[$this->tipo_identificacion].$this->rif_cedula."\"");
 
 
 
 					$r["resultado"] = "incluir";
 					$r["mensaje"] = "";
 
-
-					// ob_start();
-					// echo "<pre>\n";
-					// var_dump($respuesta);
-					// echo "</pre>";
-
-					// $valor = ob_get_clean();
-
-
-
-					// $r["resultado"] = "console";
-					// $r["mensaje"] = $valor;
 
 				}
 				else{
@@ -234,8 +222,8 @@ class nomina extends datos
 						$consulta->bindValue(2,$this->obj_pagos->id_pago);
 						$consulta->execute();
 
-						$bitacora = new Bitacora();
-						$bitacora->b_modificar("pagos");
+						$bitacora = new Bitacora($this->con);
+						//$bitacora->b_modificar("pagos");
 
 
 						$consulta = $this->con->prepare("UPDATE `detalles_pagos` SET 
@@ -272,7 +260,7 @@ class nomina extends datos
 
 						$consulta->execute();
 
-						$bitacora->b_modificar("detalles_pagos");
+						// $bitacora->b_modificar("detalles_pagos");
 
 						if($this->obj_pagos->tipo_pago == 4 and $this->obj_pagos->billetes_to_Modify == true){
 							$consulta = $this->con->prepare("DELETE FROM divisa WHERE id_detalles_pagos = ?");
@@ -295,13 +283,14 @@ class nomina extends datos
 							}
 							$consulta->execute();
 
-							$bitacora->b_modificar("divisa");
+							// $bitacora->b_modificar("divisa");
 						}
 
 						$r['resultado'] = 'modificar';
 						$r['mensaje'] =  '';
-						$bitacora = new Bitacora();
-						$bitacora->b_modificar("pago de nomina");
+						$bitacora = new Bitacora($this->con);
+						$bitacora->b_registro("Modificó el pago Nº {$this->obj_pagos->id_pago} a ".TIPO_INDENT_ARRAY[$this->tipo_identificacion].$this->rif_cedula."\"");
+						// $bitacora->b_modificar("pago de nomina");
 
 
 
@@ -361,8 +350,9 @@ class nomina extends datos
 				$consulta = $this->con->prepare("DELETE FROM pagos WHERE id_pago = ?");
 				$consulta->execute([$this->id]);
 
-				$bitacora = new Bitacora();
-				$bitacora->b_eliminar("pago de nomina");
+				$bitacora = new Bitacora($this->con);
+
+				$bitacora->b_registro("Eliminó el pago Nº $this->id");
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "probando";
 			}
@@ -455,10 +445,14 @@ class nomina extends datos
 				$consulta->bindValue(":cargo",$this->cargo);
 				$consulta->bindValue(":fecha_nacimiento",$this->fechan);
 				$consulta->bindValue(":estado_civil",$this->estado_civil);
-
+				
+				
 				$consulta->execute();
-				$bitacora = new Bitacora();
-				$bitacora->b_incluir("pagos");
+				
+
+				$bitacora = new Bitacora($this->con);
+	 			$bitacora->b_registro("Registro del Empleado \"".TIPO_INDENT_ARRAY[$this->tipo_identificacion].$this->rif_cedula."\"");
+				
 				$r["resultado"] = "incluir_2";
 				$r["mensaje"] = "El Empleado fue registrado exitosamente";
 
@@ -469,8 +463,18 @@ class nomina extends datos
 				$r["mensaje"] = "La cedula del empleado ya esta registrada";
 			}
 		
-			$this->con->commit();
+		//	$this->con->commit();
 		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		catch (Notice $e) {
 			if($this->con instanceof PDO){
 				if($this->con->inTransaction()){
 					$this->con->rollBack();
@@ -563,8 +567,8 @@ class nomina extends datos
 					$consulta->bindValue(":tipo_identificacion_id",$this->id->tipo_identificacion);
 					$consulta->execute();
 
-					$bitacora = new Bitacora();
-					$bitacora->b_modificar("Empleado");
+					$bitacora = new Bitacora($this->con);
+					$bitacora->b_registro("Modificó el Empleado \"$this->id->rif_cedula\"");
 					$r["resultado"] = "modificar_empleado";
 					$r["mensaje"] = "( ".TIPO_INDENT_ARRAY[$this->tipo_identificacion].$this->rif_cedula." )";
 
@@ -617,8 +621,8 @@ class nomina extends datos
 				$consulta = $this->con->prepare("DELETE FROM Empleado WHERE rif_cedula = ? AND tipo_identificacion = ?;");
 				$consulta->execute([$this->rif_cedula, $this->tipo_identificacion]);
 
-				$bitacora = new Bitacora();
-				$bitacora->b_eliminar("Empleado");
+				$bitacora = new Bitacora($this->con);
+				$bitacora->b_registro("Eliminó al Empleado \"".TIPO_INDENT_ARRAY[$this->tipo_identificacion].$this->rif_cedula."\"");
 
 				$r["resultado"] = "eliminar_empleado";
 				$r["mensaje"] = "El Empleado Fue Eliminado Exitosamente";

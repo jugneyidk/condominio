@@ -498,6 +498,7 @@
 							var lee = JSON.parse(respuesta);
 							if(lee.resultado == "modificar"){
 								muestraMensaje("Pago de nomina modificado exitosamente", lee.mensaje, "success");
+								borrar();
 							}
 							else if (lee.resultado == 'is-invalid'){
 								muestraMensaje("ERROR", lee.mensaje,"error");
@@ -637,8 +638,7 @@
 						if(lee.resultado == "incluir_2"){
 							console.log(lee.mensaje);
 							muestraMensaje("Registro Exitoso", lee.mensaje, "success");
-							//borrar();
-							console.error("agregar el borrar en incluir_2");
+							borrar();
 						}
 						else if(lee.resultado == "is-invalid"){
 							muestraMensaje("Campo Invalido", lee.mensaje, "error");
@@ -914,7 +914,7 @@
 					throw new valid_exeption("El cargo no es valido", cargo);
 				}
 				else if(!V.expEmail.test($("#correo").val() )){
-					throw new valid_exeption("El correo no es valido", "correo");
+					throw new valid_exeption("El correo no es valido ej. algo@algomas.com", "correo");
 				}
 				else if(!V.fecha($("#fechan").val())){
 					throw new valid_exeption("La fecha de nacimiento no es valida","fechan");

@@ -1,9 +1,9 @@
 <?php
 
-require_once("model/foro-post.php");
+require_once("model/foro.php");
 
 if (is_file("vista/" . $p . ".php")) {
-	$o = new ForoPost();
+	$o = new Foro();
 	$postId = $_GET['postId'];
 	if (!empty($_POST)) {
 		$accion = $_POST['accion'];
@@ -18,7 +18,7 @@ if (is_file("vista/" . $p . ".php")) {
 			$o->set_comentario($_POST["comentario"]);
 			$o->set_create_by($_SESSION["id_habitante"]);
 			//$o->set_create_by("2"); // //por ahora el creador es diego falta las sesiones de los habitantes
-			$respuesta = $o->incluir_s();
+			$respuesta = $o->incluir_comentario_s();
 			echo json_encode($respuesta);
 		} else if ($accion == 'listaComentarios') {
 			$o->set_post_id($postId);
@@ -35,6 +35,8 @@ if (is_file("vista/" . $p . ".php")) {
 		}
 		exit;
 	}
+	$b = new Bitacora();
+	$b->b_registro("Ingreso al Foro \"$postId\"");
 	require_once("vista/" . $p . ".php");
 } else {
 	require_once("vista/404.php");

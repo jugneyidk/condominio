@@ -43,6 +43,7 @@ class detallesdeuda extends datos
 			if(isset($this->id_habitante)){
 
 				$consulta = $co->prepare("SELECT
+							d.id_deuda,
 							a.num_letra_apartamento,
 							a.torre,
 							a.piso,
@@ -74,6 +75,7 @@ class detallesdeuda extends datos
 			}
 			else{
 				$consulta = $co->prepare("SELECT
+							d.id_deuda,
 							a.num_letra_apartamento,
 							a.torre,
 							a.piso,
@@ -166,6 +168,8 @@ class detallesdeuda extends datos
 			WHERE a.propietario = :habitante OR a.inquilino = :habitante GROUP BY p.id_pago ORDER BY dis.fecha DESC;");
 			$consulta->bindValue(":habitante", $usuario);
 			$consulta->execute();
+			$b_temp = new Bitacora;
+  			$b_temp->b_registro("Consulto el historial de pagos");
 			
 			$r['resultado'] = 'historialpagos';
 			$r['mensaje'] =  $consulta->fetchall(PDO::FETCH_NUM);;
@@ -368,11 +372,11 @@ class detallesdeuda extends datos
 					}
 					$consulta->execute();
 				}
-				if(isset($_SESSION["id_usuario"])){
+				// if(isset($_SESSION["id_usuario"])){
 					$bitacora = new Bitacora();
 					$bitacora->b_registro("Registro el pago Nº".$this->obj_pagos->id_pago." de la deuda Nª".$this->id);
-					$bitacora->set_c(null);
-				}
+					// $bitacora->set_c(null);
+				// }
 
 
 				// require_once("model/enviar-ws.php");
@@ -455,11 +459,10 @@ class detallesdeuda extends datos
 			
 			$r['resultado'] = 'eliminar_pagos';
 			$r['mensaje'] =  "El pago ha sido eliminado exitosamente $this->id";
-			if(isset($_SESSION["id_usuario"])){
+			// if(isset($_SESSION["id_usuario"])){
 				$bitacora = new Bitacora();
 				$bitacora->b_registro("Elimino el pago Nº".$this->id_pago." de la deuda Nª".$this->id);
-				$bitacora->set_c(null);
-			}
+			// }
 			$this->con->commit();
 		
 		} catch (Validaciones $e){
@@ -512,59 +515,3 @@ class detallesdeuda extends datos
 		$this->id_habitante = $value;
 	}
 }
-
-
-#SELECT a.num_letra_apartamento,a.torre,dis.concepto, dis.fecha,
-#            (SUM( IF(dd.tipo_monto = 1,dd.monto,((SELECT ROUND((dd.monto/divs.monto),2) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1)) ) )) AS monto, NULL as extra, d.id_deuda,p.estado, a.propietario
-#            FROM deudas AS d 
-#            JOIN apartamento as a on a.id_apartamento = d.id_apartamento 
-#            JOIN distribuciones as dis ON dis.id_distribucion = d.id_distribucion
-#            LEFT JOIN detalles_deudas as dd on dd.id_deuda = d.id_deuda
-#            LEFT JOIN deuda_pagos ON deuda_pagos.id_deuda = d.id_deuda
-#            LEFT JOIN pagos AS p ON p.id_pago = deuda_pagos.id_pago
-#            WHERE a.propietario = :habitante AND ((p.estado <> 0 AND p.estado <> 2) OR p.estado IS NULL)  GROUP by a.num_letra_apartamento;
-
-
-
-/*
-
-SELECT @divisa_monto := divs.monto FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1;
-
-SELECT
-    a.num_letra_apartamento,
-    a.torre,
-    dis.concepto,
-    dis.fecha, (SUM(DISTINCT IF(dd.tipo_monto = 1, dd.monto, (ROUND(dd.monto / @divisa_monto, 2)) ) ) ) AS monto,
-    NULL AS extra,
-    d.id_deuda,
-    p.estado,
-    a.propietario,
-    p.id_pago
-FROM
-    deudas AS d
-JOIN apartamento AS a
-ON
-    a.id_apartamento = d.id_apartamento
-LEFT JOIN distribuciones AS dis
-ON
-    dis.id_distribucion = d.id_distribucion
-LEFT JOIN detalles_deudas AS dd
-ON
-    dd.id_deuda = d.id_deuda
-LEFT JOIN deuda_pagos ON deuda_pagos.id_deuda = d.id_deuda
-LEFT JOIN pagos AS p
-ON
-    p.id_pago = deuda_pagos.id_pago AND p.estado = 0
-WHERE
-    a.propietario = 1 OR a.inquilino = 1 AND p.estado = 0
-GROUP BY
-    a.num_letra_apartamento,
-    d.id_distribucion
-ORDER BY
-    dis.fecha
-DESC
-    ,
-    a.num_letra_apartamento;
-
-
-*/

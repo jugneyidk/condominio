@@ -204,6 +204,7 @@ function enviaAjax(datos) {
         }
       } catch (e) {
         alert("Error en JSON " + e.name);
+        console.error(respuesta);
       }
     },
     error: function (request, status, err) {

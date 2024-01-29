@@ -9,14 +9,14 @@ class usuarios extends datos
 {
 	PRIVATE $id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol;
 
-	PUBLIC function incluir_S($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol){
-		return $this->incluir($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol);
+	PUBLIC function incluir_S(){
+		return $this->incluir();
 	}
-	PUBLIC function modificar_S($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol){
-		return $this->modificar($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol);
+	PUBLIC function modificar_S(){
+		return $this->modificar();
 	}
-	PUBLIC function eliminar_S($id){
-		return $this->eliminar($id);
+	PUBLIC function eliminar_S(){
+		return $this->eliminar();
 	}
 
 
@@ -31,29 +31,58 @@ class usuarios extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	PRIVATE function incluir($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
+	PRIVATE function incluir()
 	{
+		$rif_cedula = $this->rif_cedula;
+		$tipo_identificacion = $this->tipo_identificacion;
+		$razon_social = $this->razon_social;
+		$domicilio_fiscal = $this->domicilio_fiscal;
+		$telefono = $this->telefono;
+		$correo = $this->correo;
+		$password = $this->password;
+		$rol = $this->rol;
 		if (!$this->existe($rif_cedula, $tipo_identificacion, 1)) {
 			$co = $this->conecta();
-			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->validar_conexion($co);
 			$r = array();
 			try {
-				$guarda = $co->query("insert into datos_usuarios(rif_cedula,tipo_identificacion,razon_social,domicilio_fiscal,telefono,correo) 
-		   values ('$rif_cedula','$tipo_identificacion','$razon_social','$domicilio_fiscal','$telefono','$correo')");
+				$co->beginTransaction();
+				$guarda = $co->prepare("INSERT INTO datos_usuarios(rif_cedula,tipo_identificacion,razon_social,domicilio_fiscal,telefono,correo) 
+		   		VALUES (:rif_cedula,:tipo_identificacion,:razon_social,:domicilio_fiscal,:telefono,:correo)");
+				$guarda->bindValue(":rif_cedula",$rif_cedula);
+				$guarda->bindValue(":tipo_identificacion",$tipo_identificacion);
+				$guarda->bindValue(":razon_social",$razon_social);
+				$guarda->bindValue(":domicilio_fiscal",$domicilio_fiscal);
+				$guarda->bindValue(":telefono",$telefono);
+				$guarda->bindValue(":correo",$correo);
+				$guarda->execute();
+
 				$lid = $co->lastInsertId();
 				$contrasena = password_hash($password, PASSWORD_DEFAULT);
-				$gd = $co->query("insert into usuarios_roles(id_usuario,id_rol,clave) 
-		   values ('$lid','$rol','$contrasena')");
+				$gd = $co->prepare("INSERT INTO usuarios_roles(id_usuario,id_rol,clave) 
+		   VALUES (:lid,:rol,:contrasena)");
+				$gd->bindValue(":lid",$lid);
+				$gd->bindValue(":rol",$rol);
+				$gd->bindValue(":contrasena",$contrasena);
+				$gd->execute();
+
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Usuario Incluido";
-				$bitacora = new Bitacora();
-				$bitacora->b_incluir();
+				$bitacora = new Bitacora($co);
+				$bitacora->b_registro("Registró el nuevo usuario \"".TIPO_INDENT_ARRAY[$tipo_identificacion].$rif_cedula."\"");
 
 				
 
+				$co->commit();
 			} catch (Exception $e) {
+				if($co instanceof PDO){
+					if($co->inTransaction()){
+						$co->rollBack();
+					}
+				}
+			
 				$r['resultado'] = 'error';
-				$r['mensaje'] =  $e->getMessage();
+				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 			}
 		} else {
 			$r['resultado'] = 'error';
@@ -132,44 +161,83 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	PRIVATE function modificar($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol)
+	PRIVATE function modificar()
 	{
+		$id = $this->id;
+		$rif_cedula = $this->rif_cedula;
+		$tipo_identificacion = $this->tipo_identificacion;
+		$razon_social = $this->razon_social;
+		$domicilio_fiscal = $this->domicilio_fiscal;
+		$telefono = $this->telefono;
+		$correo = $this->correo;
+		$password = $this->password;
+		$rol = $this->rol;
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id, 0, 2)) {
 			try {
-				$co->query("Update datos_usuarios set 
-						rif_cedula = '$rif_cedula',
-						tipo_identificacion = '$tipo_identificacion',
-						razon_social = '$razon_social',
-						domicilio_fiscal = '$domicilio_fiscal'	,					
-						telefono = '$telefono',
-						correo = '$correo'
-						where
-						id = '$id'
-						");
-				if ($password) {
+				$this->validar_conexion($co);
+				$co->beginTransaction();
+				$consulta = $co->prepare("UPDATE datos_usuarios SET 
+						rif_cedula = :rif_cedula,
+						tipo_identificacion = :tipo_identificacion,
+						razon_social = :razon_social,
+						domicilio_fiscal = :domicilio_fiscal	,					
+						telefono = :telefono,
+						correo = :correo
+						WHERE
+						id = :id");
+
+				$consulta->bindValue(":rif_cedula",$rif_cedula);
+				$consulta->bindValue(":tipo_identificacion",$tipo_identificacion);
+				$consulta->bindValue(":razon_social",$razon_social);
+				$consulta->bindValue(":domicilio_fiscal",$domicilio_fiscal);
+				$consulta->bindValue(":telefono",$telefono);
+				$consulta->bindValue(":correo",$correo);
+				$consulta->bindValue(":id",$id);
+				$consulta->execute();
+
+
+				if($password){
+					$consulta = $co->prepare("UPDATE usuarios_roles SET 
+								id_rol = :rol,
+								clave = :contrasena
+								WHERE
+								id_usuario = :id
+								");
 					$contrasena = password_hash($password, PASSWORD_DEFAULT);
-					$co->query("Update usuarios_roles set 
-							id_rol = '$rol',
-							clave = '$contrasena'
-							where
-							id_usuario = '$id'
-							");
-				}else{
-					$co->query("Update usuarios_roles set 
-							id_rol = '$rol'
-							where
-							id_usuario = '$id'
-							");
+					$consulta->bindValue(":contrasena",$contrasena);
 				}
+				else{
+					$consulta = $co->prepare("UPDATE usuarios_roles SET 
+								id_rol = :rol
+								WHERE
+								id_usuario = :id
+								");
+				}
+
+
+
+				$consulta->bindValue(":rol",$rol);
+				$consulta->bindValue(":id",$id);
+				$consulta->execute();
+
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  "Usuario modificado correctamente";
-				$bitacora = new Bitacora();
-				$bitacora->b_modificar();
+				$bitacora = new Bitacora($co);
+				$bitacora->b_registro("Modificó el usuario \"".TIPO_INDENT_ARRAY[$tipo_identificacion].$rif_cedula."\"");
+				
 
+				$co->commit();
 			} catch (Exception $e) {
-				return $e->getMessage();
+				if($co instanceof PDO){
+					if($co->inTransaction()){
+						$co->rollBack();
+					}
+				}
+			
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 			}
 		} else {
 			$r['resultado'] = 'error';
@@ -177,25 +245,22 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	PRIVATE function eliminar($id)
+	PRIVATE function eliminar()
 	{
+		$id = $this->id;
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id, 0, 2)) {
 			try {
-				// $co->query("delete from usuarios_roles
-				// 		where
-				// 		id_usuario = '$id'
-				// 		");
-				$co->query("delete from datos_usuarios
-						where
-						id = '$id'
-						");
+				
+				$consulta = $co->prepare("DELETE FROM datos_usuarios WHERE id = :id ");
+				$consulta->bindValue(":id",$id);
+				$consulta->execute();
+
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Usuario Eliminado";
 				
 				$bitacora = new Bitacora();
-				$bitacora->b_eliminar();
+				$bitacora->b_registro("Eliminó el usuario \"$id\"");
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				if ($e->getCode()=='23000') {

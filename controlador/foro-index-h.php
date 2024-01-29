@@ -12,6 +12,8 @@ if (is_file("vista/" . $p . ".php")) {
 		}
 		exit;
 	}
+	$b = new Bitacora();
+	$b->b_registro("Ingreso al modulo \"Foro\"");
 	require_once("vista/" . $p . ".php");
 } else {
 	require_once("vista/404.php");

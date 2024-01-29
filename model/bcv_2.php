@@ -72,7 +72,7 @@ if(isset($_POST["control"])){
 					    	$bitacora->set_usuario_id(null);
 					    	$bitacora->set_tipo(null);
 					    	$bitacora->b_registro("Registro nuevo monto BCV ($dolar)1");
-					    	$bitacora->set_c(null);
+					    	// $bitacora->set_c(null);
 
 					    	echo json_encode(["resultado" => "actualizar" ,"mensaje" => ["fecha" => $fecha_actual->format("Y-m-d H:i:s"), "monto" => $dolar]]);
 					    }
@@ -85,7 +85,7 @@ if(isset($_POST["control"])){
 					    $bitacora->set_usuario_id(null);
 					    $bitacora->set_tipo(null);
 					    $bitacora->b_registro("Registro nuevo monto BCV ($dolar)2");
-					    $bitacora->set_c(null);
+					    // $bitacora->set_c(null);
 
 					    echo json_encode(["resultado" => "actualizar (de fechas diferentes)" ,"mensaje" => ["fecha" => $fecha_actual->format("Y-m-d H:i:s"), "monto" => $dolar]]);
 

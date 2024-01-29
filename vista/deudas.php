@@ -26,6 +26,7 @@
             <table class="table table-striped table-hover" id="tabladeudas">
               <thead>
                 <tr>
+                  <th scope="col" class="text-info">Deuda Nº</th>
                   <th scope="col" class="text-info">Apto</th>
                   <th scope="col" class="text-info d-none d-md-table-cell">Torre</th>
                   <th scope="col" class="text-info d-none d-md-table-cell">Concepto</th>
@@ -46,6 +47,7 @@
             <table class="table table-striped table-hover" id="tablamorosos">
               <thead>
                 <tr>
+                  <th scope="col" class="text-info">Deuda Nº</th>
                   <th scope="col" class="text-info">Apto</th>
                   <th scope="col" class="text-info d-none d-md-table-cell">Torre</th>
                   <th scope="col" class="text-info d-none d-md-table-cell">Concepto</th>

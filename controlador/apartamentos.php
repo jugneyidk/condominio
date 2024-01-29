@@ -28,7 +28,7 @@ if (is_file("vista/" . $p . ".php")) {
 
       echo json_encode($respuesta);
     } else if ($accion == 'modificar') {
-      
+
       $o->set_id_apartamento($_POST['id']);
       $o->set_num_letra_apartamento($_POST['numapto']);
       $o->set_propietario($_POST['propietario']);
@@ -51,6 +51,10 @@ if (is_file("vista/" . $p . ".php")) {
     }
     exit;
   }
+  $b_temp = new Bitacora;
+  $b_temp->b_registro("Ingreso en el modulo \"".$_GET["p"]."\"");
+
+
   require_once("vista/" . $p . ".php");
 } else {
     require_once("vista/404.php"); 

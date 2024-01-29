@@ -1,9 +1,6 @@
 <?php
-if (!is_file("model/" . $p . ".php")) {
-	echo "Falta definir la clase " . $p;
-	exit;
-}
-require_once("model/" . $p . ".php");
+
+require_once("model/foro.php");
 
 if (is_file("vista/" . $p . ".php")) {
 	$o = new Foro();
@@ -15,6 +12,8 @@ if (is_file("vista/" . $p . ".php")) {
 		}
 		exit;
 	}
+	$b = new Bitacora();
+	$b->b_registro("Ingreso al modulo \"Foro\"");
 	require_once("vista/" . $p . ".php");
 } else {
 	require_once("vista/404.php");

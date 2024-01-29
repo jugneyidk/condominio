@@ -1429,7 +1429,10 @@
 			document.getElementById('deuda_concepto').value=mensaje;
 			document.getElementById('deuda_concepto').onkeyup();
 			//var hoy_format = hoy.getFullYear()+"-"+(hoy.getMonth() + 1)+"-"+(hoy.getDate())<10?"0"+hoy.getDate():hoy.getDate();
-			var hoy_format = hoy.getFullYear()+"-"+(hoy.getMonth() + 1)+"-";
+			var hoy_format = hoy.getFullYear()+"-";
+			var month = hoy.getMonth() + 1;
+			hoy_format += (parseInt(month) <10 )?"0":"";
+			hoy_format += month+"-";
 			hoy_format += (parseInt(hoy.getDate())<10)?"0"+hoy.getDate():hoy.getDate();
 			document.getElementById('deuda_fecha').value = hoy_format;
 		}

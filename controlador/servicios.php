@@ -23,7 +23,7 @@ if (is_file("vista/" . $p . ".php")) {
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'modificar') {
-			$o->set_servicio($_POST['service']);
+			// $o->set_servicio($_POST['service']);
 			$o->set_descripcion($_POST['descripcion']);
 			$o->set_id_pago_serv($_POST["id"]);
 			$o->set_obj_pagos(json_decode($_POST["tipo_pago"]));// paso todo el objeto de pagos
@@ -60,6 +60,8 @@ if (is_file("vista/" . $p . ".php")) {
 		}
 		exit;
 	}
+	$b_temp = new Bitacora;
+  	$b_temp->b_registro("Ingreso en el modulo \"".$_GET["p"]."\"");
 	require_once("vista/" . $p . ".php");
 	} else {
 		require_once("vista/404.php");

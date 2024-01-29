@@ -10,6 +10,3 @@
 	<?php require_once('comunes/foot.php'); ?>
 </body>
 </html>
-
-
-

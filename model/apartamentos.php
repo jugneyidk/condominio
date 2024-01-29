@@ -142,12 +142,19 @@ class apto extends datos
 		if ($this->existe($this->id_apartamento, 0, 0, 2)) {
 			try {
 				//$co->query("delete from apartamento where id_apartamento = '$id_apartamento'");
+				$consulta = $co->prepare("SELECT num_letra_apartamento FROM apartamento WHERE id_apartamento = ?");
+				$consulta->execute([$this->id_apartamento]);
+				$consulta = $consulta->fetch(PDO::FETCH_ASSOC);
+
+				$this->num_letra_apartamento = $consulta["num_letra_apartamento"];
+
 				$consulta = $co->prepare("DELETE FROM apartamento WHERE id_apartamento = ?");
 				$consulta->execute([$this->id_apartamento]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Registro eliminado correctamente";
 				$bitacora = new Bitacora();
-				$bitacora->b_eliminar();
+				$bitacora->b_registro("Elimino el apartamento ($this->num_letra_apartamento)");
+				//$bitacora->b_eliminar();
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				if ($e->getCode()=='23000') {

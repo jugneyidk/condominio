@@ -43,7 +43,7 @@ class consulta extends datos
                     $_SESSION['CONDOMINIO_TOKEN'] = password_hash($resultado["cedula_rif"]."-".$resultado["tipo_identificacion"], PASSWORD_DEFAULT);
 
                     $bitacora = new Bitacora();
-                    $bitacora->b_registro("Inicio sesion");
+                    $bitacora->b_registro("Inicio sesión");
 
                     $r["resultado"]="correcto";
                     return $r;

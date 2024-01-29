@@ -163,6 +163,7 @@ function loadComentarios() {
         if (lee.resultado == "listaComentarios") {
             if (lee.mensaje) {
                 var comentarios = '';
+                console.log(lee.mensaje);
                 lee.mensaje.forEach(comentario => {
                     comentarios += '<div class="row mb-3">';
                     comentarios += '<div class="col">';

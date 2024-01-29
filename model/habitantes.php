@@ -24,8 +24,8 @@ class habitantes extends datos
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-		$guarda->execute();
+		$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
+		$guarda->execute([$modulo, $id_rol]);
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
@@ -43,9 +43,10 @@ class habitantes extends datos
 
 
 		if (!$this->existe($cedula_rif, $tipo_identificacion, 1)) {
-			$co = $this->conecta();
-			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
+				$co = $this->conecta();
+				$this->validar_conexion($co);
+				$co->beginTransaction();
 				$consulta = $co->prepare("INSERT INTO habitantes(
 						cedula_rif,
 						tipo_identificacion,
@@ -82,12 +83,20 @@ class habitantes extends datos
 
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Registro Incluido";
-				$bitacora = new Bitacora();
-				$bitacora->b_incluir();
+				$bitacora = new Bitacora($co);
+				$bitacora->b_registro("Registró al habitante \"".TIPO_INDENT_ARRAY[$tipo_identificacion].$cedula_rif."\"");
 
 				
+				$co->commit();
 			} catch (Exception $e) {
-				return $e->getMessage();
+				if($co instanceof PDO){
+					if($co->inTransaction()){
+						$co->rollBack();
+					}
+				}
+			
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 			}
 		} else {
 			$r['resultado'] = 'error';
@@ -106,9 +115,10 @@ class habitantes extends datos
 		$correo = $this->correo;
 		$domicilio_fiscal = $this->domicilio_fiscal;
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id,0,2)) {
 			try {
+				$this->validar_conexion($co);
+				$co->beginTransaction();
 				$consulta = "UPDATE habitantes SET 
 						cedula_rif = :cedula_rif,
 						tipo_identificacion = :tipo_identificacion,
@@ -139,12 +149,22 @@ class habitantes extends datos
 				$consulta->execute();
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  "Registro modificado correctamente";
-				$bitacora = new Bitacora();
-				$bitacora->b_modificar();
+				$bitacora = new Bitacora($co);
+				$bitacora->b_registro("Modificó al habitante \"".TIPO_INDENT_ARRAY[$tipo_identificacion].$cedula_rif."\"");
+				//$bitacora->b_modificar();
 
+
+				$co->commit();
 				
 			} catch (Exception $e) {
-				return $e->getMessage().":".$e->getLine();
+				if($co instanceof PDO){
+					if($co->inTransaction()){
+						$co->rollBack();
+					}
+				}
+			
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 			}
 		} else {
 			$r['resultado'] = 'error';
@@ -159,16 +179,29 @@ class habitantes extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id,0,2)) {
 			try {
-				$co->prepare("DELETE FROM habitantes WHERE id = :id ");
+				$this->validar_conexion($co);
+				$co->beginTransaction();
+				$consulta = $co->prepare("SELECT tipo_identificacion, cedula_rif FROM habitantes WHERE id = ?");
+				$consulta->execute([$id]);
+				$anterior = $consulta->fetch(PDO::FETCH_ASSOC);
+
+				$consulta = $co->prepare("DELETE FROM habitantes WHERE id = :id ");
 
 				$consulta->bindValue(":id",$id);
 				$consulta->execute();
 
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Registro Eliminado";
-				$bitacora = new Bitacora();
-				$bitacora->b_eliminar();
+				$bitacora = new Bitacora($co);
+				$bitacora->b_registro("Eliminó al habitante \"".TIPO_INDENT_ARRAY[$anterior["tipo_identificacion"]].$anterior["cedula_rif"]."\"");
+				$co->commit();
+
 			} catch (Exception $e) {
+				if($co instanceof PDO){
+					if($co->inTransaction()){
+						$co->rollBack();
+					}
+				}
 				$r['resultado'] = 'error';
 				if ($e->getCode()=='23000') {
 					$r['mensaje'] =  "El habitante no puede ser eliminado si está asignado a un apartamento.";

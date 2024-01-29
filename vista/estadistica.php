@@ -1,6 +1,4 @@
-<?php require_once('comunes/head.php'); 
-$morososData = getMorososData();
-?>
+<?php require_once('comunes/head.php'); ?>
 <body class="bg-light">
 	<?php require_once("comunes/carga.php"); ?>
 	<?php require_once("comunes/modal.php"); ?> 
@@ -22,7 +20,30 @@ $morososData = getMorososData();
 
 <script>
     // Convierte los datos PHP a JavaScript
+    const meses = [
+  "nulo",
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
     var labels = <?php echo json_encode(array_keys($morososData)); ?>;
+    var labels_temp = [];
+    // labels_temp.push("hola");
+
+    for(x of labels){
+        labels_temp.push(meses[x]);
+    }
+    
+    labels = labels_temp;
     var data = <?php echo json_encode(array_values($morososData)); ?>;
 
     var ctx = document.getElementById("myChart").getContext("2d");

@@ -18,21 +18,25 @@ $bitacora->b_eliminar();
 class Bitacora extends datos
 {
 	PRIVATE $c,$usuario_id,$tipo;
-	PUBLIC function __construct()
+	PUBLIC function __construct($con = NULL)
 	{
+		if(isset($con)){
+			$this->con_temp = $con;
+		}
 		$habitante = [
 		  "detallesdeuda",
 		  "foro-index-h",
 		  "foro-post-h",
+		  "consulta",
 		  "foroAction"
 		];
 		if(!empty($_GET["p"])){
 			$p = $_GET['p'];
 		}
 
-		$this->c = $this->conecta();
-		$this->c->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if(!empty($_GET['p']) and in_array($p, $habitante)){
+		// $this->c = $this->conecta();
+		// $this->c->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		if(!empty($_GET['p']) and in_array($p, $habitante) and isset($_SESSION["id_habitante"])){
 			$this->usuario_id = $_SESSION['id_habitante'];
 			$this->tipo = 0;
 		}
@@ -48,57 +52,104 @@ class Bitacora extends datos
 
 	PUBLIC function b_incluir($string = ""){
 		try {
+			if(isset($this->con_temp)){
+				$this->c = $this->con_temp;
+			}
+			else{
+				$this->c = $this->conecta();
+			}
 			$consult=$this->c->prepare("INSERT INTO bitacora (user_id,user_type, descrip) values (?,?,?)");
 			$descrip= "Registro en ".$_GET["p"];
 			$descrip.=" ".$string;
 			$consult->execute([$this->usuario_id,$this->tipo, $descrip]);
 		} finally{
+			if(!isset($this->con_temp)){
+				$this->c = null;
+			}
+			
 
 		}
 	}
 
 	PUBLIC function b_modificar($string = ""){
 		try {
+			if(isset($this->con_temp)){
+				$this->c = $this->con_temp;
+			}
+			else{
+				$this->c = $this->conecta();
+			}
 			$consult=$this->c->prepare("INSERT INTO bitacora (user_id, user_type, descrip) values (?,?,?)");
 			$descrip= "Modificación en ".$_GET["p"];
 			$descrip.=" ".$string;
 			$consult->execute([$this->usuario_id,$this->tipo, $descrip]);
 		} finally{
+			if(!isset($this->con_temp)){
+				$this->c = null;
+			}
 
 		}
 	}
 
 	PUBLIC function b_eliminar($string = ""){
 		try {
+			if(isset($this->con_temp)){
+				$this->c = $this->con_temp;
+			}
+			else{
+				$this->c = $this->conecta();
+			}
 			$consult=$this->c->prepare("INSERT INTO bitacora (user_id,user_type, descrip) values (?,?,?)");
 			$descrip= "Eliminación en ".$_GET["p"];
 			$descrip.=" ".$string;
 			$consult->execute([$this->usuario_id,$this->tipo, $descrip]);
 		} finally{
+			if(!isset($this->con_temp)){
+				$this->c = null;
+			}
 
 		}
 	}
 	PUBLIC function b_accion($string = ""){
 		try {
+			if(isset($this->con_temp)){
+				$this->c = $this->con_temp;
+			}
+			else{
+				$this->c = $this->conecta();
+			}
 			$consult=$this->c->prepare("INSERT INTO bitacora (user_id,user_type, descrip) values (?,?,?)");
 			$descrip= $string." ".$_GET["p"];
 			$consult->execute([$this->usuario_id,$this->tipo, $descrip]);
 		} finally{
+			if(!isset($this->con_temp)){
+				$this->c = null;
+			}
 
 		}
 	}
 	PUBLIC function b_registro($string = ""){
 		try {
+			if(isset($this->con_temp)){
+				$this->c = $this->con_temp;
+			}
+			else{
+				$this->c = $this->conecta();
+			}
 			$consult = $this->c->prepare("INSERT INTO bitacora (user_id,user_type, descrip) values (?,?,?)");
 			$descrip = $string;
 			$consult->execute([$this->usuario_id,$this->tipo, $descrip]);
 		} finally{
+			if(!isset($this->con_temp)){
+				$this->c = null;
+			}
 
 		}
 	}
 
 	PUBLIC function load_bitacora(){
 		try {
+			$this->c = $this->conecta();
 			$this->validar_conexion($this->c);
 			$this->c->beginTransaction();
 			//$consulta = $this->c->query("SELECT IF(u.razon_social IS NULL,'Sistema',u.razon_social) AS user,u.rif_cedula,u.tipo_identificacion, `descrip`,`fecha` FROM `bitacora` AS b JOIN datos_usuarios as u ON b.user = u.id WHERE 1;");
@@ -195,6 +246,9 @@ ORDER BY fecha DESC");
 		
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}
+		finally{
+			$this->c = null;
 		}
 		return $r;
 	}

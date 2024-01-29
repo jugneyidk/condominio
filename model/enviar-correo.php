@@ -9,7 +9,7 @@ require 'PHPMailer/src/SMTP.php';
 require_once('model/datos.php');
 class enviarcorreo extends datos
 {
-	PRIVATE $id,$username,$password,$name;
+	PRIVATE $id,$username,$password,$name,$con;
 	function __construct()
 	{
 		$this->username = "diego14asf@gmail.com";
@@ -21,7 +21,7 @@ class enviarcorreo extends datos
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		//$existe = $this->existe($id);
+		$existe = $this->existe($id);
 
 
 
@@ -159,16 +159,21 @@ class enviarcorreo extends datos
 			return $e->getMessage();
 		}
 	}
-	PUBLIC function notificar_factura($distribucion){
+	PUBLIC function notificar_factura($distribucion,$con = null){
 		try {
-			$this->con = $this->conecta();
+			if(!isset($con)){
+				$this->con = $this->conecta();
+			}
+			else {
+				$this->con = $con;
+			}
 			$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			$this->validar_conexion($this->con);
-			$this->con->beginTransaction();
-			$consulta = $this->con->prepare("SELECT * from distribuciones WHERE id_distribucion = ?");;
-			$consulta->execute([$distribucion]);
-			if($consulta->fetch()){
+			// $this->con->beginTransaction();
+			$consulta_temp = $this->con->prepare("SELECT * FROM distribuciones WHERE id_distribucion = ?");
+			$consulta_temp->execute([$distribucion]);
+			if($consulta_temp->fetch(PDO::FETCH_ASSOC)){
 				$consulta = $this->con->prepare("SELECT * FROM deudas as d LEFT JOIN distribuciones as dis on dis.id_distribucion = d.id_distribucion LEFT JOIN apartamento as a on a.id_apartamento = d.id_apartamento LEFT JOIN habitantes as h ON a.propietario = h.id WHERE d.id_distribucion = ? GROUP BY h.id ORDER BY d.id_apartamento ");
 				$consulta->execute([$distribucion]);
 				$control = $consulta->fetchall(PDO::FETCH_ASSOC);
@@ -225,13 +230,14 @@ class enviarcorreo extends datos
 						$mail->clearAllRecipients();
 						$mail->clearAttachments();
 						$mail->clearCustomHeaders();
-						//return false;
+						return false;
 					} else {
 						$mail->clearAllRecipients();
 						$mail->clearAttachments();
 						$mail->clearCustomHeaders();
-						//return true;
+						return true;
 					}
+
 
 
 
@@ -246,9 +252,9 @@ class enviarcorreo extends datos
 			}
 			else{
 				$r['resultado'] = 'console';
-				$r['mensaje'] =  "else";
+				$r['mensaje'] =  "no se encontro la distribucion $distribucion";
 			}
-			//$this->con->commit();
+			$this->con->commit();
 		
 		} catch (Validaciones $e){
 			if($this->con instanceof PDO){

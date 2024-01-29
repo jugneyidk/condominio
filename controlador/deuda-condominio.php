@@ -111,6 +111,8 @@ if (is_file("vista/" . $p . ".php")) {
     }
     exit;
   }
+  $b_temp = new Bitacora;
+  $b_temp->b_registro("Ingreso en el modulo \"Deuda del Condominio\"");
   require_once("vista/" . $p . ".php");
 } else {
   require_once("vista/404.php");

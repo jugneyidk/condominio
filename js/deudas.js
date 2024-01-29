@@ -37,6 +37,7 @@ function carga_deudas(){
 				  },
 				  "ordering": false,
 				  columns: [
+					  { data: "id_deuda" },
 					  { data: "num_letra_apartamento" },
 					  { data: "torre" },
 					  { data: "concepto" },
@@ -52,11 +53,11 @@ function carga_deudas(){
 					if(data.id_pago){
 					  row.dataset.id_pago = data.id_pago;
 					}
-					row.querySelector("td:nth-child(2)").classList.add("d-none","d-md-table-cell");
 					row.querySelector("td:nth-child(3)").classList.add("d-none","d-md-table-cell");
-					row.querySelector("td:nth-child(4)").classList.add("text-nowrap");
-					row.querySelector("td:nth-child(5)").classList.add("money_icon");
-					row.querySelector("td:nth-child(5)").innerText = sepMiles(data.monto);
+					row.querySelector("td:nth-child(4)").classList.add("d-none","d-md-table-cell");
+					row.querySelector("td:nth-child(5)").classList.add("text-nowrap");
+					row.querySelector("td:nth-child(6)").classList.add("money_icon");
+					row.querySelector("td:nth-child(6)").innerText = sepMiles(data.monto);
 					row.querySelector("td:last-child").classList.add("text-center");
 					if(data.id_pago == null || data.estado !=0){
 					  var button = crearElem("button", "class,btn btn-success, style, font-size:13px;","Pagar");
@@ -116,6 +117,7 @@ function carga_deudas(){
 			  	  },
 			  	  "ordering": false,
 			  	  columns: [
+					  { data: "id_deuda" },
 			  		  { data: "num_letra_apartamento" },
 			  		  { data: "torre" },
 			  		  { data: "concepto" },
@@ -131,11 +133,11 @@ function carga_deudas(){
 			  		if(data.id_pago){
 			  		  row.dataset.id_pago = data.id_pago;
 			  		}
-			  		row.querySelector("td:nth-child(2)").classList.add("d-none","d-md-table-cell");
 			  		row.querySelector("td:nth-child(3)").classList.add("d-none","d-md-table-cell");
-			  		row.querySelector("td:nth-child(4)").classList.add("text-nowrap");
-			  		row.querySelector("td:nth-child(5)").classList.add("money_icon");
-					row.querySelector("td:nth-child(5)").innerText = sepMiles(data.monto);
+			  		row.querySelector("td:nth-child(4)").classList.add("d-none","d-md-table-cell");
+			  		row.querySelector("td:nth-child(5)").classList.add("text-nowrap");
+			  		row.querySelector("td:nth-child(6)").classList.add("money_icon");
+					row.querySelector("td:nth-child(6)").innerText = sepMiles(data.monto);
 			  		row.querySelector("td:last-child").classList.add("text-center");
 			  		if(data.id_pago == null || data.estado !=0){
 			  		  row.querySelector("td:last-child").innerHTML="<button class='btn btn-success' style='font-size: 13px;' onclick='mostrar_registrar_pago(this)'>Pagar</button>";

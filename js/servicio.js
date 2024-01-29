@@ -21,10 +21,10 @@ $(document).ready(function(){
 
 
 
-	eventoKeypress(document.getElementById('descripcion'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);
-	eventoKeypress(document.getElementById('servicio_2'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);//-----------
-	eventoKeyup(document.getElementById('servicio_2'),   /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,"El nombre de servicio tiene caracteres no permitidos");//-----------
-	eventoKeyup(document.getElementById('descripcion'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{0,100}$/, "La descripción tiene caracteres no permitidos");
+	eventoKeypress(document.getElementById('descripcion'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);
+	eventoKeypress(document.getElementById('servicio_2'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]*$/);//-----------
+	eventoKeyup(document.getElementById('servicio_2'),   /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,"El nombre de servicio tiene caracteres no permitidos");//-----------
+	eventoKeyup(document.getElementById('descripcion'), /^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{0,100}$/, "La descripción tiene caracteres no permitidos");
 	document.getElementById('servicio_2').maxLength=50;
 	document.getElementById('descripcion').maxLength = 100;
 
@@ -164,7 +164,7 @@ $(document).ready(function(){
 
 
 	$("#incluir_2").on("click", function () {
-		if (validarKeyUp(/^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,$("#servicio_2"),"El nombre de servicio tiene caracteres no permitidos")) {
+		if (validarKeyUp(/^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,$("#servicio_2"),"El nombre de servicio tiene caracteres no permitidos")) {
 			$("#accion_2").val("incluir_s");
 			$("#servicio_2").val( removeSpace($("#servicio_2").val()) );
 
@@ -193,7 +193,7 @@ $(document).ready(function(){
 	});
 
 	$("#modificar_2").on("click", function () {
-		if (validarKeyUp(/^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,$("#servicio_2"),"El nombre de servicio tiene caracteres no permitidos")) {
+		if (validarKeyUp(/^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{1,50}$/,$("#servicio_2"),"El nombre de servicio tiene caracteres no permitidos")) {
 			if($("#id_2").val()==''){
 				muestraMensaje("ERROR","Debe seleccionar un servicio","error");
 				return false;
@@ -462,7 +462,7 @@ function lista_servicios(){
 
 function validarPagoServicios(){
 
-	if(!validarKeyUp(/^[0-9a-zA-Z\s]{0,100}$/,$("#descripcion"),"ingrese una descripción valida solo se permiten letras y números")){
+	if(!validarKeyUp(/^[0-9.,\/#!$%\^&\*;:{}=\-_`~()”“\"…a-zA-Z\\\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ]{0,100}$/,$("#descripcion"),"ingrese una descripción valida solo se permiten letras y números")){
 		muestraMensaje("ERROR", "ingrese una descripción valida solo se permiten letras y números","error");
 		return false;   
 	}

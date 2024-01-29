@@ -2,6 +2,8 @@
 
 require_once('model/datos.php');
 require_once("model/bitacora.php");
+require_once("model/enviar-correo.php");
+
 
 
 class Deudacondominio extends datos
@@ -92,7 +94,7 @@ class Deudacondominio extends datos
 			}
 
 			$bitacora = new Bitacora();
-			$bitacora->b_incluir("lista cargos");
+			$bitacora->b_registro("Registró un nuevo cargo \"$this->concepto\"");
 
 			
 			//$consulta=$this->con->query("SELECT * FROM apartamentos_lista_cargos WHERE 1;")->fetchall(PDO::FETCH_ASSOC);
@@ -154,7 +156,7 @@ class Deudacondominio extends datos
 			}
 			$this->con->beginTransaction();
 				
-				$consulta = $this->con->prepare("SELECT * FROM lista_cargos_d WHERE id_lista_cargos = ?;");
+				$consulta = $this->con->prepare("SELECT 1 FROM lista_cargos_d WHERE id_lista_cargos = ?;");
 				$consulta->execute([$this->id]);
 				if($consulta->fetch()){
 
@@ -191,7 +193,8 @@ class Deudacondominio extends datos
 				else throw new Validaciones("El cargo a no existe o fue eliminado", 1);
 
 
-
+				$bitacora = new Bitacora();
+				$bitacora->b_registro("Modificó el cargo \"$this->concepto\"");
 			
 			$r['resultado'] = 'modificar_cargo';
 			$r['mensaje'] =  "";
@@ -221,14 +224,23 @@ class Deudacondominio extends datos
 		try {
 			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
-			$consulta = $this->con->prepare("SELECT * FROM lista_cargos_d WHERE id_lista_cargos = ?;");
+			$consulta = $this->con->prepare("SELECT concepto FROM lista_cargos_d WHERE id_lista_cargos = ?;");
 			$consulta->execute([$this->id]);
 
-			if($consulta->fetch()){
+
+
+			if($resp = $consulta->fetch(PDO::FETCH_ASSOC)){
 				$consulta = $this->con->prepare("DELETE FROM lista_cargos_d WHERE id_lista_cargos = ?;");
 				$consulta->execute([$this->id]);
 			}
 			else throw new Validaciones("El cargo a no existe o fue eliminado", 1);
+
+			$this->concepto = $resp["concepto"];
+
+			$bitacora = new Bitacora();
+			$bitacora->b_registro("Eliminó el cargo \"$this->concepto\"");
+
+
 			
 			
 			$r['resultado'] = 'eliminar_cargo';
@@ -562,14 +574,17 @@ class Deudacondominio extends datos
 
 
 
-			// require_once("model/enviar-correo.php");
-			// $mailer = new enviarcorreo;
 
-			
+			$b_temp = new Bitacora($this->con);
+  			$b_temp->b_registro("distribuyo la deuda \"$this->concepto\"");
+
+			// TODO agregar para que se envien los correos
+			$mailer = new enviarcorreo;
+			//$resp = $mailer->notificar_factura($this->id, $this->con);
 			$this->con->commit();
 			
 			$r['resultado'] = 'distribuir_deudas';
-			$r['mensaje'] =  $consulta->rowCount();
+			$r['mensaje'] =  $resp;
 			// $r['mensaje'] =  $mailer->notificar_factura($this->id);;
 
 
@@ -674,11 +689,14 @@ class Deudacondominio extends datos
 
 			$b = new Bitacora();
 			if($anterior["concepto"] != $this->concepto){
-				$b->b_accion("Modifico el concepto de \"{$anterior['concepto']}\" a \"$this->concepto\" del a distribucion de deuda {$anterior['id_distribucion']}");
+				$b_temp = new Bitacora;
+				$b->b_registro("Modifico el concepto de \"{$anterior['concepto']}\"");
 			}
 			if($anterior["fecha"] != $this->fecha){
-				$b->b_accion("Modifico la fecha de \"{$anterior['fecha']}\" a \"$this->fecha\" del a distribucion de deuda {$anterior['id_distribucion']}");
+				$b->b_registro("Modifico la fecha de \"{$anterior['fecha']}\"");
 			}
+
+
 
 
 
@@ -719,15 +737,17 @@ class Deudacondominio extends datos
 			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("SELECT * FROM distribuciones WHERE id_distribucion = ?");
 			$consulta->execute([$this->id]);
+			$anterior = $consulta->fetch(PDO::FETCH_ASSOC);
 
-			if(!$consulta->fetch(PDO::FETCH_ASSOC)){
+			if(!$anterior){
 				throw new Validaciones("La distribución seleccionada no existe", 1);
 			}
+
 			$consulta = $this->con->prepare("SELECT 1 FROM distribuciones as dis
 											LEFT JOIN deudas as d on d.id_distribucion = dis.id_distribucion
 											LEFT JOIN deuda_pagos as dp on dp.id_deuda = d.id_deuda
 											LEFT JOIN pagos as p on p.id_pago = dp.id_pago
-											WHERE id_distribucion = ? AND dp.id_pago IS NOT NULL AND(p.estado IN (0,2) OR p.estado IS NULL)");
+											WHERE dis.id_distribucion = ? AND dp.id_pago IS NOT NULL AND(p.estado IN (0,2) OR p.estado IS NULL)");
 			$consulta->execute([$this->id]);
 
 			if($consulta->fetch(PDO::FETCH_ASSOC)){
@@ -736,6 +756,10 @@ class Deudacondominio extends datos
 
 			$consulta = $this->con->prepare("DELETE FROM distribuciones WHERE id_distribucion = ?");
 			$consulta->execute([$this->id]);
+
+			$b = new Bitacora();
+			$b->b_registro("Modifico el concepto de \"{$anterior['concepto']}\"");
+
 
 			
 			
@@ -774,8 +798,8 @@ class Deudacondominio extends datos
 		$modulo = $_GET['p'];
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-		$guarda->execute();
+		$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
+		$guarda->execute([$modulo, $id_rol]);
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;

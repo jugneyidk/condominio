@@ -21,8 +21,8 @@ class avisos extends datos
 		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->con;
-		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-		$guarda->execute();
+		$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
+		$guarda->execute([$modulo, $id_rol]);
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
@@ -49,7 +49,8 @@ class avisos extends datos
 			$r['resultado'] = 'incluir';
 			$r['mensaje'] =  'Registro Incluido';
 			$bitacora = new Bitacora();
-			$bitacora->b_incluir();
+  			$bitacora->b_registro("Registró el aviso \"$this->titulo\"");
+			// $bitacora->b_incluir();
 
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
@@ -73,7 +74,8 @@ class avisos extends datos
 			$r['mensaje'] =  'Registro Modificado';
 
 			$bitacora = new Bitacora();
-			$bitacora->b_modificar();
+  			$bitacora->b_registro("Modificó el aviso \"$this->titulo\"");
+			// $bitacora->b_modificar();
 
 
 		} catch (Exception $e) {
@@ -89,14 +91,17 @@ class avisos extends datos
 		try {
 			$consulta = $this->con->prepare("SELECT * FROM avisos WHERE id_aviso = ?");
 			$consulta->execute([$this->id]);
-			if ($consulta->fetch()) {
+			if ($resp = $consulta->fetch(PDO::FETCH_ASSOC)) {
 				$consulta = $this->con->prepare("DELETE FROM avisos WHERE id_aviso = ?");
 				$consulta->execute([$this->id]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  'Registro Eliminado';
+
+				$this->titulo = $resp["titulo"];
 				
 				$bitacora = new Bitacora();
-				$bitacora->b_eliminar();
+  				$bitacora->b_registro("Eliminó el aviso \"$this->titulo\"");
+				// $bitacora->b_eliminar();
 			} else {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El Registro no existe";

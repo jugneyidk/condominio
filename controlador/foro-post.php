@@ -1,12 +1,8 @@
 <?php
-if (!is_file("model/" . $p . ".php")) {
-	echo "Falta definir la clase " . $p;
-	exit;
-}
-require_once("model/" . $p . ".php");
+require_once("model/foro.php");
 
 if (is_file("vista/" . $p . ".php")) {
-	$o = new ForoPost();
+	$o = new Foro();
 	$postId = $_GET['postId'];
 	if (!empty($_POST)) {
 		$accion = $_POST['accion'];
@@ -26,6 +22,8 @@ if (is_file("vista/" . $p . ".php")) {
 		exit;
 	}
 	$usuario_normal_no_habitante = 1;
+	$b = new Bitacora();
+	$b->b_registro("Ingreso al Foro \"$postId\"");
 	require_once("vista/" . $p . ".php");
 } else {
 	require_once("vista/404.php");

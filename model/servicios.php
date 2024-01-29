@@ -31,8 +31,8 @@ class servicio extends datos
 			$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 			$modulo = $_GET['p'];
 			$co = $this->con;
-			$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-			$guarda->execute();
+			$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
+			$guarda->execute([$modulo, $id_rol]);
 			$fila = array();
 			$fila = $guarda->fetch(PDO::FETCH_NUM);
 			return $fila;
@@ -168,8 +168,8 @@ class servicio extends datos
 						$r['resultado'] = 'incluir';
 						$r['mensaje'] =  'Registro Incluido';
 
-						$bitacora = new Bitacora();
-						$bitacora->b_incluir("pago de servicio");
+						$bitacora = new Bitacora($this->con);
+						$bitacora->b_registro("Registró pago de servicio con el Nº \"{$this->obj_pagos->id_pago}\"");
 				}
 				else{
 					$r['resultado'] = 'error';
@@ -300,8 +300,8 @@ class servicio extends datos
 
 					$r['resultado'] = 'modificar';
 					$r['mensaje'] =  'Registro Modificado';
-					$bitacora = new Bitacora();
-					$bitacora->b_modificar("pago de servicio");
+					$bitacora = new Bitacora($this->con);
+					$bitacora->b_registro("Modificó pago de servicio con el Nº \"{$this->id_pago_serv}\"");
 
 				}else{
 					$r['resultado'] = 'error';
@@ -339,7 +339,7 @@ class servicio extends datos
 	PRIVATE function eliminar(){
 		$r = array();
 		try {
-			$this->validar_conexion();
+			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("SELECT * FROM pagos WHERE id_pago = ?");
 			$consulta->execute([$this->id_pago_serv]);
@@ -348,12 +348,14 @@ class servicio extends datos
 				$consulta->execute([$this->id_pago_serv]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  'Registro Eliminado';
-				$bitacora = new Bitacora();
-				$bitacora->b_eliminar("pago de servicio");
+				$bitacora = new Bitacora($this->con);
+				$bitacora->b_registro("Eliminó pago de servicio con el Nº \"{$this->id_pago_serv}\"");
+				// $bitacora->b_eliminar("pago de servicio");
 			} else {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El Registro no existe";
 			}
+			$this->con->commit();
 		} catch (Exception $e) {
 			if($this->con instanceof PDO){
 				if($this->con->inTransaction()){
@@ -374,7 +376,7 @@ class servicio extends datos
 
 			$V->alfanumerico($this->descripcion, "1,50", "El nombre de servicio tiene caracteres no permitidos");
 
-			$this->validar_conexion();
+			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("SELECT * FROM lista_servicios WHERE nombre = ?");
 			$consulta->execute([$this->descripcion]);
@@ -383,13 +385,14 @@ class servicio extends datos
 				$consulta->execute([$this->descripcion]);
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  'Registro Incluido';
-				$bitacora = new Bitacora();
-				$bitacora->b_incluir("un servicio");
+				$bitacora = new Bitacora($this->con);
+				$bitacora->b_registro("Registró un servicio \"$this->descripcion\"");
 			}
 			else{
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El servicio ya esta registrado";
 			}
+			$this->con->commit();
 		} catch (Exception $e) {
 			if($this->con instanceof PDO){
 				if($this->con->inTransaction()){
@@ -404,8 +407,9 @@ class servicio extends datos
 	PRIVATE function modificar_servicio(){
 		$r = array();
 		try {
+			$V = new Validaciones;
 			$V->alfanumerico($this->descripcion, "1,50", "El nombre de servicio tiene caracteres no permitidos");
-			$this->validar_conexion();
+			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("SELECT * FROM lista_servicios WHERE nombre = ?");
 			$consulta->execute([$this->descripcion]);
@@ -414,13 +418,14 @@ class servicio extends datos
 				$consulta->execute([$this->descripcion,$this->id_pago_serv]);
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  'Registro Modificado';
-				$bitacora = new Bitacora();
-				$bitacora->b_modificar("un servicio");
+				$bitacora = new Bitacora($this->con);
+				$bitacora->b_registro("Modificó un servicio \"$this->descripcion\"");
 			}
 			else{
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El servicio ya esta registrado";
 			}
+			$this->con->commit();
 		} catch (Exception $e) {
 			if($this->con instanceof PDO){
 				if($this->con->inTransaction()){
@@ -435,22 +440,25 @@ class servicio extends datos
 	PRIVATE function eliminar_servicio(){
 		$r = array();
 		try {
-			$this->validar_conexion();
+			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("SELECT * FROM lista_servicios WHERE id_servicios = ?");
 			$consulta->execute([$this->id_pago_serv]);
-			if($consulta->fetch()){
+
+			if($anterior = $consulta->fetch()){
 				$consulta = $this->con->prepare("DELETE FROM lista_servicios WHERE id_servicios = ?");
 				$consulta->execute([$this->id_pago_serv]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  'Registro Eliminado';
-				$bitacora = new Bitacora();
-				$bitacora->b_eliminar("un servicio");
+				$bitacora = new Bitacora($this->con);
+
+				$bitacora->b_registro("Eliminó un servicio \"{$anterior['nombre']}\"");
 			}
 			else{
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El Registro no existe";
 			}
+			$this->con->commit();
 		} catch (Exception $e) {
 			if($this->con instanceof PDO){
 				if($this->con->inTransaction()){

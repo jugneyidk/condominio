@@ -15,6 +15,8 @@
 		}
 	//si existe se la trae, ahora ve a la carpeta vista
 	//y busca el archivo principal.php 
+	
+  	//$cl->b_registro("Ingreso en el modulo \"".$_GET["p"]."\"");
 	require_once("vista/".$p.".php"); 
 	}
 	else{

@@ -12,8 +12,8 @@ class tipoapto extends datos
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-		$guarda->execute();
+		$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
+		$guarda->execute([$modulo, $id_rol]);
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
@@ -25,12 +25,12 @@ class tipoapto extends datos
 		$r = array();
 		if (!$this->existe(0,$descripcion,2)) {
 			try {
-				$guarda = $co->query("insert into tipo_apartamento(descripcion,alicuota) 
-			   values ('$descripcion','$alicuota')");
+				$guarda = $co->prepare("INSERT INTO tipo_apartamento(descripcion,alicuota) VALUES (?,?)");
+				$guarda->execute([$descripcion, $alicuota]);
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  "Registro Incluido";
 				$bitacora = new Bitacora();
-				$bitacora->b_incluir();
+				$bitacora->b_registro("Registró el tipo de apartamento \"$descripcion\"");
 
 				
 			} catch (Exception $e) {
@@ -49,11 +49,11 @@ class tipoapto extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado = $co->query("Select id_tipo_apartamento, 
+			$resultado = $co->query("SELECT id_tipo_apartamento, 
 			descripcion,
 			alicuota 
-			from 
-			tipo_apartamento ORDER BY id_tipo_apartamento DESC");
+			FROM 
+			tipo_apartamento ORDER BY id_tipo_apartamento DESC")->fetchall(PDO::FETCH_NUM);
 			$respuesta = '';
 			if ($resultado) {
 				foreach ($resultado as $r) {
@@ -84,16 +84,17 @@ class tipoapto extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id_tipo_apartamento,0,1)) {
 			try {
-				$co->query("Update tipo_apartamento set 
-						descripcion = '$descripcion',
-						alicuota = '$alicuota'
-						where
-						id_tipo_apartamento = '$id_tipo_apartamento'
-						");
+				$consulta = $co->prepare("UPDATE tipo_apartamento SET 
+						descripcion = ?,
+						alicuota = ?
+						WHERE
+						id_tipo_apartamento = ?");
+
+				$consulta->execute([$descripcion, $alicuota, $id_tipo_apartamento]);
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  "Registro modificado correctamente";
 				$bitacora = new Bitacora();
-				$bitacora->b_modificar();
+				$bitacora->b_registro("Modificó el tipo de apartamento \"$descripcion\"");
 
 			} catch (Exception $e) {
 				return $e->getMessage();
@@ -110,15 +111,16 @@ class tipoapto extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id_tipo_apartamento,0,1)) {
 			try {
-				$co->query("delete from tipo_apartamento 
-						where
-						id_tipo_apartamento = '$id_tipo_apartamento'
+				$consulta = $co->prepare("DELETE FROM tipo_apartamento 
+						WHERE
+						id_tipo_apartamento = ?
 						");
+				$consulta->execute([$id_tipo_apartamento]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Registro Eliminado";
 				
 				$bitacora = new Bitacora();
-				$bitacora->b_eliminar();
+				$bitacora->b_registro("Eliminó un tipo de apartamento");
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				if ($e->getCode()=='23000') {
@@ -140,7 +142,8 @@ class tipoapto extends datos
 		switch ($caso) {
 			case 1:
 				try {
-					$resultado = $co->query("Select * from tipo_apartamento where id_tipo_apartamento='$id_tipo_apartamento'");
+					$resultado = $co->prepare("SELECT * FROM tipo_apartamento WHERE id_tipo_apartamento = ?");
+					$resultado->execute([$id_tipo_apartamento]);
 					$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 					if ($fila) {
 						return true;
@@ -153,7 +156,8 @@ class tipoapto extends datos
 				break;
 			case 2:
 				try {
-					$resultado = $co->query("Select * from tipo_apartamento where descripcion='$descripcion'");
+				$resultado = $co->query("SELECT * FROM tipo_apartamento WHERE descripcion = ?");
+					$resultado->execute([$descripcion]);
 					$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 					if ($fila) {
 						return true;

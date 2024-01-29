@@ -29,7 +29,7 @@ class login extends datos
 					$_SESSION['CONDOMINIO_TOKEN'] = password_hash($resultado["rif_cedula"]."-".$resultado["tipo_identificacion"], PASSWORD_DEFAULT);
 					$r["resultado"]="correcto";
 					$bitacora = new Bitacora();
-					$bitacora->b_accion("Inicio sesion");
+					$bitacora->b_registro("Inicio sesion");
 					return $r;
 				}else{
 					$r['resultado'] = "incorrecto";
@@ -59,9 +59,21 @@ class login extends datos
 			$V->validar($this->pass,"/^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/","La contraseña no es valida");
 
 			if($this->type == "usuario"){
+				$consulta = $con->prepare("SELECT tipo_identificacion, rif_cedula as cedula FROM datos_usuarios WHERE id = ?");
+				$consulta->execute([$this->id]);
+				$temp = $consulta->fetch(PDO::FETCH_ASSOC);
+				if(!$temp){
+					throw new Validaciones("El usuario no existe", 1);
+				}
 				$consulta = "UPDATE usuarios_roles SET clave = ? WHERE id_usuario = ?";
 			}
 			else if ($this->type == "habitante"){
+				$consulta = $con->prepare("SELECT tipo_identificacion, cedula_rif as cedula FROM habitantes WHERE id = ?");
+				$consulta->execute([$this->id]);
+				$temp = $consulta->fetch(PDO::FETCH_ASSOC);
+				if(!$temp){
+					throw new Validaciones("El habitante no existe", 1);
+				}
 				$consulta = "UPDATE habitantes set clave = ? WHERE id = ?";
 			}
 			else
@@ -74,6 +86,11 @@ class login extends datos
 
 
 			$consulta->execute([password_hash($this->pass, PASSWORD_DEFAULT), $this->id]);
+
+
+
+			$b = new Bitacora;
+			$b->b_registro("Se reestablecio la contraseña del $this->type \"".TIPO_INDENT_ARRAY[$temp["tipo_identificacion"]].$temp["cedula"]."\"");
 
 			
 			$r['resultado'] = 'reset_pass';

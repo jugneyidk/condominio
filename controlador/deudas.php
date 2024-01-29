@@ -43,6 +43,8 @@ if (is_file("vista/" . $p . ".php")) {
 		// }
 		exit;
 	}
+	$b_temp = new Bitacora;
+	$b_temp->b_registro("Ingreso en el modulo \"".$_GET["p"]."\"");
 
 	require_once("vista/" . $p . ".php");
 } else {

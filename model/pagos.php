@@ -510,7 +510,7 @@ class pagos extends datos
 			$this->validar_conexion($co);
 			$co->beginTransaction();
 
-			$consulta = $co->prepare("SELECT * FROM pagos WHERE id_pago = ?");
+			$consulta = $co->prepare("SELECT estado FROM pagos WHERE id_pago = ?");
 			$consulta->execute([$this->id]);
 			if($consulta = $consulta->fetch(PDO::FETCH_ASSOC)){
 				if($consulta["estado"] == 1){//declinado
@@ -536,7 +536,7 @@ class pagos extends datos
 				//$r['correo'] = $correo;
 				$r['mensaje'] =  "Pago Confirmado";
 				$bitacora = new Bitacora();
-				$bitacora->b_accion("Confirmo pago Nº $this->id en ");
+				$bitacora->b_registro("Confirmo pago Nº \"$this->id\"");
 				// $mensajews = new enviarws();
 				// $ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
 				// $r['ws'] =  $ws;
@@ -545,81 +545,12 @@ class pagos extends datos
 				$r['resultado'] = 'declinado';
 				$r['mensaje'] =  "Pago declinado";
 				$bitacora = new Bitacora();
-				$bitacora->b_accion("Declino pago Nº $this->id en ");
+				$bitacora->b_registro("Declino pago Nº \"$this->id\"");
 				// $mensajews = new enviarws();
 				// $ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
 				// $r['ws'] =  $ws;
 			}
 			$co->commit();
-			return $r;
-
-
-
-
-			/*----------------------------------------------------------------------------------*/
-			/*----------------------------------------------------------------------------------*/
-			/*----------------------------------------------------------------------------------*/
-			/*----------------------------------------------------------------------------------*/
-
-			//$enviarcorreo = new enviarcorreo();
-			//$correo = $enviarcorreo->enviar_correo($id);
-			//if ($correo == true) {
-				$r['resultado'] = 'confirmado';
-				$r['correo'] = $correo;
-				$r['mensaje'] =  "Pago confirmado correctamente";
-				$bitacora = new Bitacora();
-				$bitacora->b_accion("Confirmo pago en ");
-				$mensajews = new enviarws();
-				$ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
-				$r['ws'] =  $ws;
-				return $r;
-			//}
-
-
-
-
-
-
-			if ($accion == 'confirmar') {
-				$co->query("Update pago set 
-							estado = 'confirmado',
-							id_usuario = '$id_usuario'											
-							where
-							id_pago = '$id'
-							");
-				$enviarcorreo = new enviarcorreo();
-				$correo = $enviarcorreo->enviar_correo($id);
-				if ($correo == true) {
-					$r['resultado'] = 'confirmado';
-					$r['correo'] = $correo;
-					$r['mensaje'] =  "Pago confirmado correctamente";
-					$bitacora = new Bitacora();
-					$bitacora->b_accion("Confirmo pago en ");
-					$mensajews = new enviarws();
-					$ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
-					$r['ws'] =  $ws;
-					return $r;
-				}
-			} elseif ($accion == 'declinar') {
-				$co->query("Update pago set 
-							estado = 'declinado',
-							id_usuario = '$id_usuario'												
-							where
-							id_pago = '$id'
-							");
-				$r['resultado'] = 'declinado';
-				$r['mensaje'] =  "Pago declinado correctamente";
-				$bitacora = new Bitacora();
-				$bitacora->b_accion("Declino pago en ");
-				$mensajews = new enviarws();
-				$ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
-				$r['ws'] =  $ws;
-			}
-			// code
-			
-			$r['resultado'] = 'console';
-			$r['mensaje'] =  "";
-			//$co->commit();
 		
 		} catch (Validaciones $e){
 			if($co instanceof PDO){
@@ -639,75 +570,6 @@ class pagos extends datos
 		
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
-		}
-		return $r;
-
-
-
-
-		try {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			if ($accion == 'confirmar') {
-				$co->query("Update pago set 
-							estado = 'confirmado',
-							id_usuario = '$id_usuario'											
-							where
-							id_pago = '$id'
-							");
-				$enviarcorreo = new enviarcorreo();
-				$correo = $enviarcorreo->enviar_correo($id);
-				if ($correo == true) {
-					$r['resultado'] = 'confirmado';
-					$r['correo'] = $correo;
-					$r['mensaje'] =  "Pago confirmado correctamente";
-					$bitacora = new Bitacora();
-					$bitacora->b_accion("Confirmo pago en ");
-					$mensajews = new enviarws();
-					$ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
-					$r['ws'] =  $ws;
-					return $r;
-				}
-			} elseif ($accion == 'declinar') {
-				$co->query("Update pago set 
-							estado = 'declinado',
-							id_usuario = '$id_usuario'												
-							where
-							id_pago = '$id'
-							");
-				$r['resultado'] = 'declinado';
-				$r['mensaje'] =  "Pago declinado correctamente";
-				$bitacora = new Bitacora();
-				$bitacora->b_accion("Declino pago en ");
-				$mensajews = new enviarws();
-				$ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
-				$r['ws'] =  $ws;
-			}
-		} catch (Exception $e) {
-			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
-			return $r;
 		}
 		return $r;
 	}

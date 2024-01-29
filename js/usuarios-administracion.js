@@ -319,7 +319,7 @@ function validarEnvio() {
     if (
       $("#password").val().length > 0 &&
       validarKeyUp(
-        /^[A-Za-z0-9\b]{6,20}$/,
+        /^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/,
         $("#password"),
         $("#spassword"),
         "Solo letras y/o numeros entre 6 y 20 caracteres"
@@ -338,7 +338,7 @@ function validarEnvio() {
     $("#id").val().length == 0 &&
     $("#password").val().length >= 0 &&
     validarKeyUp(
-      /^[A-Za-z0-9\b]{6,20}$/,
+      /^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/,
       $("#password"),
       $("#spassword"),
       "Solo letras y/o numeros entre 6 y 20 caracteres"
