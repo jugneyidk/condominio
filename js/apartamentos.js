@@ -464,6 +464,7 @@ function enviaAjax(datos) {
       } catch (e) {
         alert("Error en JSON " + e.name + " xxxx!!!");
         console.error(e);
+        console.error(respuesta);
         // console.log(respuesta);
       }
     },

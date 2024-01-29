@@ -6,6 +6,7 @@ require_once("model/bitacora.php");
 
 class apto extends datos
 {
+	PRIVATE $id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento;
 	PUBLIC function chequearpermisos()
 	{
 		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
@@ -19,36 +20,45 @@ class apto extends datos
 		return $fila;
 	}
 
-	PUBLIC function incluir_s($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino){
-		return $this->incluir($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino);
+	PUBLIC function incluir_s(){
+		return $this->incluir();
 	}
-	PUBLIC function modificar_s($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento){
-		return $this->modificar($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento);
+	PUBLIC function modificar_s(){
+		return $this->modificar();
 	}
-	PUBLIC function eliminar_s($id_apartamento){
-		return $this->eliminar($id_apartamento);
+	PUBLIC function eliminar_s(){
+		return $this->eliminar();
 	}
 
 
 
-	PRIVATE function incluir($torre, $piso, $numapto, $tipoapto, $propietario, $inquilino)
+	PRIVATE function incluir()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		if (!$this->existe($numapto, $torre, $piso, 1)) {
+		if (!$this->existe($this->num_letra_apartamento, $this->torre, $this->piso, 1)) {
 			try {
-				if ($inquilino) {
-					$guarda = $co->query("insert into apartamento(num_letra_apartamento, propietario, inquilino, torre, piso, tipo_apartamento) 
-					values('$numapto','$propietario','$inquilino','$torre','$piso','$tipoapto')");
-				} else {
-					$guarda = $co->query("insert into apartamento(num_letra_apartamento, propietario, inquilino, torre, piso, tipo_apartamento) 
-					values('$numapto','$propietario',NULL,'$torre','$piso','$tipoapto')");
-				}
+				// if ($inquilino) {
+					$guarda = $co->prepare("INSERT INTO apartamento (num_letra_apartamento, propietario, inquilino, torre, piso, tipo_apartamento) VALUES (:numapto, :propietario, :inquilino, :torre, :piso, :tipoapto)");
+					$guarda->bindValue(":numapto", $this->num_letra_apartamento);
+					$guarda->bindValue(":propietario", $this->propietario);
+					if( $this->inquilino ){
+						$guarda->bindValue(":inquilino", $this->inquilino);
+					}
+					else{
+						$guarda->bindValue(":inquilino", null);
+					}
+					$guarda->bindValue(":torre", $this->torre);
+					$guarda->bindValue(":piso", $this->piso);
+					$guarda->bindValue(":tipoapto", $this->tipo_apartamento);
+					$guarda->execute();
+
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  'Registro Incluido';
 				$bitacora = new Bitacora();
-				$bitacora->b_incluir();
+				// $bitacora->b_incluir();
+				$bitacora->b_registro("Registro un nuevo apartamento ($this->num_letra_apartamento)");
 
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
@@ -56,50 +66,68 @@ class apto extends datos
 			}
 		} else {
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  "El apartamento ya existe";
+			$r['mensaje'] =  "El apartamento $this->num_letra_apartamento ya existe en la torre $this->torre";
+			//$r['mensaje'] =  "El apartamento ya existe";
 		}
 		return $r;
 	}
 
-	PRIVATE function modificar($id_apartamento, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento)
+	PRIVATE function modificar()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if ($this->existe($id_apartamento, 0, 0, 2)) {
+		if ($this->existe($this->id_apartamento, 0, 0, 2)) {
 			try {
-				if ($inquilino) {
-					$co->query("Update apartamento set 
-							num_letra_apartamento = '$num_letra_apartamento',
-							propietario = '$propietario',
-							inquilino = '$inquilino',
-							torre = '$torre',
-							piso = '$piso',
-							tipo_apartamento = '$tipo_apartamento'
-							where
-							id_apartamento = '$id_apartamento'
-							");
-				} else {
-					$co->query("Update apartamento set 
-						num_letra_apartamento = '$num_letra_apartamento',
-						propietario = '$propietario',
-						inquilino = NULL,
-						torre = '$torre',
-						piso = '$piso',
-						tipo_apartamento = '$tipo_apartamento'
-						where
-						id_apartamento = '$id_apartamento'
-						");
-				}
+				// if ($inquilino) {
+					$consulta = $co->prepare("SELECT num_letra_apartamento, torre FROM apartamento where id_apartamento = ?");
+					$consulta->execute([$this->id_apartamento]);
+					$consulta = $consulta->fetch(PDO::FETCH_ASSOC);
+					if($this->num_letra_apartamento != $consulta["num_letra_apartamento"] or $this->torre != $consulta["torre"]){
+						if ($this->existe($this->num_letra_apartamento, $this->torre, $this->piso, 1)) {
+							$r['resultado'] = 'error';
+							$r['mensaje'] =  "El apartamento $this->num_letra_apartamento ya existe en la torre $this->torre";
+							return $r;
+						}
+
+
+					}
+					$consulta = $co->prepare("UPDATE apartamento SET 
+							num_letra_apartamento = :num_letra_apartamento,
+							propietario = :propietario,
+							inquilino = :inquilino,
+							torre = :torre,
+							piso = :piso,
+							tipo_apartamento = :tipo_apartamento
+							WHERE
+							id_apartamento = :id_apartamento");
+
+					$consulta->bindValue(":num_letra_apartamento",$this->num_letra_apartamento);
+					$consulta->bindValue(":propietario",$this->propietario);
+					if($this->inquilino){
+						$consulta->bindValue(":inquilino",$this->inquilino);
+					}
+					else{
+						$consulta->bindValue(":inquilino",null);
+					}
+					$consulta->bindValue(":torre",$this->torre);
+					$consulta->bindValue(":piso",$this->piso);
+					$consulta->bindValue(":tipo_apartamento",$this->tipo_apartamento);
+					$consulta->bindValue(":id_apartamento",$this->id_apartamento);
+					$consulta->execute();
+
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  'Registro modificado correctamente';
 
 				$bitacora = new Bitacora();
-				$bitacora->b_modificar();
-
+				$bitacora->b_registro("Modifico el apartamento ($this->num_letra_apartamento)");
+				// $bitacora->b_modificar();
 				
 			} catch (Exception $e) {
-				return $e->getMessage();
+				$r['resultado'] = 'error';
+				$r['mensaje'] =   $e->getMessage()." line ".$e->getLine();
+				return $r;
 			}
+			
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "El apartamento no fue encontrado";
@@ -107,14 +135,15 @@ class apto extends datos
 		return $r;
 	}
 
-	PRIVATE function eliminar($id_apartamento)
+	PRIVATE function eliminar()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if ($this->existe($id_apartamento, 0, 0, 2)) {
+		if ($this->existe($this->id_apartamento, 0, 0, 2)) {
 			try {
-				$co->query("delete from apartamento where id_apartamento = '$id_apartamento'
-						");
+				//$co->query("delete from apartamento where id_apartamento = '$id_apartamento'");
+				$consulta = $co->prepare("DELETE FROM apartamento WHERE id_apartamento = ?");
+				$consulta->execute([$this->id_apartamento]);
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  "Registro eliminado correctamente";
 				$bitacora = new Bitacora();
@@ -196,10 +225,10 @@ class apto extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array(); 
 		try {
-			$resultado = $co->query("Select id,  cedula_rif, tipo_identificacion,
+			$resultado = $co->query("SELECT id,  cedula_rif, tipo_identificacion,
 			nombres,
 			apellidos
-			from 
+			FROM 
 			habitantes ORDER BY id DESC");
 			$respuesta = '';
 			if ($resultado) {
@@ -273,8 +302,11 @@ class apto extends datos
 		switch ($caso) {
 			case '1':
 				try {
-					$resultado = $co->query("Select * from apartamento where num_letra_apartamento='$id_apartamento' and torre='$torre' and piso='$piso'");
-					$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
+
+					$resultado = $co->prepare("SELECT 1 FROM apartamento WHERE num_letra_apartamento= ? AND torre= ?;");
+					$resultado->execute([$id_apartamento, $torre]);
+					$fila = $resultado->fetchall(PDO::FETCH_ASSOC);
+
 					if ($fila) {
 						return true;
 					} else {
@@ -286,8 +318,11 @@ class apto extends datos
 				break;
 			case '2':
 				try {
-					$resultado = $co->query("Select * from apartamento where id_apartamento='$id_apartamento'");
+
+					$resultado = $co->prepare("SELECT 1 FROM apartamento WHERE id_apartamento= ?");
+					$resultado->execute([$id_apartamento]);
 					$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
+
 					if ($fila) {
 						return true;
 					} else {
@@ -301,4 +336,52 @@ class apto extends datos
 				break;
 		}
 	}
+
+
+	PUBLIC function get_id_apartamento(){
+		return $this->id_apartamento;
+	}
+	PUBLIC function set_id_apartamento($value){
+		$this->id_apartamento = $value;
+	}
+	PUBLIC function get_num_letra_apartamento(){
+		return $this->num_letra_apartamento;
+	}
+	PUBLIC function set_num_letra_apartamento($value){
+		$this->num_letra_apartamento = $value;
+	}
+	PUBLIC function get_propietario(){
+		return $this->propietario;
+	}
+	PUBLIC function set_propietario($value){
+		$this->propietario = $value;
+	}
+	PUBLIC function get_inquilino(){
+		return $this->inquilino;
+	}
+	PUBLIC function set_inquilino($value){
+		$this->inquilino = $value;
+	}
+	PUBLIC function get_torre(){
+		return $this->torre;
+	}
+	PUBLIC function set_torre($value){
+		$this->torre = $value;
+	}
+	PUBLIC function get_piso(){
+		return $this->piso;
+	}
+	PUBLIC function set_piso($value){
+		$this->piso = $value;
+	}
+	PUBLIC function get_tipo_apartamento(){
+		return $this->tipo_apartamento;
+	}
+	PUBLIC function set_tipo_apartamento($value){
+		$this->tipo_apartamento = $value;
+	}
+
+
+
+
 }

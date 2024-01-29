@@ -17,28 +17,33 @@ if (is_file("vista/" . $p . ".php")) {
       $respuesta = $o->listadohabitantes();
       echo json_encode($respuesta);
     } else if ($accion == 'incluir') {
-      $respuesta = $o->incluir_s(
-        $_POST['torre'],
-        $_POST['piso'],
-        $_POST['numapto'],
-        $_POST['tipoapto'],
-        $_POST['propietario'],
-        $_POST['inquilino']
-      );
+      //$o->set_id_apartamento();
+      $o->set_num_letra_apartamento($_POST['numapto']);
+      $o->set_propietario($_POST['propietario']);
+      $o->set_inquilino($_POST['inquilino']);
+      $o->set_torre($_POST['torre']);
+      $o->set_piso($_POST['piso']);
+      $o->set_tipo_apartamento($_POST['tipoapto']);
+      $respuesta = $o->incluir_s();
+
       echo json_encode($respuesta);
     } else if ($accion == 'modificar') {
-      $respuesta = $o->modificar_s(
-        $_POST['id'],
-        $_POST['numapto'],
-        $_POST['propietario'],
-        $_POST['inquilino'],
-        $_POST['torre'],
-        $_POST['piso'],
-        $_POST['tipoapto']
-      );
+      
+      $o->set_id_apartamento($_POST['id']);
+      $o->set_num_letra_apartamento($_POST['numapto']);
+      $o->set_propietario($_POST['propietario']);
+      $o->set_inquilino($_POST['inquilino']);
+      $o->set_torre($_POST['torre']);
+      $o->set_piso($_POST['piso']);
+      $o->set_tipo_apartamento($_POST['tipoapto']);
+
+      $respuesta = $o->modificar_s();
       echo json_encode($respuesta);
     } else if ($accion == 'eliminar') {
-      $respuesta = $o->eliminar_s($_POST['id']);
+
+      $o->set_id_apartamento($_POST['id']);
+      $respuesta = $o->eliminar_s();
+
       echo json_encode($respuesta);
     } else if ($accion == 'listadotipo') {
       $respuesta = $o->listadotipos();
