@@ -580,6 +580,7 @@ class Deudacondominio extends datos
 
 			// TODO agregar para que se envien los correos
 			$mailer = new enviarcorreo;
+			$resp = "287";
 			//$resp = $mailer->notificar_factura($this->id, $this->con);
 			$this->con->commit();
 			
