@@ -10,37 +10,6 @@ class generarreporte extends datos
 {
     PRIVATE $datos, $id, $caso;
 
-    /*
-
-SELECT @divisa_monto := divs.monto FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1;
-
-SELECT
-    dp.*,
-    #(SUM(IF(dd.tipo_monto = 1, dd.monto, (ROUND(dd.monto / @divisa_monto, 2)) ) ) ) AS monto,
-    d.id_deuda,h.nombres,h.apellidos,a.piso,a.torre,a.num_letra_apartamento,a.id_apartamento,dis.fecha,
-    p.total_pago,p.id_pago,p.estado
-    
-FROM apartamento as a
-JOIN deudas as d on d.id_apartamento = a.id_apartamento
-JOIN detalles_deudas as dd on dd.id_deuda = d.id_deuda
-RIGHT JOIN deuda_pagos as dp on dp.id_deuda = d.id_deuda
-LEFT JOIN pagos as p on p.id_pago = dp.id_pago
-LEFT JOIN distribuciones as dis on dis.id_distribucion = d.id_distribucion
-LEFT JOIN habitantes as h ON a.propietario = h.id
-WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney' AND (p.estado <> 2 OR p.estado IS NULL) ORDER BY dis.fecha ASC 
-
-
-
-
-
-
-
-
-
-
-    
-    */
-
     PUBLIC function generarPDF($datos)
     {
         $co = $this->conecta();
@@ -197,7 +166,7 @@ WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney'
                         $html = $html . "Conjunto Residencial Jose María Vargas";
                         $html = $html . "</h2>";
                         $html = $html . "<h3 align='center'>";
-                        $html = $html . "Reporte de habitante";
+                        $html = $html . "Reporte de Propietario";
                         $html = $html . "</h3>";
                         $html = $html . "<h4 align='center'>";
                         $html = $html . $nombre_archivo;
@@ -246,12 +215,9 @@ WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney'
                         $co->query("SET @n = 0; SELECT @divisa_monto := divs.monto FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1;");
                         $resultado = $co->prepare("SELECT
                         dd.n_row
-                        ,h.nombres
-                        ,h.apellidos
-                        ,a.piso
-                        ,a.torre
-                        ,a.num_letra_apartamento
                         ,dd.id_deuda
+                        ,dis.concepto
+                        ,dis.fecha
                         ,(SUM(IF(dd.tipo_monto = 1, dd.monto, (ROUND(dd.monto / @divisa_monto, 2)) ) ) ) AS total
 
                         FROM (
@@ -273,8 +239,9 @@ WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney'
                         ) AS dd
                         LEFT JOIN apartamento AS a on a.id_apartamento = dd.id_apartamento
                         LEFT JOIN habitantes as h on h.id = a.propietario
-                        WHERE a.id_apartamento = ?
-                        GROUP BY a.num_letra_apartamento
+                        LEFT JOIN distribuciones as dis on dis.id_distribucion = dd.id_distribucion
+                        WHERE a.id_apartamento = 1
+                        GROUP BY a.num_letra_apartamento, dd.id_deuda
                         ;");
 
 
@@ -297,15 +264,18 @@ WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney'
                         $html = $html . "</h3>";
                         $html = $html . "<h4 align='center'>";
                         $html = $html . $datos_apto[0]['num_letra_apartamento'] . " Torre " . $datos_apto[0]['torre'] . " Piso " . $datos_apto[0]['piso'];
+                        $html .= "<br>".$datos_apto[0]['nombre'];
                         $html = $html . "</h4>";
                         $html = $html . "<table style='width:100%; padding: 30px 0;'>";
                         if ($fila) {
                             $html = $html . "<thead>";
                             $html = $html . "<tr>";
-                            $html = $html . "<th>Apartamento</th>";
-                            $html = $html . "<th>Torre</th>";
-                            $html = $html . "<th>Piso</th>";
-                            $html = $html . "<th>Propietario</th>";
+                            // $html = $html . "<th>Apartamento</th>";
+                            // $html = $html . "<th>Torre</th>";
+                            // $html = $html . "<th>Piso</th>";
+                            // $html = $html . "<th>Propietario</th>";
+                            $html = $html . "<th>Deuda</th>";
+                            $html = $html . "<th>fecha</th>";
                             $html = $html . "<th>Total</th>";
                             $html = $html . "</tr>";
                             $html = $html . "</thead>";
@@ -314,10 +284,12 @@ WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney'
                         if ($fila) {
                             foreach ($fila as $f) {
                                 $html = $html . "<tr>";
-                                $html = $html . "<td style='text-align:center'>" . $f['num_letra_apartamento'] . "</td>";
-                                $html = $html . "<td style='text-align:center'>" . $f['torre'] . "</td>";
-                                $html = $html . "<td style='text-align:center'>" . $f['piso'] . "</td>";
-                                $html = $html . "<td style='text-align:center'>" . $f['nombres'] . " " . $f['apellidos'] . "</td>";
+                                // $html = $html . "<td style='text-align:center'>" . $f['num_letra_apartamento'] . "</td>";
+                                // $html = $html . "<td style='text-align:center'>" . $f['torre'] . "</td>";
+                                // $html = $html . "<td style='text-align:center'>" . $f['piso'] . "</td>";
+                                // $html = $html . "<td style='text-align:center'>" . $f['nombres'] . " " . $f['apellidos'] . "</td>";
+                                $html = $html . "<td style='text-align:left;padding-left:20px'>" . $f['concepto'] . "</td>";
+                                $html = $html . "<td style='text-align:center'>" . $f['fecha'] . "</td>";
                                 $html = $html . "<td style='text-align:center'>" . $f['total'] . "$</td>";
                                 $html = $html . "</tr>";
                             }
@@ -372,8 +344,8 @@ WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney'
                 break;
             case 2:
                 try {
-                    $resultado = $co->prepare("SELECT num_letra_apartamento,piso,torre from apartamento WHERE id_apartamento = '$id'");
-                    $resultado->execute();
+                    $resultado = $co->prepare("SELECT num_letra_apartamento,piso,torre, CONCAT(h.nombres,' ',h.apellidos) as nombre from apartamento as a LEFT JOIN habitantes as h on a.propietario = h.id WHERE id_apartamento = ?");
+                    $resultado->execute([$id]);
                     $fila = $resultado->fetchAll(PDO::FETCH_BOTH);
                     if ($fila) {
                         return $fila;
@@ -383,6 +355,7 @@ WHERE d.moroso = 1 AND a.num_letra_apartamento = "A-04" AND h.nombres = 'Jugney'
                 } catch (Exception $e) {
                     $r['resultado'] = 'error';
                     $r['mensaje'] =  $e->getMessage();
+                    echo $e->getMessage();
                 }
                 return $r;
                 break;
