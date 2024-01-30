@@ -514,10 +514,10 @@ class pagos extends datos
 			$consulta = $co->prepare("SELECT estado,id_deuda FROM pagos LEFT JOIN deuda_pagos as dp on dp.id_pago = pagos.id_pago WHERE pagos.id_pago = ?");
 			$consulta->execute([$this->id]);
 			if($consulta = $consulta->fetch(PDO::FETCH_ASSOC)){
-				if($consulta["estado"] == 1){//declinado
+				if($consulta["estado"] == 1 and $this->accion!== "deshacer_conf"){//declinado
 					throw new Validaciones("No puede cambiar el estado porque ya esta Declinado", 1);
 				}
-				else if($consulta["estado"] == 2){//confirmado
+				else if($consulta["estado"] == 2 and $this->accion!== "deshacer_conf"){//confirmado
 					throw new Validaciones("No puede cambiar el estado porque ya esta Confirmado", 1);
 				}
 				else{
@@ -525,7 +525,19 @@ class pagos extends datos
 					$consulta = $co->prepare("UPDATE pagos SET estado = :estado, usuario_id = :usuario_id WHERE id_pago = :id_pago");
 					$consulta->bindValue(":id_pago",$this->id);
 					$consulta->bindValue(":usuario_id",$this->usuario_id);
-					$consulta->bindValue(":estado",($this->accion == "confirmar")?2:1);// 2 = confirmar, 1 = declinar
+					if($this->accion ==="confirmar" ){
+						$consulta->bindValue(":estado",2);// 2 = confirmar
+					}
+					else if($this->accion === "declinar"){
+						$consulta->bindValue(":estado",1);// 1 = declinar
+					}
+					else if($this->accion === "deshacer_conf"){
+						$consulta->bindValue(":estado",0);// 0 = por confirmar
+					}
+					else{
+						throw new Exception("Opción no disponible :: ($this->accion)", 1);
+						
+					}
 					$consulta->execute();
 
 					$consulta = $co->prepare("SELECT verificar_estado_deuda(?)");
@@ -548,7 +560,7 @@ class pagos extends datos
 				// $ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
 				// $r['ws'] =  $ws;
 			}
-			else {
+			else if($this->accion =="declinar") {
 				$r['resultado'] = 'declinado';
 				$r['mensaje'] =  "Pago declinado";
 				$bitacora = new Bitacora();
@@ -557,6 +569,16 @@ class pagos extends datos
 				// $ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
 				// $r['ws'] =  $ws;
 			}
+			else if($this->accion =="deshacer_conf") {
+				$r['resultado'] = 'deshacer_conf';
+				$r['mensaje'] =  "Estado del pago removido";
+				$bitacora = new Bitacora();
+				$bitacora->b_registro("Removió el estado del pago Nº \"$this->id\"");
+				// $mensajews = new enviarws();
+				// $ws = $mensajews->enviarws("El pago número " . $id . " ha sido " . $r['resultado'] . " correctamente");
+				// $r['ws'] =  $ws;
+			}
+
 			$co->commit();
 		
 		} catch (Validaciones $e){

@@ -1,3 +1,15 @@
 .apartamento{
     font-weight: bold;
 }
+.btn-group-1{
+	width: calc(100% / 3);
+}
+.btn-group-2{
+	width: 50%;
+}
+button.btn-group-2,
+button.btn-group-1 
+{
+	overflow-x: hidden !important;
+	text-overflow: ellipsis;
+}

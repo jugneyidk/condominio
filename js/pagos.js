@@ -47,8 +47,8 @@ function carga_pagos() {
                 row.querySelector("td:nth-child(2)").classList.add("apartamento","align-middle");
                 row.querySelector("td:nth-child(3)").classList.add("align-middle","d-none","d-md-table-cell");
                 row.querySelector("td:nth-child(4)").classList.add("align-middle","text-nowrap");
-                row.querySelector("td:nth-child(5)").classList.add("align-middle","text-nowrap");
-                row.querySelector("td:nth-child(6)").classList.add("align-middle", "text-capitalize");
+                row.querySelector("td:nth-child(5)").classList.add("align-middle","text-nowrap","d-none","d-sm-table-cell");
+                row.querySelector("td:nth-child(6)").classList.add("align-middle", "text-capitalize","d-none","d-md-table-cell");
                 row.querySelector("td:nth-child(7)").classList.add("align-middle");
                 var estado = "Pendiente";
                 var estado_2 = 0;
@@ -56,15 +56,16 @@ function carga_pagos() {
                 else if(data.estado == 2 ){ estado = "Confirmado";estado_2 = 2;}
                 row.querySelector("td:nth-child(6)").innerHTML = estado;
 
-                var div = crearElem("div", "class, btn-group,role, group");
+                var div = crearElem("div", "class, btn-group w-100,role, group");
 
                 if(estado == "Pendiente"){
-		            div.appendChild(crearElem("button", "class/btn btn-primary/style/font-size:12px;/onclick/confirmar_declinar_pago(this,1)","Confirmar","/"));
-		            div.appendChild(crearElem("button", "class/btn btn-secondary/style/font-size:12px;/onclick/carga_detalles_pago(this,1)","Ver","/"));
-		            div.appendChild(crearElem("button", "class/btn btn-danger/style/font-size:12px;/onclick/confirmar_declinar_pago(this,2)","Declinar","/"));
+		            div.appendChild(crearElem("button", "class/btn btn-primary btn-group-1/style/font-size:12px;/onclick/confirmar_declinar_pago(this,1)","Confirmar","/"));
+		            div.appendChild(crearElem("button", "class/btn btn-secondary btn-group-1/style/font-size:12px;/onclick/carga_detalles_pago(this,1)","Ver","/"));
+		            div.appendChild(crearElem("button", "class/btn btn-danger btn-group-1/style/font-size:12px;/onclick/confirmar_declinar_pago(this,2)","Declinar","/"));
                 }
                 else if (estado == "Declinado" || estado == "Confirmado"){
-		            div.appendChild(crearElem("button", "class/btn btn-secondary w-100 btn-ver/style/font-size:12px;/onclick/carga_detalles_pago(this,1)","Ver","/"));
+		            div.appendChild(crearElem("button", "class/btn btn-secondary btn-group-2/style/font-size:12px;/onclick/carga_detalles_pago(this,1)","Ver","/"));
+		            div.appendChild(crearElem("button", "class/btn btn-info btn-group-2/style/font-size:12px;/onclick/confirmar_declinar_pago(this,3)","Deshacer","/"));
                 }
                 div = crearElem("div","class,row justify-content-around mx-0",div);
 
@@ -563,99 +564,145 @@ function carga_detalles_pago(linea) {
   });
 }
 function confirmar_declinar_pago(linea, accion) {
-  var linea = $(linea).closest("tr");
-  var id = $(linea).find("td:eq(0)").text();
-  if (accion == 1) {
-	$("#accion").val("confirmar");
-	$("#id").val(id);
-	Swal.fire({
-	  title: "¿Estás Seguro?",
-	  text: "¿Está seguro que desea confirmar este pago?",
-	  showCancelButton: true,
-	  confirmButtonText: "Confirmar",
-	  confirmButtonColor: "#007bff",
-	  cancelButtonText: `Cancelar`,
-	  icon: "warning",
-	}).then((result) => {
-	  if (result.isConfirmed) {
-		var datos = new FormData();
-		datos.append("accion", $("#accion").val());
-		datos.append("id", $("#id").val());
-		//enviaAjax(datos);
+	var linea = $(linea).closest("tr");
+	var id = $(linea).find("td:eq(0)").text();
+	if (accion == 1) { //confirmar
+		$("#accion").val("confirmar");
+		$("#id").val(id);
+		Swal.fire({
+		  title: "¿Estás Seguro?",
+		  text: "¿Está seguro que desea confirmar este pago?",
+		  showCancelButton: true,
+		  confirmButtonText: "Confirmar",
+		  confirmButtonColor: "#007bff",
+		  cancelButtonText: `Cancelar`,
+		  icon: "warning",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				var datos = new FormData();
+				datos.append("accion", $("#accion").val());
+				datos.append("id", $("#id").val());
+				//enviaAjax(datos);
 
-		enviaAjax(datos,function(respuesta){
-		
-		  var lee = JSON.parse(respuesta);
-		  console.log(lee);
-		  if (lee.resultado == "confirmado") {
-				muestraMensaje(lee.mensaje, "", "success");
-				carga_pagos();
-				carga_pagos_pendientes();
-				carga_pagos_confirmados();
-				carga_pagos_declinados();
-			  }
-		  else if (lee.resultado == 'is-invalid'){
-			muestraMensaje("ERROR", lee.mensaje,"error");
-		  }
-		  else if(lee.resultado == "error"){
-			muestraMensaje("ERROR", lee.mensaje,"error");
-			console.error(lee.mensaje);
-		  }
-		  else if(lee.resultado == "console"){
-			console.log(lee.mensaje);
-		  }
-		  else{
-			muestraMensaje("ERROR", lee.mensaje,"error");
-		  }
+				enviaAjax(datos,function(respuesta){
+				
+				  var lee = JSON.parse(respuesta);
+				  console.log(lee);
+				  if (lee.resultado == "confirmado") {
+						muestraMensaje(lee.mensaje, "", "success");
+						carga_pagos();
+						carga_pagos_pendientes();
+						carga_pagos_confirmados();
+						carga_pagos_declinados();
+					  }
+				  else if (lee.resultado == 'is-invalid'){
+					muestraMensaje("ERROR", lee.mensaje,"error");
+				  }
+				  else if(lee.resultado == "error"){
+					muestraMensaje("ERROR", lee.mensaje,"error");
+					console.error(lee.mensaje);
+				  }
+				  else if(lee.resultado == "console"){
+					console.log(lee.mensaje);
+				  }
+				  else{
+					muestraMensaje("ERROR", lee.mensaje,"error");
+				  }
+				});
+
+
+			}
 		});
+	} else if (accion == 2) { // declinar
+		$("#accion").val("declinar");
+		$("#id").val(id);
+		Swal.fire({
+			title: "¿Estás Seguro?",
+			text: "¿Está seguro que desea declinar este pago?",
+			showCancelButton: true,
+			confirmButtonText: "Declinar",
+			confirmButtonColor: "#dc3545",
+			cancelButtonText: `Cancelar`,
+			icon: "warning",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				var datos = new FormData();
+				datos.append("accion", $("#accion").val());
+				datos.append("id", $("#id").val());
+				//enviaAjax(datos);
 
+				enviaAjax(datos,function(respuesta){
+				
+				  var lee = JSON.parse(respuesta);
+				  if (lee.resultado == "declinado") {
+						muestraMensaje(lee.mensaje, "", "success");
+						carga_pagos();
+						carga_pagos_pendientes();
+						carga_pagos_confirmados();
+						carga_pagos_declinados();
+					  }
+				  else if (lee.resultado == 'is-invalid'){
+					muestraMensaje("ERROR", lee.mensaje,"error");
+				  }
+				  else if(lee.resultado == "error"){
+					muestraMensaje("ERROR", lee.mensaje,"error");
+					console.error(lee.mensaje);
+				  }
+				  else if(lee.resultado == "console"){
+					console.log(lee.mensaje);
+				  }
+				  else{
+					muestraMensaje("ERROR", lee.mensaje,"error");
+				  }
+				});
 
-	  }
-	});
-  } else if (accion == 2) {
-	$("#accion").val("declinar");
-	$("#id").val(id);
-	Swal.fire({
-	  title: "¿Estás Seguro?",
-	  text: "¿Está seguro que desea declinar este pago?",
-	  showCancelButton: true,
-	  confirmButtonText: "Declinar",
-	  confirmButtonColor: "#dc3545",
-	  cancelButtonText: `Cancelar`,
-	  icon: "warning",
-	}).then((result) => {
-	  if (result.isConfirmed) {
-		var datos = new FormData();
-		datos.append("accion", $("#accion").val());
-		datos.append("id", $("#id").val());
-		//enviaAjax(datos);
-
-		enviaAjax(datos,function(respuesta){
-		
-		  var lee = JSON.parse(respuesta);
-		  if (lee.resultado == "declinado") {
-				muestraMensaje(lee.mensaje, "", "success");
-				carga_pagos();
-				carga_pagos_pendientes();
-				carga_pagos_confirmados();
-				carga_pagos_declinados();
-			  }
-		  else if (lee.resultado == 'is-invalid'){
-			muestraMensaje("ERROR", lee.mensaje,"error");
-		  }
-		  else if(lee.resultado == "error"){
-			muestraMensaje("ERROR", lee.mensaje,"error");
-			console.error(lee.mensaje);
-		  }
-		  else if(lee.resultado == "console"){
-			console.log(lee.mensaje);
-		  }
-		  else{
-			muestraMensaje("ERROR", lee.mensaje,"error");
-		  }
+		  	}
 		});
+  	}
+  	else if (accion == 3) { // por_confirmar
+  			$("#accion").val("deshacer_conf");
+  			$("#id").val(id);
+  			Swal.fire({
+  				title: "¿Estás Seguro?",
+  				text: "¿Está seguro que desea deshacer el estado de este pago?",
+  				showCancelButton: true,
+  				confirmButtonText: "Deshacer",
+  				confirmButtonColor: "#dc3545",
+  				cancelButtonText: `Cancelar`,
+  				icon: "warning",
+  			}).then((result) => {
+  				if (result.isConfirmed) {
+  					var datos = new FormData();
+  					datos.append("accion", $("#accion").val());
+  					datos.append("id", $("#id").val());
+  					//enviaAjax(datos);
 
-	  }
-	});
-  }
+  					enviaAjax(datos,function(respuesta){
+  					
+  					  var lee = JSON.parse(respuesta);
+  					  if (lee.resultado == "deshacer_conf") {
+  							muestraMensaje(lee.mensaje, "", "success");
+  							carga_pagos();
+  							carga_pagos_pendientes();
+  							carga_pagos_confirmados();
+  							carga_pagos_declinados();
+  						  }
+  					  else if (lee.resultado == 'is-invalid'){
+  						muestraMensaje("ERROR", lee.mensaje,"error");
+  					  }
+  					  else if(lee.resultado == "error"){
+  						muestraMensaje("ERROR", lee.mensaje,"error");
+  						console.error(lee.mensaje);
+  					  }
+  					  else if(lee.resultado == "console"){
+  						console.log(lee.mensaje);
+  					  }
+  					  else{
+  						muestraMensaje("ERROR", lee.mensaje,"error");
+  					  }
+  					});
+
+  			  	}
+  			});
+  	  	}
 }

@@ -41,7 +41,7 @@ if (is_file("vista/" . $p . ".php")) {
       echo json_encode($respuesta);
 
 
-    }elseif ($accion == 'confirmar' || $accion == 'declinar') {
+    }elseif ($accion == 'confirmar' || $accion == 'declinar' || $accion == "deshacer_conf") {
 
       $o->set_id($_POST["id"]);
       $o->set_accion($_POST["accion"]);

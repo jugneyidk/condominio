@@ -35,8 +35,8 @@
 				<th scope="col" class="text-info">Apto</th>
 				<th scope="col" class="text-info d-none d-md-table-cell">Torre</th>
 				<th scope="col" class="text-info">Fecha</th>
-				<th scope="col" class="text-info">Monto</th>
-				<th scope="col" class="text-info">Estado</th>
+				<th scope="col" class="text-info d-none d-sm-table-cell">Monto</th>
+				<th scope="col" class="text-info d-none d-md-table-cell">Estado</th>
 				<th scope="col" class="text-info text-center">Acción</th>
 			  </tr>
 			</thead>
