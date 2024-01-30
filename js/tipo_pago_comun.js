@@ -58,9 +58,10 @@ function tipo_pago_comun_resumen_load(list){
 					{data:"monto", "width": "40%"},
 					],
 				createdRow: function(row,data){
+					console.log(data);
 					row.querySelector("td:nth-child(2)").className = "text-right text-nowrap align-middle";
 					row.querySelector("td:nth-child(2)").innerText = sepMiles(data.monto.toString())+((data.tipo_monto == 0)?" Bs":" $");
-					if(data.concepto == "Total"){
+					if(data.concepto == "Total" || data.concepto == "Total $" || data.concepto == "Total Bs"){
 						row.querySelector("td:nth-child(1)").className = "text-info font-weight-bold text-right text-nowrap align-middle";
 						row.querySelector("td:nth-child(2)").className = "font-weight-bold text-right text-nowrap align-middle";
 					}
@@ -91,12 +92,38 @@ function load_tipo_pago_comun(){
 	// comunes -------------------------------------
 		// monto
 		
-		eventoMonto("tipo_pago_comun-monto_total");
+		eventoMonto("tipo_pago_comun-monto_total",function(e){
+			e.transform_to_dolar = true;
+			e.value = sepMiles(e.value);
+			if(e.transform_to_dolar===true && e.value !=''){
+				var temp = sepMiles(e.value,true);
+				temp = (temp/Datos_divisa.monto).toFixed(2);
+				console.log(temp);
+				if(temp>0){
+					document.getElementById('tipo_pago_comun-bs_to_dolar').innerText=sepMiles(temp.toString());
+				}
+				else{
+					document.getElementById('tipo_pago_comun-bs_to_dolar').innerText='';
+
+				}
+
+			}
+			else{
+				document.getElementById('tipo_pago_comun-bs_to_dolar').innerText='';
+			}
+		});
+		
 		//tipo_pago
 		document.getElementById('tipo_pago_comun').onchange=function(){
 			if(this.value!= ''){
 				document.getElementById('nav-tab_tipo_pago_comun_'+tipo_pago_array_global[this.value]).click();
 				document.getElementById('tipo_pago_comun-monto_total').readOnly=(this.value=="4")?true:false;
+				if(this.value != '4'){
+					document.getElementById('tipo_pago_comun-monto_total').onkeyup();
+				}
+				else{
+					document.getElementById('tipo_pago_comun-bs_to_dolar').innerText='';
+				}
 			}
 		};
 

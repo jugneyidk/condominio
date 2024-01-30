@@ -17,7 +17,7 @@ $bitacora->b_eliminar();
  */
 class Bitacora extends datos
 {
-	PRIVATE $c,$usuario_id,$tipo;
+	PRIVATE $c,$usuario_id,$tipo,$con_temp;
 	PUBLIC function __construct($con = NULL)
 	{
 		if(isset($con)){
@@ -271,6 +271,14 @@ ORDER BY fecha DESC");
 	PUBLIC function set_tipo($value){
 		$this->tipo = $value;
 	}
+
+	PUBLIC function get_con_temp(){
+		return $this->con_temp;
+	}
+	PUBLIC function set_con_temp($value){
+		$this->con_temp = $value;
+	}
+	
 
 }
 ?>

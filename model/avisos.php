@@ -44,17 +44,24 @@ class avisos extends datos
 	{
 		$r = array();
 		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("INSERT INTO avisos (titulo, descripcion, desde, hasta) VALUES(?,?,?,?)");
 			$consulta->execute([$this->titulo, $this->descripcion, $this->desde, $this->hasta ]);
 			$r['resultado'] = 'incluir';
 			$r['mensaje'] =  'Registro Incluido';
-			$bitacora = new Bitacora();
+			$bitacora = new Bitacora($this->con);
   			$bitacora->b_registro("Registró el aviso \"$this->titulo\"");
-			// $bitacora->b_incluir();
-
+  			$this->con->commit();
 		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 		}
 		return $r;
 		
@@ -64,6 +71,8 @@ class avisos extends datos
 	PUBLIC function modificar(){
 		$r=array();
 		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("UPDATE `avisos` SET `titulo`= ? ,`descripcion`= ? ,`desde`= ? ,`hasta`= ? WHERE `id_aviso` = ?");
 			$consulta->execute([$this->titulo, $this->descripcion, $this->desde, $this->hasta, $this->id ]);
 			$consulta->execute();
@@ -73,14 +82,19 @@ class avisos extends datos
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] =  'Registro Modificado';
 
-			$bitacora = new Bitacora();
+			$bitacora = new Bitacora($this->con);
   			$bitacora->b_registro("Modificó el aviso \"$this->titulo\"");
 			// $bitacora->b_modificar();
-
-
+  			$this->con->commit();
 		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 		}
 		return $r;
 	}
@@ -89,6 +103,8 @@ class avisos extends datos
 	PUBLIC function eliminar(){
 		$r = array();
 		try {
+			$this->validar_conexion($this->con);
+			$this->con->beginTransaction();
 			$consulta = $this->con->prepare("SELECT * FROM avisos WHERE id_aviso = ?");
 			$consulta->execute([$this->id]);
 			if ($resp = $consulta->fetch(PDO::FETCH_ASSOC)) {
@@ -107,8 +123,14 @@ class avisos extends datos
 				$r['mensaje'] =  "El Registro no existe";
 			}
 		} catch (Exception $e) {
+			if($this->con instanceof PDO){
+				if($this->con->inTransaction()){
+					$this->con->rollBack();
+				}
+			}
+		
 			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
+			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 		}
 		return $r;
 	}

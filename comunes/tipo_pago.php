@@ -61,7 +61,22 @@
 			</div>
 		</div>
 		<div class="col-12 col-md">
-			<label for="tipo_pago_comun-monto_total">Monto (Bs)</label>
+			<style>
+				label[for="tipo_pago_comun-monto_total"]{
+					display: flex;
+					justify-content: space-between;
+					width: 100%;
+					padding-right: 0.1875rem
+				}
+				.dolar-after{font-weight: 500;}
+				.dolar-after::after{
+					content: "$"
+				}
+				.dolar-after:empty::after{
+					content: "";
+				}
+			</style>
+			<label for="tipo_pago_comun-monto_total"><span>Monto (Bs)</span><span class="dolar-after" id="tipo_pago_comun-bs_to_dolar"></span></label>
 			<input autocomplete="off" maxlength="29" type="text" class="form-control text-right" id="tipo_pago_comun-monto_total" data-span="invalid-span-tipo_pago_comun-monto_total">
 			<span id="invalid-span-tipo_pago_comun-monto_total" class="invalid-span text-danger"></span>
 		</div>

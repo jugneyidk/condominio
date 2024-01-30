@@ -46,7 +46,7 @@ function carga_deudas(){
 					  { data: "extra" }
 						  ],
 				  createdRow: function(row,data){
-					console.table(data);
+					// console.table(data);
 					
 					
 					row.dataset.id=data.id_deuda;
@@ -197,6 +197,7 @@ function mostrar_registrar_pago(linea) {
 			tipo_pago_comun_update_divisa();
 			tipo_pago_comun_resumen_load(lee.mensaje);
 			document.getElementById('monto_para_calcular').dataset.monto_a_pagar=lee.total;
+			document.getElementById('monto_para_calcular').dataset.monto_a_pagar_b=lee.totalB;
 			
 		}
 		else if (lee.resultado == 'is-invalid'){

@@ -586,6 +586,7 @@ function confirmar_declinar_pago(linea, accion) {
 		enviaAjax(datos,function(respuesta){
 		
 		  var lee = JSON.parse(respuesta);
+		  console.log(lee);
 		  if (lee.resultado == "confirmado") {
 				muestraMensaje(lee.mensaje, "", "success");
 				carga_pagos();

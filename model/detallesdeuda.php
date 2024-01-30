@@ -229,20 +229,33 @@ class detallesdeuda extends datos
 			$resultado = $consulta->fetchall(PDO::FETCH_ASSOC);
 
 			$consulta = $this->con->prepare("SELECT 
-							'Total' as concepto,
+							'Total Bs' as concepto,
 							(SUM(IF(dd.tipo_monto = 0, dd.monto, (ROUND(dd.monto * @divisa_monto, 2)) ) ) ) AS monto,
 							0 as tipo_monto
 
 							FROM detalles_deudas as dd 
 							WHERE dd.id_deuda = ?
-							ORDER BY id_deuda;");
-			$consulta->execute([$this->id]);
+							UNION
+							SELECT 
+							'Total $' as concepto,
+							(SUM(IF(dd.tipo_monto = 1, dd.monto, (ROUND(dd.monto / @divisa_monto, 2)) ) ) ) AS monto,
+							1 as tipo_monto
+
+							FROM detalles_deudas as dd 
+							WHERE dd.id_deuda = ?
+							");
+			$consulta->execute([$this->id, $this->id]);
 
 
-			$consulta = $consulta->fetch(PDO::FETCH_ASSOC);
-			$r["total"] = $consulta["monto"];
+			//$consulta = $consulta->fetch(PDO::FETCH_ASSOC);
+			$consulta = $consulta->fetchall(PDO::FETCH_ASSOC);
 
-			array_push($resultado, $consulta);
+
+			$r["total"] = $consulta[0]["monto"];
+			$r["totalB"] = $consulta[1]["monto"];
+
+			array_push($resultado, $consulta[0]);
+			array_push($resultado, $consulta[1]);
 			
 			$r['resultado'] = 'detalles_deuda';
 			$r['mensaje'] =  $resultado;

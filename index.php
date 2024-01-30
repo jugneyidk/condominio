@@ -1,4 +1,6 @@
 <?php 
+date_default_timezone_set("America/Caracas");
+
 $p = "principal"; 
 session_start();
  if (!empty($_GET['p'])){

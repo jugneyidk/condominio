@@ -72,10 +72,10 @@ function eventoFecha(etiqueta,mensaje = "La fecha es invalida"){
 
 }
 
-function eventoMonto(etiqueta,mensaje = "Ingrese un monto valido"){
+function eventoMonto(etiqueta,func_afterkeyup = function(e){e.value = sepMiles(e.value); },mensaje = "Ingrese un monto valido"){
 	var n = 26;
 	if(typeof etiqueta !== "string"){console.error("la etiqueta debe ser un string con el id del formulario de monto",etiqueta); return false; }
-	eventoKeyup(etiqueta, montoExp, mensaje, undefined, function(e){e.value = sepMiles(e.value); });
+	eventoKeyup(etiqueta, montoExp, mensaje, undefined, func_afterkeyup);
 	eventoKeypress(etiqueta, /^[0-9]$/);
 
 	//Si se está repitiendo, ignorar

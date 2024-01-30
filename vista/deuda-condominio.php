@@ -75,21 +75,21 @@
 						<input type="hidden" id="cargo_id_hidden" class="d-none" name="id">
 						
 						<div class="row">
-							<div class="col-12 col-md-3">
+							<div class="col-12 col-md-5">
 								<label for="cargo_concepto">Concepto</label>
 								<input type="text" maxlength="80" class="form-control" id="cargo_concepto" name="cargo_concepto" data-span="invalid-span-cargo_concepto">
 								<span id="invalid-span-cargo_concepto" class="invalid-span text-danger"></span>
 							</div>
-							<div class="col-12 col-md-3">
+							<div class="col-12 col-md-5">
 								<label for="cargo_monto">Monto</label>
 								<input type="tel" class="form-control text-right" id="cargo_monto" name="cargo_monto" data-span="invalid-span-cargo_monto">
 								<span id="invalid-span-cargo_monto" class="invalid-span text-danger"></span>
 							</div>
-							<div class="col-5 col-md-3 col-xl-2 ">
+							<div class="col-5 col-md-3 col-xl-2 d-none">
 								<label class="w-100">Tipo de monto</label>
 								<div class="text-nowrap">
 									<label class="cursor-pointer no-select" for="cargo_tipo_monto_divisa">Divisa</label>
-									<input type="radio" class="dont-erase" id="cargo_tipo_monto_divisa" name="cargo_tipo_monto" data-span="invalid-span-cargo_tipo_monto_moneda" value="divisa">
+									<input checked type="radio" class="dont-erase" id="cargo_tipo_monto_divisa" name="cargo_tipo_monto" data-span="invalid-span-cargo_tipo_monto_moneda" value="divisa">
 									<label class="cursor-pointer no-select" for="cargo_tipo_monto_bolivar">Bolívar</label>
 									<input type="radio" class="dont-erase" id="cargo_tipo_monto_bolivar" name="cargo_tipo_monto" data-span="invalid-span-cargo_tipo_monto_moneda" value="bolivar">
 								</div>
@@ -1404,6 +1404,8 @@
 			$("form input[type='radio']").each(function(a,b){
 				b.checked=false;
 			});
+
+			document.getElementById('cargo_tipo_monto_divisa').checked=true;
 			
 			limpiarvalidacion();
 			cambiarbotones_cargos();
