@@ -327,7 +327,7 @@
 				return false;
 			}
 			if(Date.parse($("#fecha2").val()) <= Date.parse($("#fecha").val())){
-				muestraMensaje("ERROR", 'La fecha "Desde" debe ser anterior o igual a la fecha "Hasta"', "error");
+				muestraMensaje("ERROR", 'La fecha "Desde" debe ser anterior a la fecha "Hasta"', "error");
 				return false; 
 			}
 

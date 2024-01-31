@@ -16,15 +16,27 @@ if (is_file("vista/" . $p . ".php")) {
       $respuesta = $o->listadotipos();
       echo json_encode($respuesta);
     } elseif ($accion == 'incluir') {
-      $respuesta = $o->incluir($_POST['descripcion'], $_POST['alicuota']);
+
+
+      $o->set_descripcion($_POST["descripcion"]);
+      $o->set_alicuota($_POST["alicuota"]);
+
+
+
+      $respuesta = $o->incluir_s();
       echo json_encode($respuesta);
     }
     elseif ($accion == 'modificar') {
-      $respuesta = $o->modificar($_POST['id_tipo_apartamento'],$_POST['descripcion'], $_POST['alicuota']);
+      $o->set_id_tipo_apartamento($_POST["id_tipo_apartamento"]);
+      $o->set_descripcion($_POST["descripcion"]);
+      $o->set_alicuota($_POST["alicuota"]);
+
+      $respuesta = $o->modificar_s();
       echo json_encode($respuesta);
     }
     elseif ($accion == 'eliminar') {
-      $respuesta = $o->eliminar($_POST['id_tipo_apartamento']);
+      $o->set_id_tipo_apartamento($_POST["id_tipo_apartamento"]);
+      $respuesta = $o->eliminar_s();
       echo json_encode($respuesta);
     }
     exit;

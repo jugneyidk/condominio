@@ -394,5 +394,24 @@ class generarreporte extends datos
         }
     }
 
+    PUBLIC function get_datos(){
+        return $this->datos;
+    }
+    PUBLIC function set_datos($value){
+        $this->datos = $value;
+    }
+    PUBLIC function get_id(){
+        return $this->id;
+    }
+    PUBLIC function set_id($value){
+        $this->id = $value;
+    }
+    PUBLIC function get_caso(){
+        return $this->caso;
+    }
+    PUBLIC function set_caso($value){
+        $this->caso = $value;
+    }
+
 
 }

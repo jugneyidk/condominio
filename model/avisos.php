@@ -4,9 +4,7 @@ require_once("model/bitacora.php");
 
 
 
-/**
- * 
- */
+
 class avisos extends datos
 {
 	PRIVATE $con, $id, $titulo, $descripcion, $desde, $hasta;
@@ -63,6 +61,11 @@ class avisos extends datos
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 		}
+		finally{
+			if($this->con instanceof PDO){
+				$this->con = null;
+			}
+		}
 		return $r;
 		
 	}
@@ -95,6 +98,10 @@ class avisos extends datos
 		
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}finally{
+			if($this->con instanceof PDO){
+				$this->con = null;
+			}
 		}
 		return $r;
 	}
@@ -115,7 +122,7 @@ class avisos extends datos
 
 				$this->titulo = $resp["titulo"];
 				
-				$bitacora = new Bitacora();
+				$bitacora = new Bitacora($this->con);
   				$bitacora->b_registro("Eliminó el aviso \"$this->titulo\"");
 				// $bitacora->b_eliminar();
 			} else {
@@ -131,6 +138,10 @@ class avisos extends datos
 		
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
+		}finally{
+			if($this->con instanceof PDO){
+				$this->con = null;
+			}
 		}
 		return $r;
 	}
@@ -223,6 +234,12 @@ class avisos extends datos
 	}
 	PUBLIC function set_hasta($value){
 		$this->hasta = $value;
+	}
+	PUBLIC function get_con(){
+		return $this->con;
+	}
+	PUBLIC function set_con($value){
+		$this->con = $value;
 	}
 }
 

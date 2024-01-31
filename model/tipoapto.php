@@ -7,21 +7,37 @@ require_once("model/bitacora.php");
 
 class tipoapto extends datos
 {
+	PRIVATE $id_tipo_apartamento, $descripcion, $alicuota;
 	PUBLIC function chequearpermisos(){
 		$id_rol = $_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'];
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
 		$guarda->execute([$modulo, $id_rol]);
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	PUBLIC function incluir($descripcion, $alicuota)
+	PUBLIC function incluir_s(){
+		return $this->incluir();
+	}
+	PUBLIC function modificar_s(){
+		return $this->modificar();
+	}
+	PUBLIC function eliminar_s(){
+		return $this->eliminar();
+	}
+
+
+
+
+
+
+	PRIVATE function incluir()
 	{
+		$descripcion = $this->descripcion;
+		$alicuota = $this->alicuota;
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		if (!$this->existe(0,$descripcion,2)) {
 			try {
@@ -46,7 +62,6 @@ class tipoapto extends datos
 	PUBLIC function listadotipos() 
 	{
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
 			$resultado = $co->query("SELECT id_tipo_apartamento, 
@@ -78,8 +93,11 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	PUBLIC function modificar($id_tipo_apartamento, $descripcion, $alicuota)
+	PRIVATE function modificar()
 	{
+		$id_tipo_apartamento = $this->id_tipo_apartamento;
+		$descripcion = $this->descripcion;
+		$alicuota = $this->alicuota;
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id_tipo_apartamento,0,1)) {
@@ -105,10 +123,10 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	PUBLIC function eliminar($id_tipo_apartamento)
+	PRIVATE function eliminar()
 	{
+		$id_tipo_apartamento = $this->id_tipo_apartamento;
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id_tipo_apartamento,0,1)) {
 			try {
 				$consulta = $co->prepare("DELETE FROM tipo_apartamento 
@@ -135,10 +153,9 @@ class tipoapto extends datos
 		}
 		return $r;
 	}
-	 function existe($id_tipo_apartamento,$descripcion,$caso)
+	PUBLIC function existe($id_tipo_apartamento,$descripcion,$caso)
 	{
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		switch ($caso) {
 			case 1:
 				try {
@@ -171,5 +188,25 @@ class tipoapto extends datos
 			default:
 				break;
 		}
+	}
+
+
+	PUBLIC function get_id_tipo_apartamento(){
+		return $this->id_tipo_apartamento;
+	}
+	PUBLIC function set_id_tipo_apartamento($value){
+		$this->id_tipo_apartamento = $value;
+	}
+	PUBLIC function get_descripcion(){
+		return $this->descripcion;
+	}
+	PUBLIC function set_descripcion($value){
+		$this->descripcion = $value;
+	}
+	PUBLIC function get_alicuota(){
+		return $this->alicuota;
+	}
+	PUBLIC function set_alicuota($value){
+		$this->alicuota = $value;
 	}
 }

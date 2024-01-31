@@ -45,7 +45,7 @@ function carga_deudas(){
 					  { data: "monto" },
 					  { data: "extra" }
 						  ],
-				  createdRow: function(row,data){
+				createdRow: function(row,data){
 					// console.table(data);
 					
 					
@@ -80,12 +80,12 @@ function carga_deudas(){
 
 					}
 					
-				  },
+				},
 
 				  autoWidth: false,
 				  //order: [[1, "desc"]],
 				  // paging: false,
-				  searching: false,
+				  searching: true,
 				  info: false,
 				});
 			  }
@@ -152,7 +152,7 @@ function carga_deudas(){
 			  	  autoWidth: false,
 			  	  //order: [[1, "desc"]],
 			  	  // paging: false,
-			  	  searching: false,
+			  	  searching: true,
 			  	  info: false,
 			  	});
 			    }

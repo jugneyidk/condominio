@@ -178,6 +178,16 @@ class usuarios extends datos
 			try {
 				$this->validar_conexion($co);
 				$co->beginTransaction();
+				$consulta = $co->prepare("SELECT rif_cedula,tipo_identificacion FROM datos_usuarios WHERE id = ?");
+				$consulta->execute([$id]);
+				$consulta = $consulta->fetch(PDO::FETCH_ASSOC);
+
+				if($consulta["rif_cedula"] != $rif_cedula or $consulta["tipo_identificacion"] != $tipo_identificacion){
+					if ($this->existe($rif_cedula, $tipo_identificacion, 1)){
+						throw new Validaciones("La nueva cedula ya esta registrada", 1);
+					}
+
+				}
 				$consulta = $co->prepare("UPDATE datos_usuarios SET 
 						rif_cedula = :rif_cedula,
 						tipo_identificacion = :tipo_identificacion,
@@ -229,7 +239,17 @@ class usuarios extends datos
 				
 
 				$co->commit();
-			} catch (Exception $e) {
+			} catch (Validaciones $e){
+				if($co instanceof PDO){
+					if($co->inTransaction()){
+						$co->rollBack();
+					}
+				}
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  $e->getMessage();
+				$r['console'] =  $e->getMessage().": Code : ".$e->getLine();
+			}
+			 catch (Exception $e) {
 				if($co instanceof PDO){
 					if($co->inTransaction()){
 						$co->rollBack();
@@ -239,6 +259,7 @@ class usuarios extends datos
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
 			}
+
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "Usuario no encontrado";
@@ -251,6 +272,11 @@ class usuarios extends datos
 		$co = $this->conecta();
 		if ($this->existe($id, 0, 2)) {
 			try {
+				$this->validar_conexion($co);
+				$co->beginTransaction();
+				if(isset($_SESSION["id_usuario"]) and $this->id == $_SESSION["id_usuario"]){
+					throw new Exception("No se puede eliminar el usuario de la sesión actual", 1);
+				}
 				
 				$consulta = $co->prepare("DELETE FROM datos_usuarios WHERE id = :id ");
 				$consulta->bindValue(":id",$id);
@@ -261,7 +287,13 @@ class usuarios extends datos
 				
 				$bitacora = new Bitacora();
 				$bitacora->b_registro("Eliminó el usuario \"$id\"");
+				//$co->commit();
 			} catch (Exception $e) {
+				if($co instanceof PDO){
+					if($co->inTransaction()){
+						$co->rollBack();
+					}
+				}
 				$r['resultado'] = 'error';
 				if ($e->getCode()=='23000') {
 					$r['mensaje'] =  "El usuario no puede ser eliminado si ha procesado deudas/pagos.";

@@ -29,10 +29,10 @@
                                 <span id="sclave" class="text-danger espacio-vacio"></span>
                             </div>
                             <div class="from-group text-center mb-3">
-                                <a href="?p=reset-pass">Has olvidado tu contraseña?</a>
+                                <a href="?p=reset-pass">¿Has olvidado tu contraseña?</a>
                             </div>
                             <div class="form-group">
-                                <button type="button" id="entrar" class="btn btn-primary btn-block">CONSULTAR</button>
+                                <button type="button" id="entrar" class="btn btn-primary btn-block">INGRESAR</button>
                             </div>
                             <div class="form-group">
                                 <a class="btn btn-dark btn-block" href="./">Regresar</a>

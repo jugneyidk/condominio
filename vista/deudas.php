@@ -13,7 +13,7 @@
     </div>
     <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="todas-tab" data-toggle="tab" href="#todas" role="tab" aria-controls="todas" aria-selected="true">Todas las deudas</a>
+        <a class="nav-link active" id="todas-tab" data-toggle="tab" href="#todas" role="tab" aria-controls="todas" aria-selected="true">deudas</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" id="morosos-tab" data-toggle="tab" href="#morosos" role="tab" aria-controls="morosos" aria-selected="false">Morosos</a>

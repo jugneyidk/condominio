@@ -9,14 +9,14 @@ require_once("model/enviar-ws.php");
 
 class pagos extends datos
 {
-	private $id, $accion, $usuario_id;
+	PRIVATE $id, $accion, $usuario_id;
 	function __construct()
 	{
 		if(isset($_SESSION['id_usuario'])){
 			$this->usuario_id = $_SESSION['id_usuario'];
 		}
 	}
-	public function listadopagos()
+	PUBLIC function listadopagos()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -94,7 +94,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	public function listadopagospendientes()
+	PUBLIC function listadopagospendientes()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -168,7 +168,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	public function listadopagosconfirmados()
+	PUBLIC function listadopagosconfirmados()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -239,7 +239,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	public function listadopagosdeclinados()
+	PUBLIC function listadopagosdeclinados()
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -313,7 +313,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	public function detallespago()
+	PUBLIC function detallespago()
 	{
 		$id = $this->id;
 		$co = $this->conecta();
@@ -499,7 +499,7 @@ class pagos extends datos
 		}
 		return $r;
 	}
-	public function confirmar_declinar_pago()
+	PUBLIC function confirmar_declinar_pago()
 	{
 		$id = $this->id;
 		$accion = $this->accion;
@@ -604,7 +604,7 @@ class pagos extends datos
 			$r["verificador"] = $respuesta_verificador;
 		}
 		return $r;
-	}
+	}// TODO add validation
 
 	PUBLIC function get_id(){
 		return $this->id;

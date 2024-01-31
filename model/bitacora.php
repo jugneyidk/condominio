@@ -153,52 +153,36 @@ class Bitacora extends datos
 			$this->validar_conexion($this->c);
 			$this->c->beginTransaction();
 			//$consulta = $this->c->query("SELECT IF(u.razon_social IS NULL,'Sistema',u.razon_social) AS user,u.rif_cedula,u.tipo_identificacion, `descrip`,`fecha` FROM `bitacora` AS b JOIN datos_usuarios as u ON b.user = u.id WHERE 1;");
-// 			$consulta = $this->c->query("SELECT
-//     IF(
-//         u.razon_social IS NULL,
-//         'Sistema',
-//         u.razon_social
-//     ) AS user,
-//     u.rif_cedula,
-//     u.tipo_identificacion,
-//     `descrip`,
-//     `fecha`
-// FROM
-//     `bitacora` AS b
-// LEFT JOIN datos_usuarios AS u
-// ON
-//     b.user = u.id
-// WHERE 1 ORDER BY b.fecha DESC;");
 
 			$consulta = $this->c->query("SELECT 
-	u.razon_social AS user,
-    u.rif_cedula,
-    u.tipo_identificacion,
-    `descrip`,
-    `fecha`,
-    `user_type`
-    FROM `bitacora` AS b0 LEFT JOIN `datos_usuarios` as u on b0.user_id = u.id WHERE user_type = 1
-UNION
-SELECT 
-	CONCAT(u.nombres,' ',u.apellidos) AS user,
-    u.cedula_rif as rif_cedula, 
-    u.tipo_identificacion,
-    `descrip`,
-    `fecha`,
-    `user_type`
-	
-	FROM `bitacora` AS b1 LEFT JOIN habitantes as u on b1.user_id = u.id WHERE user_type = 0
-UNION
-SELECT 
-	'Sistema' as user,
-    null as 'rif_cedula',
-    null as 'tipo_identificacion',
-    `descrip`,
-    `fecha`,
-    `user_type`
-    
-FROM `bitacora` AS b2 LEFT JOIN `habitantes` as u on b2.user_id = u.id WHERE user_type IS NULL
-ORDER BY fecha DESC");
+				u.razon_social AS user,
+			    u.rif_cedula,
+			    u.tipo_identificacion,
+			    `descrip`,
+			    `fecha`,
+			    `user_type`
+			    FROM `bitacora` AS b0 LEFT JOIN `datos_usuarios` as u on b0.user_id = u.id WHERE user_type = 1
+				UNION
+				SELECT 
+					CONCAT(u.nombres,' ',u.apellidos) AS user,
+				    u.cedula_rif as rif_cedula, 
+				    u.tipo_identificacion,
+				    `descrip`,
+				    `fecha`,
+				    `user_type`
+					
+					FROM `bitacora` AS b1 LEFT JOIN habitantes as u on b1.user_id = u.id WHERE user_type = 0
+				UNION
+				SELECT 
+					'Sistema' as user,
+				    null as 'rif_cedula',
+				    null as 'tipo_identificacion',
+				    `descrip`,
+				    `fecha`,
+				    `user_type`
+				    
+				FROM `bitacora` AS b2 LEFT JOIN `habitantes` as u on b2.user_id = u.id WHERE user_type IS NULL
+				ORDER BY fecha DESC");
 
 			$consulta = $consulta->fetchall(PDO::FETCH_ASSOC);
 			$dom = new DOMDocument();

@@ -472,16 +472,6 @@ class servicio extends datos
 	}
 
 
-
-	
-
-
-
-
-
-
-
-
 	PUBLIC function listadoPagosservicios() {
 		$co = $this->con;
 		$r = array();
