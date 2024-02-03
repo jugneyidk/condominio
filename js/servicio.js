@@ -486,6 +486,7 @@ function borrar() {
 	if (document.getElementById('tipo_pago_comun-divisa_cantidad')) {
 		document.getElementById('tipo_pago_comun-divisa_cantidad').dispatchEvent(new Event('input'));
 	}
+	document.getElementById('tipo_pago_comun-bs_to_dolar').innerText="";
 	document.getElementById('service').disabled=false;
 	return obj = {then:function(func){
 		func();

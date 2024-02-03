@@ -37,11 +37,13 @@ if (is_file("vista/" . $p . ".php")) {
 
 			echo json_encode($respuesta);
 		}
+		$o->set_con(null);
 		exit;
 	}
 	$b = new Bitacora();
 	$b->b_registro("Ingreso al Foro \"$postId\"");
 	require_once("vista/" . $p . ".php");
+	$o->set_con(null);
 } else {
 	require_once("vista/404.php");
 }

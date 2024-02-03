@@ -17,6 +17,7 @@ class apto extends datos
 		$guarda->execute();
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
+		$co = null;
 		return $fila;
 	}
 
@@ -79,6 +80,8 @@ class apto extends datos
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
+			}finally{
+				$co = null;
 			}
 		} else {
 			$r['resultado'] = 'error';
@@ -90,10 +93,9 @@ class apto extends datos
 
 	PRIVATE function modificar()
 	{
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($this->id_apartamento, 0, 0, 2)) {
 			try {
+			$co = $this->conecta();
 				// if ($inquilino) {
 					$consulta = $co->prepare("SELECT num_letra_apartamento, torre FROM apartamento where id_apartamento = ?");
 					$consulta->execute([$this->id_apartamento]);
@@ -142,6 +144,8 @@ class apto extends datos
 				$r['resultado'] = 'error';
 				$r['mensaje'] =   $e->getMessage()." line ".$e->getLine();
 				return $r;
+			}finally{
+				$co = null;
 			}
 			
 		} else {
@@ -153,10 +157,9 @@ class apto extends datos
 
 	PRIVATE function eliminar()
 	{
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($this->id_apartamento, 0, 0, 2)) {
 			try {
+				$co = $this->conecta();
 				//$co->query("delete from apartamento where id_apartamento = '$id_apartamento'");
 				$consulta = $co->prepare("SELECT num_letra_apartamento FROM apartamento WHERE id_apartamento = ?");
 				$consulta->execute([$this->id_apartamento]);
@@ -178,6 +181,8 @@ class apto extends datos
 				}else{
 					$r['mensaje'] =  $e->getMessage();					
 				}
+			}finally{
+				$co=null;
 			}
 		} else {
 			$r['resultado'] = 'error';
@@ -189,7 +194,6 @@ class apto extends datos
 	PUBLIC function listadoapartamentos()
 	{
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try {
 			$resultado = $co->query("SELECT a.id_apartamento, a.num_letra_apartamento, a.propietario, a.inquilino, a.tipo_apartamento, a.piso, a.torre, h1.nombres as nombre_propietario, h1.apellidos as apellido_propietario, tipo_apartamento.descripcion, h2.nombres as nombre_inquilino, h2.apellidos as apellido_inquilino  
 			FROM apartamento a 
@@ -238,14 +242,13 @@ class apto extends datos
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 
 	PUBLIC function listadohabitantes()
 	{
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array(); 
 		try {
 			$resultado = $co->query("SELECT id,  cedula_rif, tipo_identificacion,
@@ -286,14 +289,13 @@ class apto extends datos
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 
 	PUBLIC function listadotipos()
 	{
 		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array(); // en este arreglo
 		// se enviara la respuesta a la solicitud y el
 		// contenido de la respuesta
@@ -315,7 +317,7 @@ class apto extends datos
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 	PUBLIC function existe($id_apartamento, $torre, $piso, $caso)
@@ -337,7 +339,7 @@ class apto extends datos
 					}
 				} catch (Exception $e) {
 					return false;
-				}
+				}finally{$co = null;}
 				break;
 			case '2':
 				try {
@@ -353,7 +355,7 @@ class apto extends datos
 					}
 				} catch (Exception $e) {
 					return false;
-				}
+				}finally{$co = null;}
 				break;
 			default:
 				break;

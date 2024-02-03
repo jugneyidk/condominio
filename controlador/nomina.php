@@ -128,11 +128,13 @@
 					$_POST["estado_civil"]
 				));
 			} else echo "no programado";
+			$o->set_con(null);
 			exit;
 		}
 		$b_temp = new Bitacora;
 		$b_temp->b_registro("Ingreso en el modulo \"".$_GET["p"]."\"");
 		require_once("vista/" . $p . ".php");
+		$o->set_con(null);
 	} else {
 		require_once("vista/404.php");
 	}

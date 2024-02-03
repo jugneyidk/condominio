@@ -38,11 +38,14 @@ if (is_file("vista/" . $p . ".php")) {
 				// $o->set_id();
 				echo json_encode($o->detalles_deuda_s($_POST["id_deuda"]));
 			}
+			$o->set_con(null);
 			exit;
 		}
 		$b_temp = new Bitacora;
   		$b_temp->b_registro("Ingreso en el modulo \"Consultar Deudas\"");
 		require_once("vista/" . $p . ".php");
+		$o->set_con(null);
+
 	//} else {
 	//	header("Location: ?p=consulta");
 	//}

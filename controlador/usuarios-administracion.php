@@ -18,34 +18,53 @@ if (is_file("vista/" . $p . ".php")) {
     } elseif ($accion == 'incluir') {
 
       // $o->set_id($_POST["id"])
-      $o->set_rif_cedula($_POST["rif_cedula"]);
-      $o->set_tipo_identificacion($_POST["tipo_identificacion"]);
-      $o->set_razon_social($_POST["razon_social"]);
-      $o->set_domicilio_fiscal($_POST["domicilio_fiscal"]);
-      $o->set_telefono($_POST["telefono"]);
-      $o->set_correo($_POST["correo"]);
-      $o->set_password($_POST["password"]);
-      $o->set_rol($_POST["rol"]);
+      // $o->set_rif_cedula();
+      // $o->set_tipo_identificacion();
+      // $o->set_razon_social();
+      // $o->set_domicilio_fiscal();
+      // $o->set_telefono();
+      // $o->set_correo();
+      // $o->set_password();
+      // $o->set_rol();
 
-      $respuesta = $o->incluir_s();
+      $respuesta = $o->incluir_s(
+        $_POST["rif_cedula"],
+        $_POST["tipo_identificacion"],
+        $_POST["razon_social"],
+        $_POST["domicilio_fiscal"],
+        $_POST["telefono"],
+        $_POST["correo"],
+        $_POST["password"],
+        $_POST["rol"]
+      );
       echo json_encode($respuesta);
     } elseif ($accion == 'modificar') {
 
-      $o->set_id($_POST["id"]);
-      $o->set_rif_cedula($_POST["rif_cedula"]);
-      $o->set_tipo_identificacion($_POST["tipo_identificacion"]);
-      $o->set_razon_social($_POST["razon_social"]);
-      $o->set_domicilio_fiscal($_POST["domicilio_fiscal"]);
-      $o->set_telefono($_POST["telefono"]);
-      $o->set_correo($_POST["correo"]);
-      $o->set_password($_POST["password"]);
-      $o->set_rol($_POST["rol"]);
-      $respuesta = $o->modificar_s();
+      // $o->set_id();
+      // $o->set_rif_cedula();
+      // $o->set_tipo_identificacion();
+      // $o->set_razon_social();
+      // $o->set_domicilio_fiscal();
+      // $o->set_telefono();
+      // $o->set_correo();
+      // $o->set_password();
+      // $o->set_rol();
+      $respuesta = $o->modificar_s(
+        $_POST["id"],
+        $_POST["rif_cedula"],
+        $_POST["tipo_identificacion"],
+        $_POST["razon_social"],
+        $_POST["domicilio_fiscal"],
+        $_POST["telefono"],
+        $_POST["correo"],
+        $_POST["password"],
+        $_POST["rol"]
+      );
 
       echo json_encode($respuesta);
     } elseif ($accion == 'eliminar') {
-      $o->set_id($_POST["id"]);
-      $respuesta = $o->eliminar_s();
+      // $o->set_id();
+      $respuesta = $o->eliminar_s($_POST["id"]);
       echo json_encode($respuesta);
     }
     exit;

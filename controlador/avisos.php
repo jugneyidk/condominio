@@ -38,11 +38,13 @@ if (is_file("vista/" . $p . ".php")) {
 			echo json_encode($o->eliminar_s($_POST["id"]));
 			
 		}
+		$o->set_con(null);
 		exit;
 	}
 		$b_temp = new Bitacora;
 		$b_temp->b_registro("Ingreso en el modulo \"".$_GET["p"]."\"");
 		require_once("vista/" . $p . ".php");
+		$o->set_con(null);
 } else {
     require_once("vista/404.php"); 
 }

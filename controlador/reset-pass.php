@@ -6,18 +6,26 @@ if (is_file("vista/" . $p . ".php")) {
 		$o = new login();
 		$accion = $_POST['accion'];
 		if($accion == "reset_pass_request"){
-			$o->set_cedula($_POST["cedula_for_reset"]);
-			$o->set_correo($_POST["email_for_reset"]);
-			$o->set_type($_POST["select_user_type"]);
+			// $o->set_cedula();
+			// $o->set_correo();
+			// $o->set_type();
 
-			echo json_encode($o->reset_pass_request());
+			echo json_encode($o->reset_pass_request_s(
+				$_POST["cedula_for_reset"],
+				$_POST["email_for_reset"],
+				$_POST["select_user_type"]
+			));
 		}
 		else if($accion == "reset_pass"){
 			$user = json_decode($_POST["i"]);
-			$o->set_id($user->id);
-			$o->set_pass($_POST["nueva_contrasena"]);
-			$o->set_type($user->type);
-			echo json_encode($o->reset_pass());
+			// $o->set_id();
+			// $o->set_pass();
+			// $o->set_type();
+			echo json_encode($o->reset_pass_s(
+				$user->id,
+				$_POST["nueva_contrasena"],
+				$user->type
+			));
 		}
 	
 		exit;

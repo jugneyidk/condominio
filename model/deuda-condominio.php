@@ -14,7 +14,6 @@ class Deudacondominio extends datos
 
 	PUBLIC function __construct(){
 		$this->con = $this->conecta();
-		$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 	PUBLIC function incluir_cargo_s($concepto, $monto, $tipo_monto, $tipo_cargo, $mensual, $aplicar_next_mes, $apartamentos){
@@ -895,6 +894,13 @@ class Deudacondominio extends datos
 	}
 	PUBLIC function set_fecha($value){
 		$this->fecha = $value;
+	}
+
+	PUBLIC function get_con(){
+		return $this->con;
+	}
+	PUBLIC function set_con($value){
+		$this->con = $value;
 	}
 
 

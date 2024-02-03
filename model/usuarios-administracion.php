@@ -9,13 +9,32 @@ class usuarios extends datos
 {
 	PRIVATE $id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol;
 
-	PUBLIC function incluir_S(){
+	PUBLIC function incluir_S($rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol){
+
+		$this->set_rif_cedula($rif_cedula);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_razon_social($razon_social);
+		$this->set_domicilio_fiscal($domicilio_fiscal);
+		$this->set_telefono($telefono);
+		$this->set_correo($correo);
+		$this->set_password($password);
+		$this->set_rol($rol);
 		return $this->incluir();
 	}
-	PUBLIC function modificar_S(){
+	PUBLIC function modificar_S($id, $rif_cedula, $tipo_identificacion, $razon_social, $domicilio_fiscal, $telefono, $correo, $password, $rol){
+		$this->set_id($id);
+		$this->set_rif_cedula($rif_cedula);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_razon_social($razon_social);
+		$this->set_domicilio_fiscal($domicilio_fiscal);
+		$this->set_telefono($telefono);
+		$this->set_correo($correo);
+		$this->set_password($password);
+		$this->set_rol($rol);
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_S(){
+	PUBLIC function eliminar_S($id){
+		$this->set_id($id);
 		return $this->eliminar();
 	}
 
@@ -60,7 +79,7 @@ class usuarios extends datos
 				$lid = $co->lastInsertId();
 				$contrasena = password_hash($password, PASSWORD_DEFAULT);
 				$gd = $co->prepare("INSERT INTO usuarios_roles(id_usuario,id_rol,clave) 
-		   VALUES (:lid,:rol,:contrasena)");
+		   		VALUES (:lid,:rol,:contrasena)");
 				$gd->bindValue(":lid",$lid);
 				$gd->bindValue(":rol",$rol);
 				$gd->bindValue(":contrasena",$contrasena);
@@ -83,7 +102,7 @@ class usuarios extends datos
 			
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
-			}
+			}finally{$co = null;}
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "La cedula ingresada ya existe";
@@ -158,7 +177,7 @@ class usuarios extends datos
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 	PRIVATE function modificar()
@@ -172,9 +191,9 @@ class usuarios extends datos
 		$correo = $this->correo;
 		$password = $this->password;
 		$rol = $this->rol;
+		if ($this->existe($id, 0, 2)) {
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if ($this->existe($id, 0, 2)) {
 			try {
 				$this->validar_conexion($co);
 				$co->beginTransaction();
@@ -258,7 +277,7 @@ class usuarios extends datos
 			
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
-			}
+			}finally{$co = null;}
 
 		} else {
 			$r['resultado'] = 'error';
@@ -269,8 +288,8 @@ class usuarios extends datos
 	PRIVATE function eliminar()
 	{
 		$id = $this->id;
-		$co = $this->conecta();
 		if ($this->existe($id, 0, 2)) {
+			$co = $this->conecta();
 			try {
 				$this->validar_conexion($co);
 				$co->beginTransaction();
@@ -300,7 +319,7 @@ class usuarios extends datos
 				}else{
 					$r['mensaje'] =  $e->getMessage();					
 				}
-			}
+			}finally{$co = null;}
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "Usuario no encontrado";
@@ -314,7 +333,8 @@ class usuarios extends datos
 		switch ($caso) {
 			case '1':
 				try {
-					$resultado = $co->query("Select * from datos_usuarios where rif_cedula='$rif_cedula' and tipo_identificacion='$tipo_identificacion'");
+					$resultado = $co->prepare("Select * from datos_usuarios where rif_cedula= ? and tipo_identificacion= ? ");
+					$resultado->execute([$rif_cedula, $tipo_identificacion]);
 					$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 					if ($fila) {
 						return true;
@@ -323,11 +343,12 @@ class usuarios extends datos
 					}
 				} catch (Exception $e) {
 					return false;
-				}
+				}finally{$co = null;}
 				break;
 			case '2':
 				try {
-					$resultado = $co->query("Select * from datos_usuarios where id='$rif_cedula'");
+					$resultado = $co->prepare("Select * from datos_usuarios where id=?");
+					$resultado->execute([$rif_cedula]);
 					$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 					if ($fila) {
 						return true;
@@ -336,7 +357,7 @@ class usuarios extends datos
 					}
 				} catch (Exception $e) {
 					return false;
-				}
+				}finally{$co = null;}
 				break;
 			default:
 				break;

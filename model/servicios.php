@@ -21,7 +21,6 @@ class servicio extends datos
 	function __construct()
 	{
 		$this->con = $this->conecta();
-		if($this->con instanceof PDO) $this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 
@@ -39,23 +38,34 @@ class servicio extends datos
 		}
 	}
 
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($servicio, $descripcion, $obj_pagos){
+		$this->set_servicio($servicio);
+		$this->set_descripcion($descripcion);
+		$this->set_obj_pagos($obj_pagos);
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($descripcion, $id_pago_serv, $obj_pagos){
+		$this->set_descripcion($descripcion);
+		$this->set_id_pago_serv($id_pago_serv);
+		$this->set_obj_pagos($obj_pagos);
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($id_pago_serv){
+		$this->set_id_pago_serv($id_pago_serv);
 		return $this->eliminar();
 	}
 
-	PUBLIC function incluir_servicio_s(){
+	PUBLIC function incluir_servicio_s($descripcion){
+		$this->set_descripcion($descripcion);
 		return $this->incluir_servicio();
 	}
-	PUBLIC function modificar_servicio_s(){
+	PUBLIC function modificar_servicio_s($id_pago_serv, $descripcion){
+		$this->set_id_pago_serv($id_pago_serv);
+		$this->set_descripcion($descripcion);
 		return $this->modificar_servicio();
 	}
-	PUBLIC function eliminar_servicio_s(){
+	PUBLIC function eliminar_servicio_s($id_pago_serv){
+		$this->set_id_pago_serv($id_pago_serv);
 		return $this->eliminar_servicio();
 	}
 

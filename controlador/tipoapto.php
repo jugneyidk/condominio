@@ -18,25 +18,34 @@ if (is_file("vista/" . $p . ".php")) {
     } elseif ($accion == 'incluir') {
 
 
-      $o->set_descripcion($_POST["descripcion"]);
-      $o->set_alicuota($_POST["alicuota"]);
+      // $o->set_descripcion();
+      // $o->set_alicuota();
 
 
 
-      $respuesta = $o->incluir_s();
+      $respuesta = $o->incluir_s(
+        $_POST["descripcion"],
+        $_POST["alicuota"]
+      );
       echo json_encode($respuesta);
     }
     elseif ($accion == 'modificar') {
-      $o->set_id_tipo_apartamento($_POST["id_tipo_apartamento"]);
-      $o->set_descripcion($_POST["descripcion"]);
-      $o->set_alicuota($_POST["alicuota"]);
+      // $o->set_id_tipo_apartamento();
+      // $o->set_descripcion();
+      // $o->set_alicuota();
 
-      $respuesta = $o->modificar_s();
+      $respuesta = $o->modificar_s(
+        $_POST["id_tipo_apartamento"],
+        $_POST["descripcion"],
+        $_POST["alicuota"]
+      );
       echo json_encode($respuesta);
     }
     elseif ($accion == 'eliminar') {
-      $o->set_id_tipo_apartamento($_POST["id_tipo_apartamento"]);
-      $respuesta = $o->eliminar_s();
+      // $o->set_id_tipo_apartamento();
+      $respuesta = $o->eliminar_s(
+        $_POST["id_tipo_apartamento"]
+      );
       echo json_encode($respuesta);
     }
     exit;

@@ -12,12 +12,7 @@ if (is_file("vista/" . $p . ".php")) {
   $permisos = $o->chequearpermisos();
   if (!empty($_POST)) {
     $accion = $_POST['accion'];
-    if ($accion == 'listado_deudas') {
-      $respuesta = $o->listadodeudas();
-      echo json_encode($respuesta);
-
-    } 
-    else if ($accion == "lista_apartamentos"){
+    if ($accion == "lista_apartamentos"){
       echo json_encode($o->lista_apartamentos());
     }
     else if ($accion == "lista_apartamentos_select"){
@@ -105,27 +100,29 @@ if (is_file("vista/" . $p . ".php")) {
       echo json_encode($o->eliminar_distribucion_s($_POST["id"]));
     }
 
-    elseif ($accion == 'incluir') {
-      $respuesta = $o->incluir($_POST['monto'], $_POST['concepto'], $_POST['fecha']);
-      echo json_encode($respuesta);
-    } elseif ($accion == 'distribuir_deuda') {
-      $respuesta = $o->distribuir_deuda($_POST['id_deuda']);
-      echo json_encode($respuesta);
-    } elseif ($accion == 'calculo_deuda') {
-      $respuesta = $o->calcular_deuda($_POST['id_deuda']);
-      echo json_encode($respuesta);
-    } elseif ($accion == 'modificar') {
-      $respuesta = $o->modificar($_POST['id_deuda'], $_POST['monto'], $_POST['concepto'], $_POST['fecha']);
-      echo json_encode($respuesta);
-    } elseif ($accion == 'eliminar') {
-      $respuesta = $o->eliminar($_POST['id_deuda']);
-      echo json_encode($respuesta);
-    }
+    // elseif ($accion == 'incluir') {
+    //   $respuesta = $o->incluir($_POST['monto'], $_POST['concepto'], $_POST['fecha']);
+    //   echo json_encode($respuesta);
+    // } elseif ($accion == 'distribuir_deuda') {
+    //   $respuesta = $o->distribuir_deuda($_POST['id_deuda']);
+    //   echo json_encode($respuesta);
+    // } elseif ($accion == 'calculo_deuda') {
+    //   $respuesta = $o->calcular_deuda($_POST['id_deuda']);
+    //   echo json_encode($respuesta);
+    // } elseif ($accion == 'modificar') {
+    //   $respuesta = $o->modificar($_POST['id_deuda'], $_POST['monto'], $_POST['concepto'], $_POST['fecha']);
+    //   echo json_encode($respuesta);
+    // } elseif ($accion == 'eliminar') {
+    //   $respuesta = $o->eliminar($_POST['id_deuda']);
+    //   echo json_encode($respuesta);
+    // }
+    $o->set_con(null);
     exit;
   }
   $b_temp = new Bitacora;
   $b_temp->b_registro("Ingreso en el modulo \"Deuda del Condominio\"");
   require_once("vista/" . $p . ".php");
+  $o->set_con(null);
 } else {
   require_once("vista/404.php");
 }

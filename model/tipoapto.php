@@ -18,13 +18,19 @@ class tipoapto extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($descripcion, $alicuota){
+		$this->set_descripcion($descripcion);
+		$this->set_alicuota($alicuota);
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($id_tipo_apartamento, $descripcion, $alicuota){
+		$this->set_id_tipo_apartamento($id_tipo_apartamento);
+		$this->set_descripcion($descripcion);
+		$this->set_alicuota($alicuota);
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($id_tipo_apartamento){
+		$this->set_id_tipo_apartamento($id_tipo_apartamento);
 		return $this->eliminar();
 	}
 
@@ -37,9 +43,9 @@ class tipoapto extends datos
 	{
 		$descripcion = $this->descripcion;
 		$alicuota = $this->alicuota;
-		$co = $this->conecta();
 		$r = array();
 		if (!$this->existe(0,$descripcion,2)) {
+			$co = $this->conecta();
 			try {
 				$guarda = $co->prepare("INSERT INTO tipo_apartamento(descripcion,alicuota) VALUES (?,?)");
 				$guarda->execute([$descripcion, $alicuota]);
@@ -52,7 +58,7 @@ class tipoapto extends datos
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
-			}			
+			}finally{$co = null;}		
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "El tipo de apartamento ya existe"; 
@@ -90,7 +96,7 @@ class tipoapto extends datos
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 	PRIVATE function modificar()
@@ -98,9 +104,8 @@ class tipoapto extends datos
 		$id_tipo_apartamento = $this->id_tipo_apartamento;
 		$descripcion = $this->descripcion;
 		$alicuota = $this->alicuota;
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if ($this->existe($id_tipo_apartamento,0,1)) {
+			$co = $this->conecta();
 			try {
 				$consulta = $co->prepare("UPDATE tipo_apartamento SET 
 						descripcion = ?,
@@ -116,7 +121,7 @@ class tipoapto extends datos
 
 			} catch (Exception $e) {
 				return $e->getMessage();
-			}
+			}finally{$co = null;}
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "Tipo de apartamento no encontrado";
@@ -126,8 +131,8 @@ class tipoapto extends datos
 	PRIVATE function eliminar()
 	{
 		$id_tipo_apartamento = $this->id_tipo_apartamento;
-		$co = $this->conecta();
 		if ($this->existe($id_tipo_apartamento,0,1)) {
+			$co = $this->conecta();
 			try {
 				$consulta = $co->prepare("DELETE FROM tipo_apartamento 
 						WHERE
@@ -146,7 +151,7 @@ class tipoapto extends datos
 				}else{
 					$r['mensaje'] =  $e->getMessage();					
 				}
-			}
+			}finally{$co = null;}
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "Tipo de apartamento no encontrado";
@@ -169,7 +174,7 @@ class tipoapto extends datos
 					}
 				} catch (Exception $e) {
 					return false;
-				}				
+				}finally{$co = null;}
 				break;
 			case 2:
 				try {
@@ -183,7 +188,7 @@ class tipoapto extends datos
 					}
 				} catch (Exception $e) {
 					return false;
-				}		
+				}finally{$co = null;}	
 				break;
 			default:
 				break;

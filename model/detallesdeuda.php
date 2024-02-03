@@ -534,4 +534,10 @@ class detallesdeuda extends datos
 	PUBLIC function set_id_habitante($value){
 		$this->id_habitante = $value;
 	}
+	PUBLIC function get_con(){
+		return $this->con;
+	}
+	PUBLIC function set_con($value){
+		$this->con = $value;
+	}
 }

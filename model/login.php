@@ -26,7 +26,22 @@ class login extends datos
 		return $this->iniciarSesion_habitante();
 	}
 
-	PUBLIC function iniciarSesion()
+	public function reset_pass_s ($id, $pass, $type){
+		$this->set_id($id);
+		$this->set_pass($pass);
+		$this->set_type($type);
+		return $this->reset_pass();
+	}
+	public function reset_pass_request_s ($cedula, $correo, $type){
+		$this->set_cedula($cedula);
+		$this->set_correo($correo);
+		$this->set_type($type);
+		return $this->reset_pass_request();
+	}
+
+
+
+	PRIVATE function iniciarSesion()
 	{
 		$usuario = $this->cedula;
 		$clave = $this->pass;
@@ -66,7 +81,7 @@ class login extends datos
 		}
 	} // TODO fix cedula
 
-	PUBLIC function iniciarSesion_habitante()
+	PRIVATE function iniciarSesion_habitante()
 	{
 		$usuario = $this->cedula;
 		$clave = $this->pass;
@@ -124,13 +139,13 @@ class login extends datos
 	            $r["resultado"] = "incorrecto";
 	            $r["mensaje"] = $e->getMessage()."::".$e->getLine();
 	            return $r;
-	        }
+	        }finally{$co = null;}
 	    }
 	}
 
 	PUBLIC function reset_pass(){
-		$con = $this->conecta();
 		try {
+			$con = $this->conecta();
 			$this->validar_conexion($con);
 			$con->beginTransaction();
 			
@@ -203,12 +218,12 @@ class login extends datos
 
 	PUBLIC function reset_pass_request (){
 		//para enviar correo
-		$con = $this->conecta();
 		try {
+			$con = $this->conecta();
 			$this->validar_conexion($con);
 			$con->beginTransaction();
 
-			$V = new Validaciones();
+			$V = new Validaciones();		
 			$V->validarCedula($this->cedula);
 			$V->validarEmail($this->correo);
 
@@ -341,11 +356,11 @@ class login extends datos
 				}
 			}
 
-			//NO OCURRIRA NADA
+			
 
-			// $r['resultado'] = 'is-invalid';
-			// $r['mensaje'] =  $e->getMessage();
-			// $r['console'] =  $e->getMessage().": Code : ".$e->getLine();
+			$r['resultado'] = 'is-invalid';
+			$r['mensaje'] =  $e->getMessage();
+			$r['console'] =  $e->getMessage().": Code : ".$e->getLine();
 		} catch (Exception $e) {
 			if($con instanceof PDO){
 				if($con->inTransaction()){

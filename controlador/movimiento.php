@@ -1,4 +1,14 @@
 <?php
+
+
+
+  // no se esta usando
+
+
+
+
+
+
   //verifica que exista la vista de
   //la pagina
   if(is_file("vista/".$p.".php")){

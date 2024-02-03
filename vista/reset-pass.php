@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <body>
 	<?php require_once('comunes/menu.php');?>
+	<?php require_once("comunes/carga.php"); ?>
 
 	<?php if(isset($control_time_reset)){ ?>
 
@@ -74,6 +75,7 @@
 else{
  ?>
 	<div class="container bg-white p-4" id="send-mail-container">
+		<!-- TODO eliminar el auto completado -->
 		<div class="row justify-content-center">
 			<div class="col col-lg-6 col-md-8">
 				<h1 class="titulo_muestra text-center">Restablecer contraseña</h1>

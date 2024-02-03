@@ -512,16 +512,6 @@ class nomina extends datos
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
 		}
-		catch (Notice $e) {
-			if($this->con instanceof PDO){
-				if($this->con->inTransaction()){
-					$this->con->rollBack();
-				}
-			}
-		
-			$r['resultado'] = 'error';
-			$r['mensaje'] =  $e->getMessage();
-		}
 		return $r;
 
 
@@ -1001,6 +991,12 @@ class nomina extends datos
 			$value = json_decode($value);
 		}
 		$this->obj_pagos = $value;
+	}
+	PUBLIC function get_con(){
+		return $this->con;
+	}
+	PUBLIC function set_con($value){
+		$this->con = $value;
 	}
 
 

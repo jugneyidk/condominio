@@ -312,7 +312,7 @@ class generarreporte extends datos
             }
         } catch (Exception $e) {
             echo $e->getMessage()." ".$e->getLine();
-        }
+        }finally{$co = null;}
         $pdf = new DOMPDF();
         $pdf->set_paper("A4", "portrait");
         $pdf->load_html($html, 'UTF-8');
@@ -339,7 +339,7 @@ class generarreporte extends datos
                 } catch (Exception $e) {
                     $r['resultado'] = 'error';
                     $r['mensaje'] =  $e->getMessage();
-                }
+                }finally{$co = null;}
                 return $r;
                 break;
             case 2:
@@ -356,7 +356,7 @@ class generarreporte extends datos
                     $r['resultado'] = 'error';
                     $r['mensaje'] =  $e->getMessage();
                     echo $e->getMessage();
-                }
+                }finally{$co = null;}
                 return $r;
                 break;
             default:

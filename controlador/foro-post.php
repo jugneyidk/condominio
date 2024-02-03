@@ -18,12 +18,14 @@ if (is_file("vista/" . $p . ".php")) {
 		else if($accion = "cambiar_estado"){
 			echo json_encode($o->cambiar_estados($_POST["control"], $_POST["value"],$postId));
 		}
+		$o->set_con(null);
 		exit;
 	}
 	$usuario_normal_no_habitante = 1;
 	$b = new Bitacora();
 	$b->b_registro("Ingreso al Foro \"$postId\"");
 	require_once("vista/" . $p . ".php");
+	$o->set_con(null);
 } else {
 	require_once("vista/404.php");
 }

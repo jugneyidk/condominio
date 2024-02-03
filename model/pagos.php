@@ -43,55 +43,55 @@ class pagos extends datos
 			return $r;
 
 
-			$respuesta = '';
-			if ($resultado) {
-				foreach ($resultado as $r) {
-					$respuesta = $respuesta . "<tr>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['id_pago'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='apartamento align-middle'>";
-					$respuesta = $respuesta . $r['num_letra_apartamento'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['torre'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$fecha_original = $r['fecha_entrega'];
-					$nuevo_formato = "d-m-Y";
-					$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
-					$respuesta = $respuesta . $fecha_cambiada;
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['total'];
-					$respuesta = $respuesta . "$</td>";
-					$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
-					$respuesta = $respuesta . $r['estado'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					if ($r['estado'] == "pendiente") {
-						$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
-						$respuesta = $respuesta . "<div class='btn-group' role='group'>";
-						$respuesta = $respuesta . "<button class='btn btn-primary' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,1)'>Confirmar</button>";
-						$respuesta = $respuesta . "<button class='btn btn-secondary' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
-						$respuesta = $respuesta . "<button class='btn btn-danger' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,2)'>Declinar</button>";
-						$respuesta = $respuesta . "</div>";
-						$respuesta = $respuesta . "</div>";
-					} elseif ($r['estado'] == "confirmado" || $r['estado'] == "declinado") {
-						$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
-						$respuesta = $respuesta . "<button class='btn btn-secondary w-100 btn-ver' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
-						$respuesta = $respuesta . "</div>";
-					}
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "</tr>";
-				}
-			}
-			$r['resultado'] = 'listadopagos';
-			$r['mensaje'] =  $respuesta;
+			// $respuesta = '';
+			// if ($resultado) {
+			// 	foreach ($resultado as $r) {
+			// 		$respuesta = $respuesta . "<tr>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['id_pago'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='apartamento align-middle'>";
+			// 		$respuesta = $respuesta . $r['num_letra_apartamento'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['torre'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$fecha_original = $r['fecha_entrega'];
+			// 		$nuevo_formato = "d-m-Y";
+			// 		$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
+			// 		$respuesta = $respuesta . $fecha_cambiada;
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['total'];
+			// 		$respuesta = $respuesta . "$</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
+			// 		$respuesta = $respuesta . $r['estado'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		if ($r['estado'] == "pendiente") {
+			// 			$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
+			// 			$respuesta = $respuesta . "<div class='btn-group' role='group'>";
+			// 			$respuesta = $respuesta . "<button class='btn btn-primary' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,1)'>Confirmar</button>";
+			// 			$respuesta = $respuesta . "<button class='btn btn-secondary' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
+			// 			$respuesta = $respuesta . "<button class='btn btn-danger' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,2)'>Declinar</button>";
+			// 			$respuesta = $respuesta . "</div>";
+			// 			$respuesta = $respuesta . "</div>";
+			// 		} elseif ($r['estado'] == "confirmado" || $r['estado'] == "declinado") {
+			// 			$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
+			// 			$respuesta = $respuesta . "<button class='btn btn-secondary w-100 btn-ver' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
+			// 			$respuesta = $respuesta . "</div>";
+			// 		}
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "</tr>";
+			// 	}
+			// }
+			// $r['resultado'] = 'listadopagos';
+			// $r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 	PUBLIC function listadopagospendientes()
@@ -121,51 +121,51 @@ class pagos extends datos
 			return $r;
 
 
-			$respuesta = '';
-			if ($resultado) {
-				foreach ($resultado as $r) {
-					$respuesta = $respuesta . "<tr>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['id_pago'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='apartamento align-middle'>";
-					$respuesta = $respuesta . $r['num_letra_apartamento'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['torre'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$fecha_original = $r['fecha_entrega'];
-					$nuevo_formato = "d-m-Y";
-					$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
-					$respuesta = $respuesta . $fecha_cambiada;
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['total'];
-					$respuesta = $respuesta . "$</td>";
-					$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
-					$respuesta = $respuesta . $r['estado'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					if ($r['estado'] == "pendiente") {
-						$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
-						$respuesta = $respuesta . "<div class='btn-group' role='group'>";
-						$respuesta = $respuesta . "<button class='btn btn-primary' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,1)'>Confirmar</button>";
-						$respuesta = $respuesta . "<button class='btn btn-secondary' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
-						$respuesta = $respuesta . "<button class='btn btn-danger' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,2)'>Declinar</button>";
-						$respuesta = $respuesta . "</div>";
-						$respuesta = $respuesta . "</div>";
-					}
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "</tr>";
-				}
-			}
-			$r['resultado'] = 'listadopagospendientes';
-			$r['mensaje'] =  $respuesta;
+			// $respuesta = '';
+			// if ($resultado) {
+			// 	foreach ($resultado as $r) {
+			// 		$respuesta = $respuesta . "<tr>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['id_pago'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='apartamento align-middle'>";
+			// 		$respuesta = $respuesta . $r['num_letra_apartamento'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['torre'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$fecha_original = $r['fecha_entrega'];
+			// 		$nuevo_formato = "d-m-Y";
+			// 		$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
+			// 		$respuesta = $respuesta . $fecha_cambiada;
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['total'];
+			// 		$respuesta = $respuesta . "$</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
+			// 		$respuesta = $respuesta . $r['estado'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		if ($r['estado'] == "pendiente") {
+			// 			$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
+			// 			$respuesta = $respuesta . "<div class='btn-group' role='group'>";
+			// 			$respuesta = $respuesta . "<button class='btn btn-primary' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,1)'>Confirmar</button>";
+			// 			$respuesta = $respuesta . "<button class='btn btn-secondary' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
+			// 			$respuesta = $respuesta . "<button class='btn btn-danger' style='font-size: 12px;' onclick='confirmar_declinar_pago(this,2)'>Declinar</button>";
+			// 			$respuesta = $respuesta . "</div>";
+			// 			$respuesta = $respuesta . "</div>";
+			// 		}
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "</tr>";
+			// 	}
+			// }
+			// $r['resultado'] = 'listadopagospendientes';
+			// $r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 	PUBLIC function listadopagosconfirmados()
@@ -198,45 +198,45 @@ class pagos extends datos
 
 
 
-			$respuesta = '';
-			if ($resultado) {
-				foreach ($resultado as $r) {
-					$respuesta = $respuesta . "<tr>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['id_pago'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='apartamento align-middle'>";
-					$respuesta = $respuesta . $r['num_letra_apartamento'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['torre'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$fecha_original = $r['fecha_entrega'];
-					$nuevo_formato = "d-m-Y";
-					$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
-					$respuesta = $respuesta . $fecha_cambiada;
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['total'];
-					$respuesta = $respuesta . "$</td>";
-					$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
-					$respuesta = $respuesta . $r['estado'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
-					$respuesta = $respuesta . "<button class='btn btn-secondary w-100 btn-ver' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
-					$respuesta = $respuesta . "</div>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "</tr>";
-				}
-			}
-			$r['resultado'] = 'listadopagosconfirmados';
-			$r['mensaje'] =  $respuesta;
+			// $respuesta = '';
+			// if ($resultado) {
+			// 	foreach ($resultado as $r) {
+			// 		$respuesta = $respuesta . "<tr>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['id_pago'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='apartamento align-middle'>";
+			// 		$respuesta = $respuesta . $r['num_letra_apartamento'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['torre'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$fecha_original = $r['fecha_entrega'];
+			// 		$nuevo_formato = "d-m-Y";
+			// 		$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
+			// 		$respuesta = $respuesta . $fecha_cambiada;
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['total'];
+			// 		$respuesta = $respuesta . "$</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
+			// 		$respuesta = $respuesta . $r['estado'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
+			// 		$respuesta = $respuesta . "<button class='btn btn-secondary w-100 btn-ver' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
+			// 		$respuesta = $respuesta . "</div>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "</tr>";
+			// 	}
+			// }
+			// $r['resultado'] = 'listadopagosconfirmados';
+			// $r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 	PUBLIC function listadopagosdeclinados()
@@ -272,45 +272,45 @@ class pagos extends datos
 
 
 
-			$respuesta = '';
-			if ($resultado) {
-				foreach ($resultado as $r) {
-					$respuesta = $respuesta . "<tr>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['id_pago'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='apartamento align-middle'>";
-					$respuesta = $respuesta . $r['num_letra_apartamento'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['torre'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$fecha_original = $r['fecha_entrega'];
-					$nuevo_formato = "d-m-Y";
-					$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
-					$respuesta = $respuesta . $fecha_cambiada;
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . $r['total'];
-					$respuesta = $respuesta . "$</td>";
-					$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
-					$respuesta = $respuesta . $r['estado'];
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
-					$respuesta = $respuesta . "<button class='btn btn-secondary w-100 btn-ver' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
-					$respuesta = $respuesta . "</div>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "</tr>";
-				}
-			}
-			$r['resultado'] = 'listadopagosdeclinados';
-			$r['mensaje'] =  $respuesta;
+			// $respuesta = '';
+			// if ($resultado) {
+			// 	foreach ($resultado as $r) {
+			// 		$respuesta = $respuesta . "<tr>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['id_pago'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='apartamento align-middle'>";
+			// 		$respuesta = $respuesta . $r['num_letra_apartamento'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['torre'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$fecha_original = $r['fecha_entrega'];
+			// 		$nuevo_formato = "d-m-Y";
+			// 		$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
+			// 		$respuesta = $respuesta . $fecha_cambiada;
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . $r['total'];
+			// 		$respuesta = $respuesta . "$</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle text-capitalize'>";
+			// 		$respuesta = $respuesta . $r['estado'];
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td class='align-middle'>";
+			// 		$respuesta = $respuesta . "<div class='row justify-content-around mx-0'>";
+			// 		$respuesta = $respuesta . "<button class='btn btn-secondary w-100 btn-ver' style='font-size: 12px;'' onclick='carga_detalles_pago(this)'>Ver</button>";
+			// 		$respuesta = $respuesta . "</div>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "</tr>";
+			// 	}
+			// }
+			// $r['resultado'] = 'listadopagosdeclinados';
+			// $r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
-		}
+		}finally{$co = null;}
 		return $r;
 	}
 	PUBLIC function detallespago()
@@ -412,84 +412,84 @@ class pagos extends datos
 			/// codigo viejo
 		
 
-			$respuesta = '';
-			if ($resultado) {
-				foreach ($resultado as $r) {
-					$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
-					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Referencia:</span>";
-					$respuesta = $respuesta . "<span class='d-block'>";
-					$respuesta = $respuesta . $r['referencia'];
-					$respuesta = $respuesta . "</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td colspan='2'>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Método de pago:</span>";
-					$respuesta = $respuesta . "<span class='d-block'>";
-					$respuesta = $respuesta . $r['tipo_pago'];
-					$respuesta = $respuesta . "</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "</tr>";
-					$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
-					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Apartamento:</span>";
-					$respuesta = $respuesta . "<span class='d-block'>";
-					$respuesta = $respuesta . $r['num_letra_apartamento'];
-					$respuesta = $respuesta . "</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Torre:</span>";
-					$respuesta = $respuesta . "<span class='d-block'>";
-					$respuesta = $respuesta . $r['torre'];
-					$respuesta = $respuesta . "</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Piso:</span>";
-					$respuesta = $respuesta . "<span class='d-block'>";
-					$respuesta = $respuesta . $r['piso'];
-					$respuesta = $respuesta . "</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "</tr>";
-					$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
-					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Estado:</span>";
-					$respuesta = $respuesta . "<span class='d-block text-capitalize'>";
-					$respuesta = $respuesta . $r['estado'];
-					$respuesta = $respuesta . "</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Fecha:</span>";
-					$respuesta = $respuesta . "<span class='d-block'>";
-					$fecha_original = $r['fecha_entrega'];
-					$nuevo_formato = "d-m-Y";
-					$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
-					$respuesta = $respuesta . $fecha_cambiada;
-					$respuesta = $respuesta . "</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . "<span class='font-weight-bold'>Monto:</span>";
-					$respuesta = $respuesta . "<span class='d-block'>";
-					$respuesta = $respuesta . $r['total'];
-					$respuesta = $respuesta . "$</span>";
-					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta . "</tr>";
-					if ($r['estado'] == "confirmado" || $r['estado'] == "declinado") {
-						$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
-						$respuesta = $respuesta . "<td colspan='3'>";
-						if ($r['estado'] == "confirmado") {
-							$respuesta = $respuesta . "<span class='font-weight-bold'>Confirmado por:</span>";
-						} elseif ($r['estado'] == "declinado") {
-							$respuesta = $respuesta . "<span class='font-weight-bold'>Declinado por:</span>";
-						}
-						$respuesta = $respuesta . "<span class='d-block'>";
-						$respuesta = $respuesta . $r['razon_social'];
-						$respuesta = $respuesta . "</span>";
-						$respuesta = $respuesta . "</td>";
-						$respuesta = $respuesta . "</tr>";
-					}
-				}
-			}
-			$r['resultado'] = 'detallespago';
-			$r['mensaje'] =  $respuesta;
+			// $respuesta = '';
+			// if ($resultado) {
+			// 	foreach ($resultado as $r) {
+			// 		$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
+			// 		$respuesta = $respuesta . "<td>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Referencia:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block'>";
+			// 		$respuesta = $respuesta . $r['referencia'];
+			// 		$respuesta = $respuesta . "</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td colspan='2'>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Método de pago:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block'>";
+			// 		$respuesta = $respuesta . $r['tipo_pago'];
+			// 		$respuesta = $respuesta . "</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "</tr>";
+			// 		$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
+			// 		$respuesta = $respuesta . "<td>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Apartamento:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block'>";
+			// 		$respuesta = $respuesta . $r['num_letra_apartamento'];
+			// 		$respuesta = $respuesta . "</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Torre:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block'>";
+			// 		$respuesta = $respuesta . $r['torre'];
+			// 		$respuesta = $respuesta . "</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Piso:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block'>";
+			// 		$respuesta = $respuesta . $r['piso'];
+			// 		$respuesta = $respuesta . "</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "</tr>";
+			// 		$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
+			// 		$respuesta = $respuesta . "<td>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Estado:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block text-capitalize'>";
+			// 		$respuesta = $respuesta . $r['estado'];
+			// 		$respuesta = $respuesta . "</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Fecha:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block'>";
+			// 		$fecha_original = $r['fecha_entrega'];
+			// 		$nuevo_formato = "d-m-Y";
+			// 		$fecha_cambiada = date($nuevo_formato, strtotime($fecha_original));
+			// 		$respuesta = $respuesta . $fecha_cambiada;
+			// 		$respuesta = $respuesta . "</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "<td>";
+			// 		$respuesta = $respuesta . "<span class='font-weight-bold'>Monto:</span>";
+			// 		$respuesta = $respuesta . "<span class='d-block'>";
+			// 		$respuesta = $respuesta . $r['total'];
+			// 		$respuesta = $respuesta . "$</span>";
+			// 		$respuesta = $respuesta . "</td>";
+			// 		$respuesta = $respuesta . "</tr>";
+			// 		if ($r['estado'] == "confirmado" || $r['estado'] == "declinado") {
+			// 			$respuesta = $respuesta . "<tr class='my-2 mx-5 text-center'>";
+			// 			$respuesta = $respuesta . "<td colspan='3'>";
+			// 			if ($r['estado'] == "confirmado") {
+			// 				$respuesta = $respuesta . "<span class='font-weight-bold'>Confirmado por:</span>";
+			// 			} elseif ($r['estado'] == "declinado") {
+			// 				$respuesta = $respuesta . "<span class='font-weight-bold'>Declinado por:</span>";
+			// 			}
+			// 			$respuesta = $respuesta . "<span class='d-block'>";
+			// 			$respuesta = $respuesta . $r['razon_social'];
+			// 			$respuesta = $respuesta . "</span>";
+			// 			$respuesta = $respuesta . "</td>";
+			// 			$respuesta = $respuesta . "</tr>";
+			// 		}
+			// 	}
+			// }
+			// $r['resultado'] = 'detallespago';
+			// $r['mensaje'] =  $respuesta;
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage()." :: LINE ".$e->getLine()." ::";
@@ -599,7 +599,7 @@ class pagos extends datos
 		
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
-		}
+		}finally{$co = null;}
 		if(isset($respuesta_verificador)){
 			$r["verificador"] = $respuesta_verificador;
 		}

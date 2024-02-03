@@ -33,7 +33,7 @@ class habitantes extends datos
 	}
 	PUBLIC function eliminar_s($id){
 		$this->set_id($id);
-		return $this->eliminar($id);
+		return $this->eliminar();
 	}
 
 
@@ -116,7 +116,7 @@ class habitantes extends datos
 			
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
-			}
+			}finally{$co = null;}
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "La cedula ingresada ya existe";
@@ -133,8 +133,8 @@ class habitantes extends datos
 		$telefono = $this->telefono;
 		$correo = $this->correo;
 		$domicilio_fiscal = $this->domicilio_fiscal;
-		$co = $this->conecta();
 		if ($this->existe($id,0,2)) {
+			$co = $this->conecta();
 			try {
 				$this->validar_conexion($co);
 				$co->beginTransaction();
@@ -184,7 +184,7 @@ class habitantes extends datos
 			
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
-			}
+			}finally{$co = null;}
 		} else {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  "Habitante no encontrado";
