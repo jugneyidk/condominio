@@ -119,13 +119,24 @@ class estac extends datos
 		return $r;
 	}
 
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($num_estac, $costo, $apartamento_id){
+		
+		$this->set_num_estac($num_estac);
+		$this->set_costo($costo);
+		$this->set_apartamento_id($apartamento_id);
+
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($num_estac, $costo, $apartamento_id, $id){
+		$this->set_num_estac($num_estac);
+		$this->set_costo($costo);
+		$this->set_apartamento_id($apartamento_id);
+		$this->set_num_estac_original($id);
+
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($num_estac){
+		$this->set_num_estac($num_estac);
 		return $this->eliminar();
 	}
 

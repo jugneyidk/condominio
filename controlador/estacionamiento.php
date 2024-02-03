@@ -24,24 +24,24 @@
 				echo json_encode($respuesta);
 			}
 			else if($accion == "incluir"){
-				$cl->set_num_estac($_POST["numEstac"]);
-				$cl->set_costo($_POST["estacCosto"]);
-				$cl->set_apartamento_id($_POST["apartamentos_id"]);
 
-				echo json_encode($cl->incluir_s());
-				//echo json_encode(["resultado"=>'incluir',"mensaje"=>"Registro Incluido", "envio" => $_POST]);
+				echo json_encode($cl->incluir_s(
+					$_POST["numEstac"],
+					$_POST["estacCosto"],
+					$_POST["apartamentos_id"]
+				));
 			}
 			else if($accion == "modificar"){
-				$cl->set_num_estac($_POST["numEstac"]);
-				$cl->set_costo($_POST["estacCosto"]);
-				$cl->set_apartamento_id($_POST["apartamentos_id"]);
-				$cl->set_num_estac_original($_POST["id"]);
 
-				echo json_encode($cl->modificar_s());
+				echo json_encode($cl->modificar_s(
+					$_POST["numEstac"],
+					$_POST["estacCosto"],
+					$_POST["apartamentos_id"],
+					$_POST["id"]
+				));
 			}
 			else if($accion == "eliminar"){
-				$cl->set_num_estac($_POST["numEstac"]);
-				echo json_encode($cl->eliminar_s());
+				echo json_encode($cl->eliminar_s($_POST["numEstac"]));
 			}
 
 

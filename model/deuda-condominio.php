@@ -17,13 +17,31 @@ class Deudacondominio extends datos
 		$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
-	PUBLIC function incluir_cargo_s(){
+	PUBLIC function incluir_cargo_s($concepto, $monto, $tipo_monto, $tipo_cargo, $mensual, $aplicar_next_mes, $apartamentos){
+
+		$this->set_concepto($concepto);
+		$this->set_monto($monto);
+		$this->set_tipo_monto($tipo_monto);
+		$this->set_tipo_cargo($tipo_cargo);
+		$this->set_mensual($mensual);
+		$this->set_aplicar_next_mes($aplicar_next_mes);
+		$this->set_apartamentos($apartamentos);
 		return $this->incluir_cargo();
 	}
-	PUBLIC function modificar_cargo_s(){
+	PUBLIC function modificar_cargo_s($id ,$concepto, $monto, $tipo_monto, $tipo_cargo, $mensual, $aplicar_next_mes, $apartamentos){
+		$this->set_id($id);
+		$this->set_concepto($concepto);
+		$this->set_monto($monto);
+		$this->set_tipo_monto($tipo_monto);
+		$this->set_tipo_cargo($tipo_cargo);
+		$this->set_mensual($mensual);
+		$this->set_aplicar_next_mes($aplicar_next_mes);
+		$this->set_apartamentos($apartamentos);
+
 		return $this->modificar_cargo();
 	}
-	PUBLIC function eliminar_cargo_s(){
+	PUBLIC function eliminar_cargo_s($id){
+		$this->set_id($id);
 		return $this->eliminar_cargo();
 	}
 	PRIVATE function incluir_cargo(){
@@ -87,7 +105,6 @@ class Deudacondominio extends datos
 				$consulta = $this->con->prepare("INSERT INTO apartamentos_lista_cargos (id_apartamento,id_lista_cargos)
 					VALUES
 					((SELECT id_apartamento FROM apartamento WHERE num_letra_apartamento = ?), ?);");
-
 				for($i = 0;$i<count($this->apartamentos);$i++){
 					$consulta->execute([$this->apartamentos[$i][1], $this->id]);
 				}
@@ -511,13 +528,21 @@ class Deudacondominio extends datos
 
 	}
 
-	PUBLIC function distribuir_deudas_s(){
+	PUBLIC function distribuir_deudas_s($fecha, $concepto){
+		$this->set_fecha($fecha);
+		$this->set_concepto($concepto);
+
 		return $this->distribuir_deudas();
 	}
-	PUBLIC function modificar_distribucion_s(){
+	PUBLIC function modificar_distribucion_s($id, $fecha, $concepto){
+		$this->set_id($id);
+		$this->set_fecha($fecha);
+		$this->set_concepto($concepto);		
+
 		return $this->modificar_distribucion();
 	}
-	PUBLIC function eliminar_distribucion_s(){
+	PUBLIC function eliminar_distribucion_s($id){
+		$this->set_id($id);
 		return $this->eliminar_distribucion();
 	}
 
@@ -615,8 +640,9 @@ class Deudacondominio extends datos
 
 	}
 
-	PUBLIC function consultar_distribucion_deuda(){
+	PUBLIC function consultar_distribucion_deuda($id){
 		try {
+			$this->id = $id;
 			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
 			if(!isset($this->id)){

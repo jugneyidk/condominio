@@ -8,16 +8,30 @@ require_once("model/enviar-correo.php");
 
 class login extends datos
 {
-	PRIVATE $cedula,$correo,$link,$type,$keyword,$id,$pass;
+	PRIVATE $cedula,$correo,$link,$type,$id,$pass;
+	PROTECTED $keyword;
 	function __construct()
 	{
 		$this->keyword = "a3b5G-Hui4sXXXa";
 	}
-	PUBLIC function iniciarSesion($usuario,$clave)
+
+	PUBLIC function iniciarSesion_s($usuario,$clave){
+		$this->set_cedula($usuario);
+		$this->set_pass($clave);
+		return $this->iniciarSesion();
+	}
+	PUBLIC function iniciarSesion_habitante_s($usuario,$clave){
+		$this->set_cedula($usuario);
+		$this->set_pass($clave);
+		return $this->iniciarSesion_habitante();
+	}
+
+	PUBLIC function iniciarSesion()
 	{
+		$usuario = $this->cedula;
+		$clave = $this->pass;
 		if (!empty($usuario) && !empty($clave)) {            
 			$co = $this->conecta();
-			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);            
 			try {
 				$consulta = $co->query("SELECT id,rif_cedula,tipo_identificacion,id_rol,clave FROM datos_usuarios INNER JOIN usuarios_roles WHERE usuarios_roles.id_usuario=datos_usuarios.id AND datos_usuarios.rif_cedula='$usuario'");
 				$resultado = $consulta->fetch();
@@ -26,6 +40,9 @@ class login extends datos
 					session_start();
 					$_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'] = $resultado['id_rol'];
 					$_SESSION['id_usuario'] = $resultado['id'];
+					if(isset($_SESSION["id_habitante"])){
+						unset($_SESSION["id_habitante"]);
+					}
 					$_SESSION['CONDOMINIO_TOKEN'] = password_hash($resultado["rif_cedula"]."-".$resultado["tipo_identificacion"], PASSWORD_DEFAULT);
 					$r["resultado"]="correcto";
 					$bitacora = new Bitacora();
@@ -47,10 +64,12 @@ class login extends datos
 				$co = null;
 			}
 		}
-	}
+	} // TODO fix cedula
 
-	PUBLIC function iniciarSesion_habitante($usuario,$clave)
+	PUBLIC function iniciarSesion_habitante()
 	{
+		$usuario = $this->cedula;
+		$clave = $this->pass;
 	    if (!empty($usuario) && !empty($clave)) {
 	        $co = $this->conecta();
 	        $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);            
@@ -85,6 +104,10 @@ class login extends datos
 	            //if ($resultado) {
 	                //session_start();
 			        $_SESSION['id_habitante'] = $resultado['id'];
+			        if(isset($_SESSION["id_usuario"])){
+			        	unset($_SESSION["id_usuario"]);
+			        	unset($_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol']);
+			        }
 	                $_SESSION['CONDOMINIO_TOKEN'] = password_hash($resultado["cedula_rif"]."-".$resultado["tipo_identificacion"], PASSWORD_DEFAULT);
 
 	                $bitacora = new Bitacora();
@@ -184,20 +207,6 @@ class login extends datos
 		try {
 			$this->validar_conexion($con);
 			$con->beginTransaction();
-
-			/*
-			***************************
-			***************************
-			***************************
-
-			codigo para separar la cedula del tipo de cedula
-
-
-			***************************
-			***************************
-			***************************
-			***************************
-			*/
 
 			$V = new Validaciones();
 			$V->validarCedula($this->cedula);

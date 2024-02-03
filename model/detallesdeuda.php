@@ -12,7 +12,6 @@ class detallesdeuda extends datos
 	function __construct()
 	{
 		$this->con = $this->conecta();
-		if($this->con instanceof PDO) $this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if(isset($_SESSION["id_habitante"])){
 			$this->id_habitante = $_SESSION['id_habitante'];
 		}
@@ -201,13 +200,21 @@ class detallesdeuda extends datos
 
 
 	}
-	PUBLIC function registrarpago_s(){
+	PUBLIC function registrarpago_s($id, $obj){
+		$this->set_id($id);
+		$this->set_obj_pagos($obj);
+		
 		return $this->registrarpago();
 	}
-	PUBLIC function eliminar_pagos_s(){
+	PUBLIC function eliminar_pagos_s($id, $id_pago){
+		$this->set_id($id);
+		$this->set_id_pago($id_pago);
+
 		return $this->eliminar_pagos();
 	}
-	PUBLIC function detalles_deuda_s(){
+	PUBLIC function detalles_deuda_s($id){
+		$this->set_id($id);
+
 		return $this->detalles_deuda();
 	}
 	PRIVATE function detalles_deuda(){
@@ -471,7 +478,7 @@ class detallesdeuda extends datos
 
 			
 			$r['resultado'] = 'eliminar_pagos';
-			$r['mensaje'] =  "El pago ha sido eliminado exitosamente $this->id";
+			$r['mensaje'] =  "El pago ha sido eliminado exitosamente ( Nº$this->id_pago )";
 			// if(isset($_SESSION["id_usuario"])){
 				$bitacora = new Bitacora();
 				$bitacora->b_registro("Elimino el pago Nº".$this->id_pago." de la deuda Nª".$this->id);

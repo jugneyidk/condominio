@@ -8,7 +8,6 @@ class Foro extends datos
 	function __construct()
 	{
 		$this->con = $this->conecta();
-		$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 	public function chequearpermisos()
@@ -24,21 +23,37 @@ class Foro extends datos
 	}
 
 
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($titulo, $descripcion, $create_by){
+		
+		$this->set_titulo($titulo);
+		$this->set_descripcion($descripcion);
+		$this->set_create_by($create_by);
+
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($id, $titulo, $descripcion){
+		$this->set_id($id);
+		$this->set_titulo($titulo);
+		$this->set_descripcion($descripcion);
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($id){
+		$this->set_id($id);
 		return $this->eliminar();
 	}
-	PUBLIC function incluir_comentario_s(){
+	PUBLIC function incluir_comentario_s($post_id, $comentario, $create_by){
+		$this->set_post_id($post_id);
+		$this->set_comentario($comentario);
+		$this->set_create_by($create_by);
 		return $this->incluir_comentario();
 	}
 
-	PUBLIC function cambiar_voto_s()
+	PUBLIC function cambiar_voto_s($post_id, $habitante_id, $voto)
 	{
+
+		$this->set_post_id($post_id);
+		$this->set_habitante_id($habitante_id);
+		$this->set_voto($voto);
 		return $this->cambiar_Voto();
 	}
 
@@ -131,11 +146,11 @@ class Foro extends datos
 
 	}
 
-	PUBLIC function listaPost()
+	PUBLIC function listaPost($postId, $habitante_id)
 	{
 		try {
-			$postId = $this->post_id;
-			$aptoId = $this->apto_id;
+			$this->post_id = $postId;
+			$this->habitante_id = $habitante_id;
 
 			if(isset($this->habitante_id)){
 				$respuesta = $this->con->query("SELECT foro.id,titulo,descripcion,fecha,create_by,h.nombres,h.apellidos FROM `foro` INNER JOIN habitantes as h ON h.id = create_by WHERE foro.id = '$postId';")->fetch(PDO::FETCH_ASSOC);
@@ -168,6 +183,7 @@ class Foro extends datos
 	{
 		$r = array();
 		try {
+
 			$consulta = $this->con->prepare("INSERT INTO comentarios (id_post, comentario, create_by) VALUES(?,?,?)");
 			$consulta->execute([$this->post_id, $this->comentario, $this->create_by]);
 			$r['resultado'] = 'incluirComentario';
@@ -181,10 +197,10 @@ class Foro extends datos
 		return $r;
 	}
 
-	PUBLIC function listaComentarios()
+	PUBLIC function listaComentarios($postId)
 	{
 		try {
-			$postId = $this->post_id;
+			
 			$respuesta = $this->con->prepare("SELECT *,h.nombres,h.apellidos FROM `comentarios` INNER JOIN `habitantes` as h ON create_by = h.id WHERE id_post = ? ORDER BY comentarios.id DESC");
 			$respuesta->execute([$postId]);
 			$respuesta = $respuesta->fetchall(PDO::FETCH_ASSOC);
@@ -201,11 +217,17 @@ class Foro extends datos
 	PRIVATE function cambiar_Voto()
 	{
 		try {
-
 			$consulta = $this->con->prepare("SELECT DISTINCT a.id_apartamento FROM apartamento AS a WHERE a.propietario = :id_habitante OR a.inquilino = :id_habitante;");
 			$consulta->bindValue(":id_habitante", $this->habitante_id);
 			$consulta->execute();
 			$respuesta = $consulta;
+
+
+			
+
+
+
+
 			while ($temp = $respuesta->fetch(PDO::FETCH_ASSOC)) {
 				$consulta = $this->con->prepare("INSERT INTO votos (id_foro,id_apartamento,voto) VALUES(:post_id,:aptoId,:voto) ON DUPLICATE KEY UPDATE voto = :voto;");
 				$consulta->bindValue(":post_id",$this->post_id);
@@ -254,8 +276,9 @@ class Foro extends datos
 		return $r;
 	}
 
-	PUBLIC function cambiar_estados($control,$value){
+	PUBLIC function cambiar_estados($control,$value,$post_id){
 		try {
+			$this->set_post_id($post_id);
 			$this->validar_conexion($this->con);
 			$this->con->beginTransaction();
 

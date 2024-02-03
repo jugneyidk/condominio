@@ -7,13 +7,32 @@ class habitantes extends datos
 {
 	PRIVATE $id, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal, $clave;
 
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($clave, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal){
+		$this->set_clave($clave);
+		$this->set_cedula_rif($cedula_rif);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_nombres($nombres);
+		$this->set_apellidos($apellidos);
+		$this->set_telefono($telefono);
+		$this->set_correo($correo);
+		$this->set_domicilio_fiscal($domicilio_fiscal);
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($id, $clave, $cedula_rif, $tipo_identificacion, $nombres, $apellidos, $telefono, $correo, $domicilio_fiscal){
+		
+		$this->set_id($id);
+		$this->set_clave($clave);
+		$this->set_cedula_rif($cedula_rif);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_nombres($nombres);
+		$this->set_apellidos($apellidos);
+		$this->set_telefono($telefono);
+		$this->set_correo($correo);
+		$this->set_domicilio_fiscal($domicilio_fiscal);
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($id){
+		$this->set_id($id);
 		return $this->eliminar($id);
 	}
 

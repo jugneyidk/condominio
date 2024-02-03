@@ -128,6 +128,7 @@ function loadPost() {
                 } else{
                     $("#numero-votos").html("0");
                 }
+                console.log(lee);
                 if (lee.mensaje.voto && document.getElementById('aprobar')) {
                     switch (lee.mensaje.voto) {
                         case "0":

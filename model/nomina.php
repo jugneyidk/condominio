@@ -47,13 +47,22 @@ class nomina extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
 	}
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($rif_cedula, $tipo_identificacion, $descripcion, $obj_pagos){
+		$this->set_rif_cedula($rif_cedula);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_descripcion($descripcion);
+		$this->set_obj_pagos($obj_pagos);
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($rif_cedula, $tipo_identificacion, $descripcion, $obj_pagos){
+		$this->set_rif_cedula($rif_cedula);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_descripcion($descripcion);
+		$this->set_obj_pagos($obj_pagos);
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($id){
+		$this->set_id($id);
 		return $this->eliminar();
 	}
 	PRIVATE function incluir()
@@ -385,13 +394,42 @@ class nomina extends datos
 		return $r;
 	}
 
-	PUBLIC function incluir_empleado_s(){
+	PUBLIC function incluir_empleado_s($rif_cedula, $tipo_identificacion, $nombres, $apellidos, $fechac, $salario, $domicilio_fiscal, $telefono, $correo, $cargo, $fechan, $estado_civil){
+		
+		$this->set_rif_cedula($rif_cedula);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_nombres($nombres);
+		$this->set_apellidos($apellidos);
+		$this->set_fechac($fechac);
+		$this->set_salario($salario);
+		$this->set_domicilio_fiscal($domicilio_fiscal);
+		$this->set_telefono($telefono);
+		$this->set_correo($correo);
+		$this->set_cargo($cargo);
+		$this->set_fechan($fechan);
+		$this->set_estado_civil($estado_civil);
 		return $this->incluir_empleado();
 	}
-	PUBLIC function modificar_empleado_s(){
+	PUBLIC function modificar_empleado_s($id, $rif_cedula, $tipo_identificacion, $nombres, $apellidos, $fechac, $salario, $domicilio_fiscal, $telefono, $correo, $cargo, $fechan, $estado_civil){
+		
+		$this->set_id($id);
+		$this->set_rif_cedula($rif_cedula);
+		$this->set_tipo_identificacion($tipo_identificacion);
+		$this->set_nombres($nombres);
+		$this->set_apellidos($apellidos);
+		$this->set_fechac($fechac);
+		$this->set_salario($salario);
+		$this->set_domicilio_fiscal($domicilio_fiscal);
+		$this->set_telefono($telefono);
+		$this->set_correo($correo);
+		$this->set_cargo($cargo);
+		$this->set_fechan($fechan);
+		$this->set_estado_civil($estado_civil);
 		return $this->modificar_empleado();
 	}
-	PUBLIC function eliminar_empleado_s(){
+	PUBLIC function eliminar_empleado_s($rif_cedula, $tipo_identificacion){
+		$this->set_rif_cedula($rif_cedula);
+		$this->set_tipo_identificacion($tipo_identificacion);
 		return $this->eliminar_empleado();
 	}
 
@@ -463,7 +501,7 @@ class nomina extends datos
 				$r["mensaje"] = "La cedula del empleado ya esta registrada";
 			}
 		
-		//	$this->con->commit();
+			$this->con->commit();
 		} catch (Exception $e) {
 			if($this->con instanceof PDO){
 				if($this->con->inTransaction()){
@@ -568,7 +606,7 @@ class nomina extends datos
 					$consulta->execute();
 
 					$bitacora = new Bitacora($this->con);
-					$bitacora->b_registro("Modificó el Empleado \"$this->id->rif_cedula\"");
+					$bitacora->b_registro("Modificó el Empleado \"{$this->id->rif_cedula}\"");
 					$r["resultado"] = "modificar_empleado";
 					$r["mensaje"] = "( ".TIPO_INDENT_ARRAY[$this->tipo_identificacion].$this->rif_cedula." )";
 
@@ -646,8 +684,10 @@ class nomina extends datos
 
 	}
 
- 	PUBLIC function listadoEmpleados() {
+ 	PUBLIC function listadoEmpleados($rif_cedula, $tipo_identificacion) {
  		try {
+ 			$this->rif_cedula = $rif_cedula;
+ 			$this->tipo_identificacion = $tipo_identificacion;
 			$this->validar_conexion($this->con);
  			$co = $this->con;
  			$co->beginTransaction();

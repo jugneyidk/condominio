@@ -20,19 +20,25 @@ if (is_file("vista/" . $p . ".php")) {
 		}
 		else if ($accion == 'registrarpago') {
 
-			$o->set_obj_pagos($_POST["obj_pagos"]);
-			$o->set_id($_POST["id_deuda_tosend"]);
-			$respuesta = $o->registrarpago_s();
+			// $o->set_obj_pagos();
+			// $o->set_id();
+			$respuesta = $o->registrarpago_s(
+				$_POST["id_deuda_tosend"],
+				$_POST["obj_pagos"]
+			);
 			echo json_encode($respuesta);
 		}
 		else if ($accion == "eliminar_pagos"){
-			$o->set_id($_POST["eliminar_id"]);
-			$o->set_id_pago($_POST["id_pago"]);
-			echo json_encode($o->eliminar_pagos_s());
+			// $o->set_id();
+			// $o->set_id_pago();
+			echo json_encode($o->eliminar_pagos_s(
+				$_POST["eliminar_id"],
+				$_POST["id_pago"]
+			));
 		}
 		else if($accion == "detalles_deuda"){
-			$o->set_id($_POST["id_deuda"]);
-			echo json_encode($o->detalles_deuda_s());
+			// $o->set_id();
+			echo json_encode($o->detalles_deuda_s($_POST["id_deuda"]));
 		}
 		//else if($accion == 'listadomorosos'){
 		//   $respuesta = $o->listadomorosos();

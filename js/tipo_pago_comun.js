@@ -58,7 +58,7 @@ function tipo_pago_comun_resumen_load(list){
 					{data:"monto", "width": "40%"},
 					],
 				createdRow: function(row,data){
-					console.log(data);
+					// console.log(data);
 					row.querySelector("td:nth-child(2)").className = "text-right text-nowrap align-middle";
 					row.querySelector("td:nth-child(2)").innerText = sepMiles(data.monto.toString())+((data.tipo_monto == 0)?" Bs":" $");
 					if(data.concepto == "Total" || data.concepto == "Total $" || data.concepto == "Total Bs"){
@@ -98,7 +98,7 @@ function load_tipo_pago_comun(){
 			if(e.transform_to_dolar===true && e.value !=''){
 				var temp = sepMiles(e.value,true);
 				temp = (temp/Datos_divisa.monto).toFixed(2);
-				console.log(temp);
+				// console.log(temp);
 				if(temp>0){
 					document.getElementById('tipo_pago_comun-bs_to_dolar').innerText=sepMiles(temp.toString());
 				}

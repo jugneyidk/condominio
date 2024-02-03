@@ -20,13 +20,29 @@ class apto extends datos
 		return $fila;
 	}
 
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento){
+
+		$this->set_num_letra_apartamento($num_letra_apartamento);
+		$this->set_propietario($propietario);
+		$this->set_inquilino($inquilino);
+		$this->set_torre($torre);
+		$this->set_piso($piso);
+		$this->set_tipo_apartamento($tipo_apartamento);
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($id, $num_letra_apartamento, $propietario, $inquilino, $torre, $piso, $tipo_apartamento){
+    	$this->set_id_apartamento($id);
+    	$this->set_num_letra_apartamento($num_letra_apartamento);
+		$this->set_propietario($propietario);
+		$this->set_inquilino($inquilino);
+		$this->set_torre($torre);
+		$this->set_piso($piso);
+		$this->set_tipo_apartamento($tipo_apartamento);
+
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($id){
+		$this->set_id_apartamento($id);
 		return $this->eliminar();
 	}
 

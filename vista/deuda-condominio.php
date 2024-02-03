@@ -262,366 +262,7 @@
 
 	<script type="text/javascript">
 
-		function load_extra_stuff(){
-			eventoKeyup("deuda_fecha", /^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$/, "La fecha es invalida");
-			eventoAlfanumerico("deuda_concepto",100,"1,100","El concepto de la deuda tiene caracteres inválidos o esta vació");
-
-			placeholder_concepto();
-
-
-
-			$("#incluir_deuda").on("click",()=>{
-				if(validar_deudas()){
-
-
-
-
-
-					var datos = new FormData();
-					datos.append("accion","lista_resumen_cargos");
-					enviaAjax(datos,function(respuesta){
-					
-						var lee = JSON.parse(respuesta);
-						if(lee.resultado == "lista_resumen_cargos"){
-							document.getElementById('deuda_lista_resumen_global').innerHTML="";
-							document.getElementById('deuda_lista_resumen_dedicado').innerHTML="";
-							for(x of lee.global){
-								console.log(x);
-								var tr = crearElem("tr");
-								tr.appendChild(crearElem("td",undefined,x.concepto));
-								tr.appendChild(crearElem("td",undefined,sepMiles(x.divisa)));
-								tr.appendChild(crearElem("td",undefined,sepMiles(x.bolivares)));
-								document.getElementById('deuda_lista_resumen_global').appendChild(tr);
-
-							}
-							for (x of lee.dedicados){
-								console.log(x);
-								var tr = crearElem("tr");
-								tr.appendChild(crearElem("td",undefined,x.concepto));
-								tr.appendChild(crearElem("td",undefined,sepMiles(x.divisa)));
-								tr.appendChild(crearElem("td",undefined,sepMiles(x.bolivares)));
-								document.getElementById('deuda_lista_resumen_dedicado').appendChild(tr);
-							}
-
-
-							if(lee.global.length>0){
-								document.getElementById('btn_collapse_global').innerHTML=`Globales (${lee.global.length})`;
-							}else {
-								document.getElementById('btn_collapse_global').innerHTML=`Globales`;
-								document.getElementById('deuda_lista_resumen_global').innerHTML="<tr><td colspan='3'>No hay registros</td></tr>";
-							}
-							
-							if(lee.dedicados.length>0){
-								document.getElementById('btn_collapse_dedicado').innerHTML=`Dedicados (${lee.dedicados.length})`;
-							}
-							else{
-								document.getElementById('btn_collapse_dedicado').innerHTML=`Dedicados`;
-								document.getElementById('deuda_lista_resumen_dedicado').innerHTML="<tr><td colspan='3'>No hay registros</td></tr>";
-							}
-
-						}
-						else if (lee.resultado == 'is-invalid'){
-							muestraMensaje("ERROR", lee.mensaje,"error");
-						}
-						else if(lee.resultado == "error"){
-							muestraMensaje("ERROR", lee.mensaje,"error");
-							console.error(lee.mensaje);
-						}
-						else if(lee.resultado == "console"){
-							console.log(lee.mensaje);
-						}
-						else{
-							muestraMensaje("ERROR", lee.mensaje,"error");
-						}
-					}).then(()=>{
-						$("#modal_resumen_cargos_deudas").modal("show");
-					});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				}
-			});
-
-			$("#deuda_btn_distribuir_modal").on("click",()=>{
-				Swal.fire({
-					title: "¿Estás Seguro?",
-					text: "Las deudas distribuidas no se pueden modificar ni eliminar si hay registros de pagos por parte de algún apartamento\n¿Desea continuar?",
-					showCancelButton: true,
-					confirmButtonText: "Distribuir",
-					confirmButtonColor: "#007bff",
-					cancelButtonText: `Cancelar`,
-					focusConfirm:true,
-					icon: "info",
-				}).then((result) => {
-					if (result.isConfirmed) {
-
-						if(validar_deudas()){
-							
-							var datos = new FormData($("#f_deudas")[0]);
-							datos.append("accion","distribuir_deudas");
-							enviaAjax(datos,function(respuesta){
-							
-								var lee = JSON.parse(respuesta);
-								if(lee.resultado == "distribuir_deudas"){
-									//console.log(lee.mensaje);
-									muestraMensaje("La deuda fue distribuida exitosamente", "", "success");
-									console.log(lee);
-									borrar();
-								}
-								else if (lee.resultado == 'is-invalid'){
-									muestraMensaje("ERROR", lee.mensaje,"error");
-								}
-								else if(lee.resultado == "error"){
-									muestraMensaje("ERROR", lee.mensaje,"error");
-									console.error(lee.mensaje);
-								}
-								else if(lee.resultado == "console"){
-									console.log(lee.mensaje);
-								}
-								else{
-									muestraMensaje("ERROR", lee.mensaje,"error");
-								}
-							}).then(()=>{
-								$("#modal_resumen_cargos_deudas").modal("hide");
-							});
-						}
-						else{
-							$("#modal_resumen_cargos_deudas").modal("hide");
-						}
-						
-					}
-				});
-
-			});
-
-			$("#consultar_deuda").on("click",()=>{
-				var datos = new FormData();
-				datos.append("accion","consultar_distribucion_deuda");
-				enviaAjax(datos,function(respuesta){
-				
-					var lee = JSON.parse(respuesta);
-					console.log(lee);
-					if(lee.resultado == "consultar_distribucion_deuda"){
-
-
-						if ($.fn.DataTable.isDataTable("#table_distribuciones_modal")) {
-							$("#table_distribuciones_modal").DataTable().destroy();
-						}
-						
-						$("#tbody_distribuciones_modal").html("");
-						
-						if (!$.fn.DataTable.isDataTable("#table_distribuciones_modal")) {
-							$("#table_distribuciones_modal").DataTable({
-								language: {
-									lengthMenu: "Mostrar _MENU_ por página",
-									zeroRecords: "No se encontraron registros de Distribuciones",
-									info: "Mostrando página _PAGE_ de _PAGES_",
-									infoEmpty: "No hay registros disponibles",
-									infoFiltered: "(filtrado de _MAX_ registros totales)",
-									search: "Buscar:",
-									paginate: {
-										first: "Primera",
-										last: "Última",
-										next: "Siguiente",
-										previous: "Anterior",
-									},
-								},
-								data:lee.mensaje,
-								createdRow: function(row,data){
-									row.id = "distrib-"+data[3];
-								},
-								autoWidth: false
-								//order: [[1, "asc"]],
-								
-							});
-						}
-
-
-
-
-						
-					}
-					else if (lee.resultado == 'is-invalid'){
-						muestraMensaje("ERROR", lee.mensaje,"error");
-					}
-					else if(lee.resultado == "error"){
-						muestraMensaje("ERROR", lee.mensaje,"error");
-						console.error(lee.mensaje);
-					}
-					else if(lee.resultado == "console"){
-						console.log(lee.mensaje);
-					}
-					else{
-						muestraMensaje("ERROR", lee.mensaje,"error");
-					}
-				}).then(()=>{
-					$("#modal_distribuciones").modal("show");
-				});
-			});
-
-			rowsEvent("tbody_distribuciones_modal",(a,b)=>{
-				if(/^distrib-/.test(a.id)){
-					var id_f = a.id.replace(/distrib-/, "");
-
-					var datos = new FormData();
-					datos.append("accion","consultar_distribucion_deuda");
-					datos.append("id_seleccionado",id_f);
-					enviaAjax(datos,function(respuesta){
-					
-						var lee = JSON.parse(respuesta);
-						if(lee.resultado == "consultar_distribucion_deuda"){
-								document.getElementById('deuda_fecha').value = lee.mensaje.fecha;
-								document.getElementById('deuda_concepto').value = lee.mensaje.concepto;
-								document.getElementById('id_hidden').value = lee.mensaje.id_distribucion;
-								cambiarbotones_deuda(false);
-								
-						}
-						else if (lee.resultado == 'is-invalid'){
-							muestraMensaje("ERROR", lee.mensaje,"error");
-						}
-						else if(lee.resultado == "error"){
-							muestraMensaje("ERROR", lee.mensaje,"error");
-							console.error(lee.mensaje);
-						}
-						else if(lee.resultado == "console"){
-							console.log(lee.mensaje);
-						}
-						else{
-							muestraMensaje("ERROR", lee.mensaje,"error");
-						}
-					}).then(()=>{
-						$("#modal_distribuciones").modal("hide");
-					});
-					
-				}
-			})
-
-
-			$("#modificar_deuda").on("click",()=>{
-
-				Swal.fire({
-					title: "¿Estás Seguro?",
-					text: "¿Está seguro que desea modificar la distribución?",
-					showCancelButton: true,
-					confirmButtonText: "Modificar",
-					confirmButtonColor: "#ffc107",
-					cancelButtonText: `Cancelar`,
-					icon: "warning",
-				}).then((result) => {
-					if (result.isConfirmed) {
-
-						if(validar_deudas()){
-							var datos = new FormData($("#f_deudas")[0]);
-							datos.append("accion","modificar_deuda");
-							enviaAjax(datos,function(respuesta){
-							
-								var lee = JSON.parse(respuesta);
-								if(lee.resultado == "modificar_deuda"){
-									muestraMensaje(lee.mensaje, "", "success");
-									borrar();
-								}
-								else if (lee.resultado == 'is-invalid'){
-									muestraMensaje("ERROR", lee.mensaje,"error");
-								}
-								else if(lee.resultado == "error"){
-									muestraMensaje("ERROR", lee.mensaje,"error");
-									console.error(lee.mensaje);
-								}
-								else if(lee.resultado == "console"){
-									console.log(lee.mensaje);
-								}
-								else{
-									muestraMensaje("ERROR", lee.mensaje,"error");
-								}
-							});
-						}
-
-
-
-					}
-				});
-			});
-
-			$("#eliminar_deuda").on("click",()=>{
-
-				Swal.fire({
-					title: "¿Estás Seguro?",
-					text: "¿Está seguro que desea eliminar la distribución?",
-					showCancelButton: true,
-					confirmButtonText: "eliminar",
-					confirmButtonColor: "#c82333",
-					cancelButtonText: `Cancelar`,
-					icon: "warning",
-				}).then((result) => {
-					if (result.isConfirmed) {
-						var datos = new FormData();
-						datos.append("accion","eliminar_deuda");
-						datos.append("id",document.getElementById('id_hidden').value);
-						enviaAjax(datos,function(respuesta){
-						
-							var lee = JSON.parse(respuesta);
-							if(lee.resultado == "eliminar_deuda"){
-								muestraMensaje(lee.mensaje, '', "success");
-								borrar();
-							}
-							else if (lee.resultado == 'is-invalid'){
-								muestraMensaje("ERROR", lee.mensaje,"error");
-							}
-							else if(lee.resultado == "error"){
-								muestraMensaje("ERROR", lee.mensaje,"error");
-								console.error(lee.mensaje);
-							}
-							else if(lee.resultado == "console"){
-								console.log(lee.mensaje);
-							}
-							else{
-								muestraMensaje("ERROR", lee.mensaje,"error");
-							}
-						});
-					}
-				});
-			});
-
-
-
-
-
-
-
-			function validar_deudas(){
-				if(!document.getElementById('deuda_fecha').validarme()){
-					muestraMensaje("La fecha es invalida", "", "error");
-					return false;
-				}
-				if(!document.getElementById('deuda_concepto').validarme()){
-					muestraMensaje("El concepto de la deuda tiene caracteres inválidos o esta vació", "", "error");
-					return false;
-				}
-				return true;
-
-			}
-
-
-
-
-
-
-
-
-
-
-		}
+		
 		
 	</script>
 
@@ -858,12 +499,19 @@
 	<?php endif; ?>
 	<script src="js/carga.js"></script>
 	<script src="js/comun_x.js"></script>
+	
 	<script>
 		var lista_apartamentos_seleccionados = {lista:[]};
 		document.addEventListener("DOMContentLoaded", function(){
 
 
 			load_extra_stuff();
+
+			rowsEvent("cargo_apartamentos_seleccionados_info",function(row,elem){
+				if(elem != row.getElementsByTagName('input')[0]){
+					row.getElementsByTagName('input')[0].click();
+				}
+			});
 
 
 
@@ -1455,6 +1103,351 @@
 			$("form input").removeClass("is-invalid");
 			$("form select").removeClass("is-valid");
 			$("form select").removeClass("is-invalid");
+		}
+
+		function load_extra_stuff(){
+			eventoKeyup("deuda_fecha", /^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$/, "La fecha es invalida");
+			eventoAlfanumerico("deuda_concepto",100,"1,100","El concepto de la deuda tiene caracteres inválidos o esta vació");
+
+			placeholder_concepto();
+
+
+
+			$("#incluir_deuda").on("click",()=>{
+				if(validar_deudas()){
+
+
+
+
+
+					var datos = new FormData();
+					datos.append("accion","lista_resumen_cargos");
+					enviaAjax(datos,function(respuesta){
+					
+						var lee = JSON.parse(respuesta);
+						if(lee.resultado == "lista_resumen_cargos"){
+							document.getElementById('deuda_lista_resumen_global').innerHTML="";
+							document.getElementById('deuda_lista_resumen_dedicado').innerHTML="";
+							for(x of lee.global){
+								console.log(x);
+								var tr = crearElem("tr");
+								tr.appendChild(crearElem("td",undefined,x.concepto));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.divisa)));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.bolivares)));
+								document.getElementById('deuda_lista_resumen_global').appendChild(tr);
+
+							}
+							for (x of lee.dedicados){
+								console.log(x);
+								var tr = crearElem("tr");
+								tr.appendChild(crearElem("td",undefined,x.concepto));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.divisa)));
+								tr.appendChild(crearElem("td",undefined,sepMiles(x.bolivares)));
+								document.getElementById('deuda_lista_resumen_dedicado').appendChild(tr);
+							}
+
+
+							if(lee.global.length>0){
+								document.getElementById('btn_collapse_global').innerHTML=`Globales (${lee.global.length})`;
+							}else {
+								document.getElementById('btn_collapse_global').innerHTML=`Globales`;
+								document.getElementById('deuda_lista_resumen_global').innerHTML="<tr><td colspan='3'>No hay registros</td></tr>";
+							}
+							
+							if(lee.dedicados.length>0){
+								document.getElementById('btn_collapse_dedicado').innerHTML=`Dedicados (${lee.dedicados.length})`;
+							}
+							else{
+								document.getElementById('btn_collapse_dedicado').innerHTML=`Dedicados`;
+								document.getElementById('deuda_lista_resumen_dedicado').innerHTML="<tr><td colspan='3'>No hay registros</td></tr>";
+							}
+
+						}
+						else if (lee.resultado == 'is-invalid'){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+						else if(lee.resultado == "error"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							console.error(lee.mensaje);
+						}
+						else if(lee.resultado == "console"){
+							console.log(lee.mensaje);
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+					}).then(()=>{
+						$("#modal_resumen_cargos_deudas").modal("show");
+					});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				}
+			});
+
+			$("#deuda_btn_distribuir_modal").on("click",()=>{
+				Swal.fire({
+					title: "¿Estás Seguro?",
+					text: "Las deudas distribuidas no se pueden modificar ni eliminar si hay registros de pagos por parte de algún apartamento\n¿Desea continuar?",
+					showCancelButton: true,
+					confirmButtonText: "Distribuir",
+					confirmButtonColor: "#007bff",
+					cancelButtonText: `Cancelar`,
+					focusConfirm:true,
+					icon: "info",
+				}).then((result) => {
+					if (result.isConfirmed) {
+
+						if(validar_deudas()){
+							
+							var datos = new FormData($("#f_deudas")[0]);
+							datos.append("accion","distribuir_deudas");
+							enviaAjax(datos,function(respuesta){
+							
+								var lee = JSON.parse(respuesta);
+								if(lee.resultado == "distribuir_deudas"){
+									//console.log(lee.mensaje);
+									muestraMensaje("La deuda fue distribuida exitosamente", "", "success");
+									console.log(lee);
+									borrar();
+								}
+								else if (lee.resultado == 'is-invalid'){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+								else if(lee.resultado == "error"){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+									console.error(lee.mensaje);
+								}
+								else if(lee.resultado == "console"){
+									console.log(lee.mensaje);
+								}
+								else{
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+							}).then(()=>{
+								$("#modal_resumen_cargos_deudas").modal("hide");
+							});
+						}
+						else{
+							$("#modal_resumen_cargos_deudas").modal("hide");
+						}
+						
+					}
+				});
+
+			});
+
+			$("#consultar_deuda").on("click",()=>{
+				var datos = new FormData();
+				datos.append("accion","consultar_distribucion_deuda");
+				enviaAjax(datos,function(respuesta){
+				
+					var lee = JSON.parse(respuesta);
+					console.log(lee);
+					if(lee.resultado == "consultar_distribucion_deuda"){
+
+
+						if ($.fn.DataTable.isDataTable("#table_distribuciones_modal")) {
+							$("#table_distribuciones_modal").DataTable().destroy();
+						}
+						
+						$("#tbody_distribuciones_modal").html("");
+						
+						if (!$.fn.DataTable.isDataTable("#table_distribuciones_modal")) {
+							$("#table_distribuciones_modal").DataTable({
+								language: {
+									lengthMenu: "Mostrar _MENU_ por página",
+									zeroRecords: "No se encontraron registros de Distribuciones",
+									info: "Mostrando página _PAGE_ de _PAGES_",
+									infoEmpty: "No hay registros disponibles",
+									infoFiltered: "(filtrado de _MAX_ registros totales)",
+									search: "Buscar:",
+									paginate: {
+										first: "Primera",
+										last: "Última",
+										next: "Siguiente",
+										previous: "Anterior",
+									},
+								},
+								data:lee.mensaje,
+								createdRow: function(row,data){
+									row.id = "distrib-"+data[3];
+								},
+								autoWidth: false
+								//order: [[1, "asc"]],
+								
+							});
+						}
+
+
+
+
+						
+					}
+					else if (lee.resultado == 'is-invalid'){
+						muestraMensaje("ERROR", lee.mensaje,"error");
+					}
+					else if(lee.resultado == "error"){
+						muestraMensaje("ERROR", lee.mensaje,"error");
+						console.error(lee.mensaje);
+					}
+					else if(lee.resultado == "console"){
+						console.log(lee.mensaje);
+					}
+					else{
+						muestraMensaje("ERROR", lee.mensaje,"error");
+					}
+				}).then(()=>{
+					$("#modal_distribuciones").modal("show");
+				});
+			});
+
+			rowsEvent("tbody_distribuciones_modal",(a,b)=>{
+				if(/^distrib-/.test(a.id)){
+					var id_f = a.id.replace(/distrib-/, "");
+
+					var datos = new FormData();
+					datos.append("accion","consultar_distribucion_deuda");
+					datos.append("id_seleccionado",id_f);
+					enviaAjax(datos,function(respuesta){
+					
+						var lee = JSON.parse(respuesta);
+						if(lee.resultado == "consultar_distribucion_deuda"){
+								document.getElementById('deuda_fecha').value = lee.mensaje.fecha;
+								document.getElementById('deuda_concepto').value = lee.mensaje.concepto;
+								document.getElementById('id_hidden').value = lee.mensaje.id_distribucion;
+								cambiarbotones_deuda(false);
+								
+						}
+						else if (lee.resultado == 'is-invalid'){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+						else if(lee.resultado == "error"){
+							muestraMensaje("ERROR", lee.mensaje,"error");
+							console.error(lee.mensaje);
+						}
+						else if(lee.resultado == "console"){
+							console.log(lee.mensaje);
+						}
+						else{
+							muestraMensaje("ERROR", lee.mensaje,"error");
+						}
+					}).then(()=>{
+						$("#modal_distribuciones").modal("hide");
+					});
+					
+				}
+			})
+
+
+			$("#modificar_deuda").on("click",()=>{
+
+				Swal.fire({
+					title: "¿Estás Seguro?",
+					text: "¿Está seguro que desea modificar la distribución?",
+					showCancelButton: true,
+					confirmButtonText: "Modificar",
+					confirmButtonColor: "#ffc107",
+					cancelButtonText: `Cancelar`,
+					icon: "warning",
+				}).then((result) => {
+					if (result.isConfirmed) {
+
+						if(validar_deudas()){
+							var datos = new FormData($("#f_deudas")[0]);
+							datos.append("accion","modificar_deuda");
+							enviaAjax(datos,function(respuesta){
+							
+								var lee = JSON.parse(respuesta);
+								if(lee.resultado == "modificar_deuda"){
+									muestraMensaje(lee.mensaje, "", "success");
+									borrar();
+								}
+								else if (lee.resultado == 'is-invalid'){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+								else if(lee.resultado == "error"){
+									muestraMensaje("ERROR", lee.mensaje,"error");
+									console.error(lee.mensaje);
+								}
+								else if(lee.resultado == "console"){
+									console.log(lee.mensaje);
+								}
+								else{
+									muestraMensaje("ERROR", lee.mensaje,"error");
+								}
+							});
+						}
+
+
+
+					}
+				});
+			});
+
+			$("#eliminar_deuda").on("click",()=>{
+
+				Swal.fire({
+					title: "¿Estás Seguro?",
+					text: "¿Está seguro que desea eliminar la distribución?",
+					showCancelButton: true,
+					confirmButtonText: "eliminar",
+					confirmButtonColor: "#c82333",
+					cancelButtonText: `Cancelar`,
+					icon: "warning",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						var datos = new FormData();
+						datos.append("accion","eliminar_deuda");
+						datos.append("id",document.getElementById('id_hidden').value);
+						enviaAjax(datos,function(respuesta){
+						
+							var lee = JSON.parse(respuesta);
+							if(lee.resultado == "eliminar_deuda"){
+								muestraMensaje(lee.mensaje, '', "success");
+								borrar();
+							}
+							else if (lee.resultado == 'is-invalid'){
+								muestraMensaje("ERROR", lee.mensaje,"error");
+							}
+							else if(lee.resultado == "error"){
+								muestraMensaje("ERROR", lee.mensaje,"error");
+								console.error(lee.mensaje);
+							}
+							else if(lee.resultado == "console"){
+								console.log(lee.mensaje);
+							}
+							else{
+								muestraMensaje("ERROR", lee.mensaje,"error");
+							}
+						});
+					}
+				});
+			});
+
+			function validar_deudas(){
+				if(!document.getElementById('deuda_fecha').validarme()){
+					muestraMensaje("La fecha es invalida", "", "error");
+					return false;
+				}
+				if(!document.getElementById('deuda_concepto').validarme()){
+					muestraMensaje("El concepto de la deuda tiene caracteres inválidos o esta vació", "", "error");
+					return false;
+				}
+				return true;
+
+			}
 		}
 
 	</script>

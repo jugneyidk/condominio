@@ -11,7 +11,6 @@ class avisos extends datos
 	function __construct()
 	{
 		$this->con = $this->conecta();
-		$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 	PUBLIC function chequearpermisos()
@@ -25,13 +24,24 @@ class avisos extends datos
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;
 	} 
-	PUBLIC function incluir_s(){
+	PUBLIC function incluir_s($titulo, $descripcion, $desde, $hasta){
+		
+		$this->set_titulo($titulo);
+		$this->set_descripcion($descripcion);
+		$this->set_desde($desde);
+		$this->set_hasta($hasta);
 		return $this->incluir();
 	}
-	PUBLIC function modificar_s(){
+	PUBLIC function modificar_s($id, $titulo, $descripcion, $desde, $hasta){
+		$this->set_id($id);
+		$this->set_titulo($titulo);
+		$this->set_descripcion($descripcion);
+		$this->set_desde($desde);
+		$this->set_hasta($hasta);
 		return $this->modificar();
 	}
-	PUBLIC function eliminar_s(){
+	PUBLIC function eliminar_s($id){
+		$this->set_id($id);
 		return $this->eliminar();
 	}
 
@@ -124,7 +134,8 @@ class avisos extends datos
 				
 				$bitacora = new Bitacora($this->con);
   				$bitacora->b_registro("Eliminó el aviso \"$this->titulo\"");
-				// $bitacora->b_eliminar();
+				
+				$this->con->commit();
 			} else {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  "El Registro no existe";
@@ -138,10 +149,6 @@ class avisos extends datos
 		
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage().": LINE : ".$e->getLine();
-		}finally{
-			if($this->con instanceof PDO){
-				$this->con = null;
-			}
 		}
 		return $r;
 	}

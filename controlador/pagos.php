@@ -35,17 +35,17 @@ if (is_file("vista/" . $p . ".php")) {
 
 
     }elseif ($accion == 'detallespago') {
-      $o->set_id($_POST["id"]);
 
+      $o->set_id($_POST["id"]);
       $respuesta = $o->detallespago();
       echo json_encode($respuesta);
 
 
     }elseif ($accion == 'confirmar' || $accion == 'declinar' || $accion == "deshacer_conf") {
 
+
       $o->set_id($_POST["id"]);
       $o->set_accion($_POST["accion"]);
-
       $respuesta = $o->confirmar_declinar_pago();
       echo json_encode($respuesta);
 

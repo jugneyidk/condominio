@@ -15,27 +15,27 @@ if (is_file("vista/" . $p . ".php")) {
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'incluir') {
-			$o->set_titulo($_POST["titulo"]);
-			$o->set_descripcion($_POST["descripcion"]);
-			$o->set_desde($_POST["fecha"]);
-			$o->set_hasta($_POST["fecha2"]); 
-			$respuesta = $o->incluir_s();
+			$respuesta = $o->incluir_s(
+				$_POST["titulo"],
+				$_POST["descripcion"],
+				$_POST["fecha"],
+				$_POST["fecha2"]
+			);
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'modificar') {
 
-
-			$o->set_id($_POST["id"]);
-			$o->set_titulo($_POST["titulo"]);
-			$o->set_descripcion($_POST["descripcion"]);
-			$o->set_desde($_POST["fecha"]);
-			$o->set_hasta($_POST["fecha2"]);
-			$respuesta = $o->modificar_s();
+			$respuesta = $o->modificar_s(
+				$_POST["id"],
+				$_POST["titulo"],
+				$_POST["descripcion"],
+				$_POST["fecha"],
+				$_POST["fecha2"]
+			);
 			echo json_encode($respuesta);
 
 		} else if ($accion == 'eliminar') {
-			$o->set_id($_POST["id"]);
-			echo json_encode($o->eliminar_s());
+			echo json_encode($o->eliminar_s($_POST["id"]));
 			
 		}
 		exit;

@@ -14,40 +14,61 @@ if (is_file("vista/" . $p . ".php")) {
       echo json_encode($respuesta);
     }  elseif ($accion == 'incluir') {
 
-//      $o->set_id();
-      $o->set_clave($_POST["clave"]);
-      $o->set_cedula_rif($_POST['cedula_rif']);
-      $o->set_tipo_identificacion($_POST['tipo_identificacion']);
-      $o->set_nombres($_POST['nombres']);
-      $o->set_apellidos($_POST['apellidos']);
-      $o->set_telefono($_POST['telefono']);
-      $o->set_correo($_POST['correo']);
-      $o->set_domicilio_fiscal($_POST['domicilio_fiscal']);
+// //      $o->set_id();
+//       $o->set_clave();
+//       $o->set_cedula_rif();
+//       $o->set_tipo_identificacion();
+//       $o->set_nombres();
+//       $o->set_apellidos();
+//       $o->set_telefono();
+//       $o->set_correo();
+//       $o->set_domicilio_fiscal();
 
 
-      $respuesta = $o->incluir();
+      $respuesta = $o->incluir_s(
+        $_POST["clave"],
+        $_POST['cedula_rif'],
+        $_POST['tipo_identificacion'],
+        $_POST['nombres'],
+        $_POST['apellidos'],
+        $_POST['telefono'],
+        $_POST['correo'],
+        $_POST['domicilio_fiscal']
+      );
       echo json_encode($respuesta);
     }
     elseif ($accion == 'modificar') {
 
-      $o->set_id($_POST['id']);
-      $o->set_clave($_POST["clave"]);
-      $o->set_cedula_rif($_POST['cedula_rif']);
-      $o->set_tipo_identificacion($_POST['tipo_identificacion']);
-      $o->set_nombres($_POST['nombres']);
-      $o->set_apellidos($_POST['apellidos']);
-      $o->set_telefono($_POST['telefono']);
-      $o->set_correo($_POST['correo']);
-      $o->set_domicilio_fiscal($_POST['domicilio_fiscal']);
+      // $o->set_id();
+      // $o->set_clave();
+      // $o->set_cedula_rif();
+      // $o->set_tipo_identificacion();
+      // $o->set_nombres();
+      // $o->set_apellidos();
+      // $o->set_telefono();
+      // $o->set_correo();
+      // $o->set_domicilio_fiscal();
 
 
 
-      $respuesta = $o->modificar();
+      $respuesta = $o->modificar_s(
+        $_POST['id'],
+        $_POST["clave"],
+        $_POST['cedula_rif'],
+        $_POST['tipo_identificacion'],
+        $_POST['nombres'],
+        $_POST['apellidos'],
+        $_POST['telefono'],
+        $_POST['correo'],
+        $_POST['domicilio_fiscal']
+      );
       echo json_encode($respuesta);
     }
     elseif ($accion == 'eliminar') {
-      $o->set_id($_POST['id']);
-      $respuesta = $o->eliminar();
+      // $o->set_id($_POST['id']);
+      $respuesta = $o->eliminar_s(
+        $_POST["id"]
+      );
       echo json_encode($respuesta);
     }
     exit;
