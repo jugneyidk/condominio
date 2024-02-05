@@ -48,6 +48,7 @@ class login extends datos
 		if (!empty($usuario) && !empty($clave)) {       
 			$co = $this->conecta();
 			try {
+				$this->validar_conexion($co);
 
 				$tipo_identificacion = preg_replace("/[\s-]?[0-9]*$/", "", $usuario);
 				$usuario = preg_replace("/^.[\s-]?/", "", $usuario);
