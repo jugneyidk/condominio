@@ -3,6 +3,15 @@ $(document).ready(function () {
   carga_pagos_pendientes();
   carga_pagos_confirmados();
   carga_pagos_declinados();
+
+  $("#modaldetalles").on("shown.bs.modal",()=>{
+  	document.body.classList.add("modal-open");
+  });
+  $("#modaldetalles").on("hidden.bs.modal",()=>{
+  	document.body.classList.remove("modal-open");
+  });
+
+
   $(function () {
 	var hash = document.location.hash;
 	if (hash) {
@@ -546,7 +555,6 @@ function carga_detalles_pago(linea) {
 			}
 		$("#modaldetalles").modal("show");
 		document.getElementById('titulomodal').innerText ="Detalles del pago Nº "+id;
-		
 	}
 	else if (lee.resultado == 'is-invalid'){
 	  muestraMensaje("ERROR", lee.mensaje,"error");

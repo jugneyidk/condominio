@@ -16,12 +16,12 @@
 					<li><a href="?p=tipoapto" class="text-muted">Tipos de Apartamento</a></li>
 					<li><a href="?p=apartamentos" class="text-muted">Apartamentos</a></li>
 					<li><a href="?p=estacionamiento" class="text-muted">Estacionamiento</a></li>
+					<li><a href="?p=deuda-condominio" class="text-muted">Deuda del condominio</a></li>
 				</ul>
 			</div>
 			<div class="col-md-1">
 				<p class="text-light h5">Procesar</p>
 				<ul class="list-unstyled text-small">
-					<li><a href="?p=deuda-condominio" class="text-muted">Deuda del condominio</a></li>
 					<li><a href="?p=deudas" class="text-muted">Deudas</a></li>
 					<li><a href="?p=pagos" class="text-muted">Pagos</a></li>
 					<li><a href="?p=generar-reporte" class="text-muted">Generar Reporte</a></li>
@@ -51,5 +51,5 @@
 		<?php endif; ?>
 	</div>
 </footer>
-<?php require_once("comunes/bcv_button.php"); ?>
+<?php// require_once("comunes/bcv_button.php"); ?>
 

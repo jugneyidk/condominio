@@ -338,10 +338,17 @@ function muestraMensaje(titulo, mensaje, icono) {
 
 
 function sepMiles (value,cond=false){
+	if(typeof value !== 'string'){
+		return value;
+	}
+	var negativo = false;
 	sigDecim=",";
 	sigSepar=".";
 	if(value!=''){
 		var x = 0;
+		if(/^[-]/.test(value)){
+			negativo = true;
+		}
 
 		value = value.replace(/^[0]*\D*[0]*|\D/g,'');
 		for(var i = 3;i>value.length;value = '0'+value){
@@ -356,6 +363,9 @@ function sepMiles (value,cond=false){
 		}
 		else{
 			value = value.replace(/(\d)(\d\d)$/,"$1.$2");
+		}
+		if(negativo){
+			value = '-'+value;
 		}
 		return value;
 	}

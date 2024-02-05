@@ -4,7 +4,6 @@ function modalcarga(parametro) {
 		if (parametro) {
 		  $("#carga").modal("show");
 		  $("body").addClass("carga");
-		  console.log(document.getElementById('carga'));
 		  resolve();
 		} else {
 		  setTimeout(function () {

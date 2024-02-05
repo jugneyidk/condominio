@@ -45,10 +45,32 @@ class login extends datos
 	{
 		$usuario = $this->cedula;
 		$clave = $this->pass;
-		if (!empty($usuario) && !empty($clave)) {            
+		if (!empty($usuario) && !empty($clave)) {       
 			$co = $this->conecta();
 			try {
-				$consulta = $co->query("SELECT id,rif_cedula,tipo_identificacion,id_rol,clave FROM datos_usuarios INNER JOIN usuarios_roles WHERE usuarios_roles.id_usuario=datos_usuarios.id AND datos_usuarios.rif_cedula='$usuario'");
+
+				$tipo_identificacion = preg_replace("/[\s-]?[0-9]*$/", "", $usuario);
+				$usuario = preg_replace("/^.[\s-]?/", "", $usuario);
+
+
+				//$tipo_identificacion = 0;// V 
+				switch ($tipo_identificacion) {
+				    case "V":
+				        $tipo_identificacion = 0;
+				        break;
+				    case "E":
+				        $tipo_identificacion = 1;
+				    break;
+				    case "J":
+				        $tipo_identificacion = 2;
+				    break;
+				    case "G":
+				        $tipo_identificacion = 3;
+				    break;
+				}
+
+				$consulta = $co->prepare("SELECT id,rif_cedula,tipo_identificacion,id_rol,clave FROM datos_usuarios INNER JOIN usuarios_roles WHERE usuarios_roles.id_usuario=datos_usuarios.id AND datos_usuarios.rif_cedula=? AND datos_usuarios.tipo_identificacion=?");			
+				$consulta->execute([$usuario, $tipo_identificacion]);
 				$resultado = $consulta->fetch();
 				//if ($resultado && password_verify($clave,$resultado['clave'])) {
 				if ($resultado && password_verify($clave, $resultado['clave'])) {

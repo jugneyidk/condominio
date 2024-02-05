@@ -451,12 +451,12 @@ class Deudacondominio extends datos
 			$consulta = "SELECT
 			    CONCAT(
 			        'Puesto de Estacionamiento ',
-			        e.num_estacionamiento
+			        e.num_estacionamiento,' (',a.num_letra_apartamento,')'
 			    ) AS concepto,
 			    e.costo AS divisa,
 			     ROUND((SELECT (divisa*divs.monto) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1),2) AS bolivares
 				FROM
-				    estacionamiento AS e WHERE e.id_apartamento IS NOT NULL
+				    estacionamiento AS e LEFT JOIN apartamento AS a ON a.id_apartamento = e.id_apartamento WHERE e.id_apartamento IS NOT NULL
 				UNION
 				SELECT
 					CONCAT('Apartamento ',ta.descripcion,' (',ta.cantidadHijos,')') AS concepto,
@@ -483,7 +483,7 @@ class Deudacondominio extends datos
 											IF(lc.tipo_monto = 0,lc.monto, (SELECT ROUND((lc.monto*divs.monto),2) FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1)) AS bolivares
 											FROM lista_cargos_d AS lc
 											JOIN apartamentos_lista_cargos AS alc ON alc.id_lista_cargos = lc.id_lista_cargos
-											WHERE lc.tipo_cargo = 0 GROUP BY lc.id_lista_cargos;");
+											WHERE lc.tipo_cargo = 0 AND lc.aplicar_next_mes = 1 GROUP BY lc.id_lista_cargos;");
 
 				$consulta->execute();
 				$r["dedicados"] = $consulta->fetchall(PDO::FETCH_ASSOC);
@@ -576,7 +576,7 @@ class Deudacondominio extends datos
 
 											UNION
 
-											SELECT deu.id_deuda, CONCAT('Apartamento tipo ',t.descripcion) AS concepto, t.alicuota, 1 AS tipo_monto from apartamento AS a JOIN deudas AS deu ON deu.id_apartamento = a.id_apartamento AND deu.id_distribucion = :id_distribucion JOIN tipo_apartamento AS t ON a.tipo_apartamento = t.id_tipo_apartamento
+											SELECT deu.id_deuda, CONCAT('Apartamento tipo ',t.descripcion) AS concepto, t.alicuota, 1 AS tipo_monto FROM apartamento AS a JOIN deudas AS deu ON deu.id_apartamento = a.id_apartamento AND deu.id_distribucion = :id_distribucion JOIN tipo_apartamento AS t ON a.tipo_apartamento = t.id_tipo_apartamento
 
 											UNION
 
@@ -589,9 +589,28 @@ class Deudacondominio extends datos
 
 											UNION 
 
-											SELECT d.id_deuda, l.concepto, l.tipo_monto,l.tipo_monto  FROM apartamento as a JOIN apartamentos_lista_cargos as alc ON alc.id_apartamento = a.id_apartamento JOIN lista_cargos_d AS l ON l.id_lista_cargos = alc.id_lista_cargos JOIN deudas AS d on d.id_apartamento = a.id_apartamento AND d.id_distribucion = :id_distribucion WHERE l.tipo_cargo = 0 AND l.aplicar_next_mes = 1 ;");
+											SELECT d.id_deuda, l.concepto, l.monto,l.tipo_monto  FROM apartamento as a JOIN apartamentos_lista_cargos as alc ON alc.id_apartamento = a.id_apartamento JOIN lista_cargos_d AS l ON l.id_lista_cargos = alc.id_lista_cargos JOIN deudas AS d on d.id_apartamento = a.id_apartamento AND d.id_distribucion = :id_distribucion WHERE l.tipo_cargo = 0 AND l.aplicar_next_mes = 1 ;");			
 			$consulta->bindValue(":id_distribucion",$this->id,PDO::PARAM_INT);
 			$consulta->execute();
+			$consulta = $this->con->query("SELECT @divisa_monto := divs.monto FROM tipo_cambio_divisa AS divs WHERE 1 ORDER BY divs.fecha DESC LIMIT 1;
+											SELECT @descuento_monto := valor FROM config WHERE config.titulo = 'descuento_porcentaje';");
+			$consulta = $this->con->prepare("INSERT INTO detalles_deudas (id_deuda,concepto,monto,tipo_monto) SELECT 
+										d.id_deuda,
+										'Descuento Temporal' as concepto,
+										ROUND(SUM(IF(dd.tipo_monto = 1,dd.monto, ROUND(dd.monto / @divisa_monto , 2) )) * - @descuento_monto, 2 ) AS descuento
+										,1 AS tipo_monto
+										FROM deudas as d 
+										LEFT JOIN distribuciones as dis on dis.id_distribucion = d.id_distribucion
+										LEFT JOIN detalles_deudas as dd on dd.id_deuda = d.id_deuda
+									WHERE dis.id_distribucion = :id_distribucion
+									   AND NOT EXISTS (
+									       SELECT 1 FROM deudas as d1 
+									       LEFT JOIN detalles_deudas as dd1 on dd1.id_deuda 
+									       WHERE dd1.concepto = 'Descuento Temporal')
+									GROUP BY d.id_deuda;");
+			$consulta->bindValue(":id_distribucion",$this->id,PDO::PARAM_INT);
+			$consulta->execute();
+
 
 			$consulta = $this->con->prepare("UPDATE lista_cargos_d SET aplicar_next_mes = 0 WHERE mensual = 0 AND aplicar_next_mes = 1");
 			$consulta->execute();
@@ -716,10 +735,10 @@ class Deudacondominio extends datos
 			$b = new Bitacora();
 			if($anterior["concepto"] != $this->concepto){
 				$b_temp = new Bitacora;
-				$b->b_registro("Modifico el concepto de \"{$anterior['concepto']}\"");
+				$b->b_registro("Modifico el concepto de la distribución \"{$anterior['concepto']}\"");
 			}
 			if($anterior["fecha"] != $this->fecha){
-				$b->b_registro("Modifico la fecha de \"{$anterior['fecha']}\"");
+				$b->b_registro("Modifico la fecha de la distribución \"{$anterior['concepto']}\"");
 			}
 
 

@@ -5,8 +5,14 @@ if(is_file("model/validaciones.php")){
 else if(is_file("validaciones.php")){
     require_once("validaciones.php");
 }
+else if(is_file("../model/validaciones.php")){
+    require_once("../model/validaciones.php");
+}
 
-if(is_file("model/const.php")){
+if(is_file("../model/const.php")){// quta las barras extras
+    require_once ("../model/const.php");
+}
+if(is_file("model/const.php")){// quta las barras extras
     require_once ("model/const.php");
 }
 else if(is_file("const.php")){

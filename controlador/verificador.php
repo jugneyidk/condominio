@@ -40,5 +40,6 @@ if(!in_array($p, $excepciones_p) || $p == "principal"){
 	else if(!in_array($p, $excepciones_p)){
 		$p = "cerrarsesion";
 	}
+
 }
 ?>

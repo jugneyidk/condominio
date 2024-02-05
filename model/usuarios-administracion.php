@@ -1,7 +1,7 @@
 <?php
 
-require_once('model/datos.php');
-require_once("model/bitacora.php");
+ require_once('model/datos.php');
+ require_once("model/bitacora.php");
 
 
 
@@ -44,8 +44,8 @@ class usuarios extends datos
 		$modulo = $_GET['p'];
 		$co = $this->conecta(); 
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$guarda = $co->query("SELECT * FROM `roles_modulos` inner join `modulos` on roles_modulos.id_modulo = modulos.id inner join `roles` on roles_modulos.id_rol = roles.id where modulos.nombre = '$modulo' and roles_modulos.id_rol = '$id_rol'");
-		$guarda->execute();
+		$guarda = $co->prepare("SELECT * FROM `roles_modulos` INNER JOIN `modulos` ON roles_modulos.id_modulo = modulos.id INNER JOIN `roles` ON roles_modulos.id_rol = roles.id WHERE modulos.nombre = ? AND roles_modulos.id_rol = ?");
+		$guarda->execute([$modulo, $id_rol]);
 		$fila = array();
 		$fila = $guarda->fetch(PDO::FETCH_NUM);
 		return $fila;		
@@ -306,7 +306,7 @@ class usuarios extends datos
 				
 				$bitacora = new Bitacora();
 				$bitacora->b_registro("Eliminó el usuario \"$id\"");
-				//$co->commit();
+				$co->commit();
 			} catch (Exception $e) {
 				if($co instanceof PDO){
 					if($co->inTransaction()){
@@ -326,7 +326,8 @@ class usuarios extends datos
 		}
 		return $r;
 	}
-	function existe($rif_cedula, $tipo_identificacion, $caso)
+
+	PUBLIC function existe($rif_cedula, $tipo_identificacion, $caso)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

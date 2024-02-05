@@ -9,6 +9,7 @@ define("TIPO_INDENT_ARRAY", [
 	"J-",// 2
 	"G-" // 3
 ]);
+define("CAMPO_DESCUENTO", 'Descuento Temporal');
 
 define("CONFIG_ARRAY", [
 	"BCV"=>["hora_dolar"]

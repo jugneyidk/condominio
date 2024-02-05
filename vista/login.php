@@ -22,7 +22,7 @@
                     <h5 class="fw-normal mb-2 pb-2" style="letter-spacing: 1px;">Panel de administración</h5>
                     <div class="form-outline mb-4 mb-md-3 mb-lg-3">
                       <label class="form-label" for="usuario">Cedula</label>
-                      <input type="text" id="usuario" name="usuario" class="form-control form-control-lg" value="27250544" />
+                      <input type="text" id="usuario" name="usuario" class="form-control form-control-lg" value="V-27250544" />
                       <span id="susuario" class="text-danger espacio-vacio"></span>
                     </div>
                     <div class="form-outline mb-3">

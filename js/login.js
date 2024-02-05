@@ -1,27 +1,25 @@
 $(document).ready(function () {
-  $("#usuario").on("keypress", function (e) {
-    validarkeypress(/^[0-9]*$/, e);
-  });
+  cedulaKeypress(document.getElementById('usuario'));
 
   $("#usuario").on("keyup", function () {
     validarkeyup(
-      /^[0-9]{7,9}$/,
+      /(?:(?:^[ve][-\s]?[0-9]{7,8}$)|(?:^[jg][-\s]?[0-9]{8,10}$))/i,
       $(this),
       $("#susuario"),
-      "El formato debe ser 12345678"
+      "La cedula no es valida ej.(V-0000000)"
     );
   });
 
   $("#clave").on("keypress", function (e) {
-    validarkeypress(/^[A-Za-z0-9]*/, e);
+    validarkeypress(/^./, e);
   });
 
   $("#clave").on("keyup", function () {
     validarkeyup(
-      /^[A-Za-z0-9]{6,20}$/,
+      /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,20}$/,
       $(this),
       $("#sclave"),
-      "Solo letras y/o numeros y/o # - entre 6 y 20 caracteres"
+      "Debe ingresar al menos un numero, una letra mayúscula y una minúscula y debe ingresar entre 6 y 20 caracteres"
     );
   });
 
@@ -92,20 +90,20 @@ function limpia() {
 function validarenvio() {
   if (
     validarkeyup(
-      /^[0-9]{7,9}$/,
+      /(?:(?:^[ve][-\s]?[0-9]{7,8}$)|(?:^[jg][-\s]?[0-9]{8,10}$))/i,
       $("#usuario"),
       $("#susuario"),
-      "El formato debe ser 12345678"
+      "La cedula no es valida ej.(V-0000000)"
     ) == 0
   ) {
-    muestraMensaje("Error", "El formato de usuario debe ser 12345678", "error");
+    muestraMensaje("Error", "El formato de usuario debe ser V-0000000", "error");
     return false;
   } else if (
     validarkeyup(
-      /^[A-Za-z0-9,#\b\s\u00f1\u00d1\u00E0-\u00FC-]{6,20}$/,
+      /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,20}$/,
       $("#clave"),
       $("#sclave"),
-      "Solo letras y/o numeros y/o # - entre 6 y 20 caracteres"
+      "Debe ingresar al menos un numero, una letra mayúscula y una minúscula y debe ingresar entre 6 y 20 caracteres"
     ) == 0
   ) {
     muestraMensaje(
@@ -151,4 +149,31 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
     etiquetamensaje.text(mensaje);
     return 0;
   }
+}
+function cedulaKeypress(tag){
+  tag.onkeypress=function(e){
+    tecla = String.fromCharCode(e.keyCode);
+    var cont_tecla_letra;
+
+    if(!/^[vejg][-]?/i.test(this.value) && (!(cont_tecla_letra = /^[vejg]$/i.test(tecla)))){
+      this.value = this.value.replace(/[^0-9]/g,"");
+      this.value= "V-"+this.value;
+      if(this.value.length >= this.value.maxLength){e.preventDefault();return 0;}
+      validarKeyPress(/^[0-9]$/,e);
+    }
+    else if(cont_tecla_letra){
+      this.value = this.value.replace(/[^0-9]/g,"");
+      this.value = tecla.toUpperCase()+"-"+this.value;
+      e.preventDefault();
+    }
+    else if(/^[vejg][-]?/i.test(this.value) && /^[vejg]$/i.test(tecla)){
+      this.value = this.value.replace(/^[VEJG][-]*(.{0,10}).*/, tecla.toUpperCase()+"-$1");
+      e.preventDefault();
+    }
+    else{
+      validarKeyPress(/^[0-9]$/,e);
+    }
+
+  }
+  tag.maxLength = 12;
 }

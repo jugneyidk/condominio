@@ -33,6 +33,7 @@ function mostrar_registrar_pago(linea) {
 			tipo_pago_comun_update_divisa();
 			tipo_pago_comun_resumen_load(lee.mensaje);
 			document.getElementById('monto_para_calcular').dataset.monto_a_pagar=lee.total;
+			exito();
 			
 		}
 		else if (lee.resultado == 'is-invalid'){
@@ -80,6 +81,7 @@ function registrar_pago() {
 					var lee = JSON.parse(respuesta);
 					if(lee.resultado == "registrarpago"){
 						borrar();
+						exito();
 					
 					}
 					else if (lee.resultado == 'is-invalid'){

@@ -304,6 +304,12 @@ class estac extends datos
 	PUBLIC function set_num_estac_original($value){
 		$this->num_estac_original = $value;
 	}
+	PUBLIC function get_con(){
+		return $this->con;
+	}
+	PUBLIC function set_con($value){
+		$this->con = $value;
+	}
 
 
 

@@ -51,13 +51,13 @@
 
 
 
-			$o->set_con(null);
+			$cl->set_con(null);
 
 			exit;
 		}
 
 		require_once("vista/".$p.".php"); 
-			$o->set_con(null);
+			$cl->set_con(null);
 	}
 	else{
 	require_once("vista/404.php"); 

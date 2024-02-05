@@ -22,8 +22,8 @@ class pagos extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$resultado2 = $co->query("SELECT pago.id_pago, NULL as extra, pago.fecha_entrega as fecha, pago.total as total_pago, IF(pago.estado = 'pendiente', 0,IF(pago.estado = 'declinado',1,IF(pago.estado = 'confirmado',2,NULL) ) ) AS estado, apartamento.num_letra_apartamento, apartamento.piso, apartamento.torre FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento ORDER BY pago.id_pago DESC;")->fetchall(PDO::FETCH_ASSOC);
-			$resultado = $co->query("SELECT 
+			//$resultado2 = $co->query("SELECT pago.id_pago, NULL as extra, pago.fecha_entrega as fecha, pago.total as total_pago, IF(pago.estado = 'pendiente', 0,IF(pago.estado = 'declinado',1,IF(pago.estado = 'confirmado',2,NULL) ) ) AS estado, apartamento.num_letra_apartamento, apartamento.piso, apartamento.torre FROM `pago` INNER JOIN deuda_pendiente on pago.deuda=deuda_pendiente.id INNER JOIN apartamento on deuda_pendiente.id_apartamento=apartamento.id_apartamento ORDER BY pago.id_pago DESC;")->fetchall(PDO::FETCH_ASSOC);
+			$resultado = ("SELECT 
 									p.id_pago,
 									a.num_letra_apartamento,
 									a.torre,
@@ -36,7 +36,42 @@ class pagos extends datos
 									JOIN deudas as d on d.id_deuda = dp.id_deuda
 									JOIN apartamento as a on a.id_apartamento = d.id_apartamento
 									JOIN distribuciones as dis on d.id_distribucion = dis.id_distribucion
-									WHERE 1 ORDER BY dis.fecha DESC;")->fetchall(PDO::FETCH_ASSOC);
+									WHERE 1 ORDER BY dis.fecha DESC;");//->fetchall(PDO::FETCH_ASSOC);// query viejo
+			
+			$resultado = $co->query("SELECT 
+									dp.id_deuda,
+									p.id_pago,
+									a.num_letra_apartamento,
+									a.torre,
+									dis.fecha,
+									p.total_pago,
+									p.estado,
+									NULL as extra
+									FROM pagos as p 
+									JOIN deuda_pagos as dp on dp.id_pago = p.id_pago 
+									JOIN deudas as d on d.id_deuda = dp.id_deuda
+									JOIN apartamento as a on a.id_apartamento = d.id_apartamento
+									JOIN distribuciones as dis on d.id_distribucion = dis.id_distribucion
+									WHERE p.id_pago IN (
+									    SELECT 
+										#d.id_deuda,
+										#GROUP_CONCAT(CASE WHEN p.estado = 2 THEN p.id_pago END) as aceptado,
+										#GROUP_CONCAT(CASE WHEN p.estado = 0 THEN p.id_pago END) as pendiente,
+										#GROUP_CONCAT(CASE WHEN p.estado = 1 THEN p.id_pago END) as declinado,
+										COALESCE(
+										    GROUP_CONCAT(CASE WHEN p.estado = 2 THEN p.id_pago END),
+											GROUP_CONCAT(CASE WHEN p.estado = 0 THEN p.id_pago END),
+											GROUP_CONCAT(CASE WHEN p.estado = 1 THEN p.id_pago END)
+										) AS selecionado
+
+
+										FROM pagos as p
+										INNER JOIN (
+										    SELECT MAX(ps.fecha_generada) as fecha_max, pds.id_deuda, ps.estado FROM pagos as ps JOIN deuda_pagos as pds on pds.id_pago = ps.id_pago GROUP BY ps.estado, pds.id_deuda
+										) as p2 on p.fecha_generada = p2.fecha_max AND p.estado = p2.estado
+										LEFT JOIN deudas as d on d.id_deuda = p2.id_deuda GROUP BY d.id_deuda
+									)
+									ORDER BY dis.fecha DESC;")->fetchall(PDO::FETCH_ASSOC);
 			$r['resultado'] = 'listadopagos';
 			$r['mensaje'] =  $resultado;
 

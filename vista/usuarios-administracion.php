@@ -38,7 +38,7 @@
 					</div>
 					<div class="col mt-3 mt-md-0">
 						<label for="password">Contraseña</label>
-						<input autocomplete="off" class="form-control" type="password" id="password" name="password" />
+						<input autocomplete="off" class="form-control" type="password" id="password" name="password" data-span = 'spassword'/>
 						<span id="spassword" class="text-danger"></span>
 					</div>
 				</div>

@@ -15,6 +15,10 @@ if (is_file("vista/" . $p . ".php")) {
     if ($accion == "iniciar") {
       $respuesta = $o->iniciarSesion_habitante_s($_POST["usuario"], $_POST["clave"]);
       echo json_encode($respuesta);
+    }else{
+      if(!isset($_SESSION['id_usuario']) and !isset($_SESSION["id_habitante"])){
+        echo json_encode(["resultado" => "error", "mensaje" => "La Sesión ha finalizado"]);
+      }
     }
     exit;
   }

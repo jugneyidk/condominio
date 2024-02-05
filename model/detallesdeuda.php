@@ -61,7 +61,7 @@ class detallesdeuda extends datos
 							LEFT JOIN detalles_deudas AS dd ON dd.id_deuda = d.id_deuda
 							LEFT JOIN
 							(
-							SELECT p.*,dp.id_deuda from pagos as p JOIN deuda_pagos as dp on dp.id_pago = p.id_pago WHERE 1
+							SELECT p.*,dp.id_deuda FROM pagos as p JOIN deuda_pagos as dp on dp.id_pago = p.id_pago WHERE 1
 							)AS p on p.id_deuda = d.id_deuda
 							WHERE (a.propietario = :habitante OR a.inquilino = :habitante) AND 
 							(p.estado = 0 OR p.estado IS NULL OR p.estado = 1) 
@@ -71,6 +71,83 @@ class detallesdeuda extends datos
 							d.id_deuda
 							ORDER BY dis.fecha DESC ,
 							a.num_letra_apartamento;");
+				$consulta = $co->prepare("
+					SELECT
+					    d.id_deuda,
+					    a.num_letra_apartamento,
+					    a.torre,
+					    a.piso,
+					    dis.concepto,
+					    dis.fecha,
+					    (
+					        SUM(
+					            IF(
+					                dd.tipo_monto = 1,
+					                dd.monto,
+					                (
+					                    ROUND(dd.monto / @divisa_monto, 2)
+					                )
+					            )
+					        )
+					    ) AS monto,
+					    NULL AS extra,
+					    d.id_deuda,
+					    p.estado,
+					    a.propietario,
+					    p.id_pago,
+					    d.moroso
+					FROM
+					    deudas AS d
+					LEFT JOIN apartamento AS a
+					ON
+					    a.id_apartamento = d.id_apartamento
+					LEFT JOIN distribuciones AS dis
+					ON
+					    dis.id_distribucion = d.id_distribucion
+					LEFT JOIN detalles_deudas AS dd
+					ON
+					    dd.id_deuda = d.id_deuda
+					LEFT JOIN deuda_pagos AS dp
+					ON
+					    dp.id_deuda = d.id_deuda
+					LEFT JOIN pagos AS p
+					ON
+					    p.id_pago = dp.id_pago
+					WHERE 
+					(a.propietario = :habitante or a.inquilino = :habitante) AND
+					NOT EXISTS
+					    (
+					    SELECT
+					        *
+					    FROM
+					        deudas AS d2
+					    JOIN deuda_pagos AS dp2
+					    ON
+					        dp2.id_deuda = d2.id_deuda
+					    JOIN pagos AS p2
+					    ON
+					        p2.id_pago = dp2.id_pago
+					    WHERE
+					        d2.id_deuda = d.id_deuda AND p2.estado <> 1 
+					) OR(
+					    p.id_pago NOT IN(
+					    SELECT
+					        p2.id_pago
+					    FROM
+					        pagos AS p2
+					    JOIN deuda_pagos AS dp2
+					    ON
+					        dp2.id_pago = p2.id_pago
+					    WHERE
+					        p2.estado IN(1, 2) 
+					) OR p.id_pago IS NULL 
+					) AND (a.propietario = :habitante or a.inquilino = :habitante)
+					GROUP BY
+					    d.id_deuda,
+					    p.estado
+					ORDER BY
+					    a.num_letra_apartamento;
+					");
 			}
 			else{
 				$consulta = $co->prepare("SELECT
@@ -96,13 +173,50 @@ class detallesdeuda extends datos
 							(
 							SELECT p.*,dp.id_deuda from pagos as p JOIN deuda_pagos as dp on dp.id_pago = p.id_pago WHERE 1
 							)AS p on p.id_deuda = d.id_deuda
-							WHERE (p.estado = 0 OR p.estado IS NULL) GROUP BY a.num_letra_apartamento,p.estado, d.id_distribucion ORDER BY dis.fecha DESC , a.num_letra_apartamento LIMIT 600;");
+							WHERE (p.estado = 0 OR p.estado IS NULL OR p.estado = 1) GROUP BY a.num_letra_apartamento,p.estado, d.id_distribucion ORDER BY dis.fecha DESC , a.num_letra_apartamento LIMIT 600;");
+				$consulta = $co->prepare("SELECT 
+						d.id_deuda,
+						a.num_letra_apartamento,
+						a.torre,
+						a.piso,
+						dis.concepto,
+						dis.fecha, 
+						(SUM( IF(dd.tipo_monto = 1, dd.monto, (ROUND(dd.monto / @divisa_monto, 2)) ) ) ) AS monto,
+						NULL AS extra,
+						d.id_deuda,
+						p.estado,
+						a.propietario,
+						p.id_pago,
+						d.moroso
+						FROM deudas AS d
+						LEFT JOIN apartamento as a on a.id_apartamento = d.id_apartamento
+						LEFT JOIN distribuciones as dis on dis.id_distribucion = d.id_distribucion
+						LEFT JOIN detalles_deudas as dd on dd.id_deuda = d.id_deuda
+						LEFT JOIN deuda_pagos as dp on dp.id_deuda = d.id_deuda
+						LEFT JOIN pagos as p on p.id_pago = dp.id_pago
+
+						WHERE 
+						NOT EXISTS (
+						  SELECT *
+						  FROM deudas AS d2
+						  JOIN deuda_pagos AS dp2 ON
+						  dp2.id_deuda = d2.id_deuda
+						  JOIN pagos AS p2 ON p2.id_pago = dp2.id_pago
+						  WHERE d2.id_deuda = d.id_deuda AND p2.estado <> 1
+						)
+						OR
+						(p.id_pago NOT IN (
+						    SELECT p2.id_pago FROM pagos as p2 JOIN deuda_pagos as dp2 on dp2.id_pago = p2.id_pago WHERE p2.estado IN (1,2) 
+						) OR p.id_pago IS null)
+						#AND (a.num_letra_apartamento = 'A-02' OR a.num_letra_apartamento = 'A-04')
+						GROUP BY d.id_deuda, p.estado ORDER BY a.num_letra_apartamento;");
 
 			}
 
 			if(isset($this->id_habitante)){
 				$consulta->bindValue(":habitante",$this->id_habitante);
 			}
+
 			$consulta->execute();
 			if(isset($this->id_habitante)){
 
@@ -230,7 +344,7 @@ class detallesdeuda extends datos
 
 							FROM detalles_deudas as dd 
 							WHERE dd.id_deuda = ?
-							ORDER BY dd.concepto;");
+							ORDER BY monto DESC, dd.concepto;");
 			$consulta->execute([$this->id]);
 
 			$resultado = $consulta->fetchall(PDO::FETCH_ASSOC);

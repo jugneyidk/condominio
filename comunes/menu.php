@@ -36,6 +36,7 @@ if (isset($_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'])) {
 								<a class="dropdown-item" href="?p=tipoapto">Tipos de Apartamento</a>
 								<a class="dropdown-item" href="?p=apartamentos">Apartamentos</a>
 								<a class="dropdown-item" href="?p=estacionamiento">Estacionamiento</a>
+								<a class="dropdown-item" href="?p=deuda-condominio">Deuda del condominio</a>
 							</div>
 							<div class="collapse navbar-collapse" id="navbarNavDropdown">
 						</li>
@@ -44,7 +45,7 @@ if (isset($_SESSION['Conjunto_Residencial_José_Maria_Vargas_rol'])) {
 								Procesar
 							</a>
 							<div class="dropdown-menu">
-								<a class="dropdown-item" href="?p=deuda-condominio">Deuda del condominio</a>
+								<!-- <a class="dropdown-item" href="?p=deuda-condominio">Deuda del condominio</a> -->
 								<a class="dropdown-item" href="?p=deudas">Deudas</a>
 								<a class="dropdown-item" href="?p=pagos">Pagos</a>
 								<a class="dropdown-item" href="?p=generar-reporte">Generar Reporte</a>

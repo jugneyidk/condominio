@@ -45,7 +45,7 @@ class generarreporte extends datos
                                      1
                                      FROM deuda_pagos 
                                      LEFT JOIN pagos ON pagos.id_pago = deuda_pagos.id_pago
-                                     WHERE pagos.estado = 2 AND deuda_pagos.id_deuda = d1.id_deuda)
+                                     WHERE pagos.estado = 2 AND deuda_pagos.id_deuda = d1.id_deuda) AND d1.moroso = 1
                     ) AS dd
                     LEFT JOIN apartamento AS a on a.id_apartamento = dd.id_apartamento
                     LEFT JOIN habitantes as h on h.id = a.propietario
@@ -101,7 +101,7 @@ class generarreporte extends datos
                     } else {
                         $html = $html . "<tr>";
                         $html = $html . "<td colspan='6'>";
-                        $html = $html . "<h4 align='center'>No hay morosidad actualmente";
+                        $html = $html . "<h4 align='center'>No hay apartamentos morosos actualmente";
                         $html = $html . "</td>";
                         $html = $html . "</tr>";
                     }

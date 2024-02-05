@@ -27,24 +27,25 @@ $(document).ready(function () {
   $("#password").on("keypress", function (e) {
     validarKeyPress(/^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]*$/, e);
   });
-
+  document.getElementById('password').maxLength=20;
   $("#password").on("keyup", function () {
     if ($("#id").val().length > 0) {
       validarKeyUp(
-        /^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/,
+        /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,20}$/,
         $(this),
         $("#spassword"),
-        "Solo letras y/o numeros entre 6 y 20 caracteres (Dejar en blanco si no desea modificar)"
+        "Debe ingresar al menos un numero, una letra mayúscula y una minúscula y debe ingresar entre 6 y 20 caracteres (Dejar en blanco si no desea modificar)"
       );
     } else {
       validarKeyUp(
-        /^[a-zA-Z\säÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ0-9]{6,20}$/,
+        /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,20}$/,
         $(this),
         $("#spassword"),
-        "Solo letras y/o numeros entre 6 y 20 caracteres"
+        "Debe ingresar al menos un numero, una letra mayúscula y una minúscula y debe ingresar entre 6 y 20 caracteres"
       );
     }
   });
+   evento_pass('password');
   $("#razon_social").on("keypress", function (e) {
     validarKeyPress(/^[aA-zZ0-9\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
   });
@@ -56,9 +57,9 @@ $(document).ready(function () {
       "La razón social debe contener entre 5 y 45 caracteres"
     );
   });
-  $("#telefono").on("keypress", function (e) {
-    validarKeyPress(/^[0-9-\b]*$/, e);
-  });
+  // $("#telefono").on("keypress", function (e) {
+  //   validarKeyPress(/^[0-9-\b]*$/, e);
+  // });
   $("#telefono").on("keyup", function () {
     validarKeyUp(
       /^[0][0-9]{3}[-][0-9]{7}$/,
@@ -67,6 +68,8 @@ $(document).ready(function () {
       "El teléfono debe ser 0XXX-1234567"
     );
   });
+  evento_telefono('telefono');
+
   $("#domicilio_fiscal").on("keypress", function (e) {
     validarKeyPress(/^[aA-zZ0-9\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
   });
@@ -526,4 +529,38 @@ function limpiarvalidacion() {
 function agregarvalidacion() {
   $("form input").addClass("is-valid");
   $("form select").addClass("is-valid");
+}
+
+function evento_telefono(elem){
+  if(typeof elem === 'string'){
+    elem = document.getElementById(elem);
+  }
+  
+  if(elem){
+    elem.maxLength = 12;
+    elem.onkeypress=function(e){
+      validarKeyPress(/^[0-9]*$/, e);
+      console.log(this.value);
+      if(/^[0-9]{4}/.test(this.value)){
+        this.value = this.value.replace(/[^0-9]/g, '');
+        this.value = this.value.replace(/^([0-9]{4})([0-9]{0,7})$/, "$1-$2");
+      }
+    }
+  }
+}
+//password
+function evento_pass(elem){
+  console.log(elem);
+  if (typeof elem === 'string') {
+    elem = document.getElementById('elem');
+  }
+  if(elem){
+    elem.maxLength = 20;
+    elem.onkeyup=function(){
+      er = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,20}$/;
+      etiquetamensaje = document.getElementById('this.dataSet.span');
+      validarKeyUp(er, this, etiquetamensaje, "Debe ingresar al menos una letra mayúscula un minúscula")
+      
+    }
+  }
 }
