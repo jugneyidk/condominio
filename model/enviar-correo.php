@@ -13,7 +13,7 @@ class enviarcorreo extends datos
 	function __construct()
 	{
 		$this->username = "diego14asf@gmail.com";
-		$this->password = "okcycrqarqjqcnsk";
+		$this->password = "";
 		$this->name = 'Diego Salazar';
 	}
 
